@@ -7,6 +7,9 @@
 *.userosscache
 *.sln.docstates
 
+# GGDrive ini files
+desktop.init
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

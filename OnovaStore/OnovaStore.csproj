@@ -5,6 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\desktop.ini" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="desktop.ini" />
+    <None Remove="Properties\desktop.ini" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
