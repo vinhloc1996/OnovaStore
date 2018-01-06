@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace OnovaApi.Migrations
 {
-    public partial class Test : Migration
+    public partial class InitFullDB : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -131,8 +131,11 @@ namespace OnovaApi.Migrations
                     UserID = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
+                    DateOfBirth = table.Column<DateTime>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
+                    FullName = table.Column<string>(nullable: true),
+                    Gender = table.Column<bool>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
@@ -140,6 +143,7 @@ namespace OnovaApi.Migrations
                     PasswordHash = table.Column<string>(nullable: true),
                     PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    Picture = table.Column<string>(nullable: true),
                     SecurityStamp = table.Column<string>(nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     UserName = table.Column<string>(maxLength: 256, nullable: true)
@@ -270,27 +274,6 @@ namespace OnovaApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserProfile",
-                columns: table => new
-                {
-                    UserID = table.Column<string>(nullable: false),
-                    DateOfBirth = table.Column<DateTime>(type: "date", nullable: true),
-                    FullName = table.Column<string>(unicode: false, maxLength: 256, nullable: true),
-                    Gender = table.Column<bool>(nullable: true),
-                    Picture = table.Column<string>(unicode: false, maxLength: 256, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserProfile", x => x.UserID);
-                    table.ForeignKey(
-                        name: "FK_UserProfile_UserID",
-                        column: x => x.UserID,
-                        principalTable: "User",
-                        principalColumn: "UserID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -355,7 +338,7 @@ namespace OnovaApi.Migrations
                     table.ForeignKey(
                         name: "FK_Customer_CustomerID",
                         column: x => x.CustomerID,
-                        principalTable: "UserProfile",
+                        principalTable: "User",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -390,7 +373,7 @@ namespace OnovaApi.Migrations
                     table.ForeignKey(
                         name: "FK_Staff_StaffID",
                         column: x => x.StaffID,
-                        principalTable: "UserProfile",
+                        principalTable: "User",
                         principalColumn: "UserID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
@@ -1452,7 +1435,7 @@ namespace OnovaApi.Migrations
                 table: "Role",
                 column: "NormalizedName",
                 unique: true,
-                filter: "([NormalizedName] IS NOT NULL)");
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RoleClaim_RoleId",
@@ -1510,7 +1493,7 @@ namespace OnovaApi.Migrations
                 table: "User",
                 column: "NormalizedUserName",
                 unique: true,
-                filter: "([NormalizedUserName] IS NOT NULL)");
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserClaim_UserId",
@@ -1674,13 +1657,10 @@ namespace OnovaApi.Migrations
                 name: "Staff");
 
             migrationBuilder.DropTable(
-                name: "UserProfile");
+                name: "User");
 
             migrationBuilder.DropTable(
                 name: "UserStatus");
-
-            migrationBuilder.DropTable(
-                name: "User");
         }
     }
 }

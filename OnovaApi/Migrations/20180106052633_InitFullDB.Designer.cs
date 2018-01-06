@@ -5,14 +5,14 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
-using OnovaApi.Models.DatabaseModels;
+using OnovaApi.Data;
 using System;
 
 namespace OnovaApi.Migrations
 {
-    [DbContext(typeof(OnovaContext))]
-    [Migration("20180105145813_Test")]
-    partial class Test
+    [DbContext(typeof(OnovaDbContext))]
+    [Migration("20180106052633_InitFullDB")]
+    partial class InitFullDB
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,117 @@ namespace OnovaApi.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.1-rtm-125")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("RoleID");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("Role");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("RoleClaimID");
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("RoleClaim");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("UserClaimID");
+
+                    b.Property<string>("ClaimType");
+
+                    b.Property<string>("ClaimValue");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserClaim");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("ProviderKey");
+
+                    b.Property<string>("ProviderDisplayName");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserLogin");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("RoleId");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("UserRole");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("LoginProvider");
+
+                    b.Property<string>("Name");
+
+                    b.Property<string>("Value");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("UserToken");
+                });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.AnonymousCustomer", b =>
                 {
@@ -123,6 +234,66 @@ namespace OnovaApi.Migrations
                     b.HasIndex("PromotionId");
 
                     b.ToTable("AnonymousCustomerCartDetail");
+                });
+
+            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.ApplicationUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("UserID");
+
+                    b.Property<int>("AccessFailedCount");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken();
+
+                    b.Property<DateTime?>("DateOfBirth");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256);
+
+                    b.Property<bool>("EmailConfirmed");
+
+                    b.Property<string>("FullName");
+
+                    b.Property<bool?>("Gender");
+
+                    b.Property<bool>("LockoutEnabled");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256);
+
+                    b.Property<string>("PasswordHash");
+
+                    b.Property<string>("PhoneNumber");
+
+                    b.Property<bool>("PhoneNumberConfirmed");
+
+                    b.Property<string>("Picture");
+
+                    b.Property<string>("SecurityStamp");
+
+                    b.Property<bool>("TwoFactorEnabled");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasName("UserNameIndex")
+                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Brand", b =>
@@ -909,49 +1080,6 @@ namespace OnovaApi.Migrations
                     b.ToTable("ReviewConfirm");
                 });
 
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Role", b =>
-                {
-                    b.Property<string>("RoleId")
-                        .HasColumnName("RoleID");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("RoleId");
-
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("([NormalizedName] IS NOT NULL)");
-
-                    b.ToTable("Role");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.RoleClaim", b =>
-                {
-                    b.Property<int>("RoleClaimId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("RoleClaimID");
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired();
-
-                    b.HasKey("RoleClaimId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RoleClaim");
-                });
-
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.SaveForLater", b =>
                 {
                     b.Property<string>("CustomerId")
@@ -1162,130 +1290,6 @@ namespace OnovaApi.Migrations
                     b.ToTable("UsefulReview");
                 });
 
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.User", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnName("UserID");
-
-                    b.Property<int>("AccessFailedCount");
-
-                    b.Property<string>("ConcurrencyStamp");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256);
-
-                    b.Property<bool>("EmailConfirmed");
-
-                    b.Property<bool>("LockoutEnabled");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
-
-                    b.Property<string>("PasswordHash");
-
-                    b.Property<string>("PhoneNumber");
-
-                    b.Property<bool>("PhoneNumberConfirmed");
-
-                    b.Property<string>("SecurityStamp");
-
-                    b.Property<bool>("TwoFactorEnabled");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256);
-
-                    b.HasKey("UserId");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                    b.ToTable("User");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserClaim", b =>
-                {
-                    b.Property<int>("UserClaimId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnName("UserClaimID");
-
-                    b.Property<string>("ClaimType");
-
-                    b.Property<string>("ClaimValue");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("UserClaimId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserClaim");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserLogin", b =>
-                {
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<string>("ProviderDisplayName");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogin");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserProfile", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnName("UserID");
-
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("FullName")
-                        .HasMaxLength(256)
-                        .IsUnicode(false);
-
-                    b.Property<bool?>("Gender");
-
-                    b.Property<string>("Picture")
-                        .HasMaxLength(256)
-                        .IsUnicode(false);
-
-                    b.HasKey("UserId");
-
-                    b.ToTable("UserProfile");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserRole", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("RoleId");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("UserRole");
-                });
-
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserStatus", b =>
                 {
                     b.Property<int>("UserStatusId")
@@ -1307,21 +1311,6 @@ namespace OnovaApi.Migrations
                     b.ToTable("UserStatus");
                 });
 
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserToken", b =>
-                {
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("LoginProvider");
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Value");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("UserToken");
-                });
-
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.WishList", b =>
                 {
                     b.Property<string>("CustomerId")
@@ -1335,6 +1324,51 @@ namespace OnovaApi.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("WishList");
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.AnonymousCustomerCart", b =>
@@ -1397,7 +1431,7 @@ namespace OnovaApi.Migrations
                         .HasForeignKey("AnonymouseCustomerId")
                         .HasConstraintName("FK_AnonymousCustomer_AnonymousCustomerID");
 
-                    b.HasOne("OnovaApi.Models.DatabaseModels.UserProfile", "CustomerNavigation")
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser", "ApplicationUser")
                         .WithOne("Customer")
                         .HasForeignKey("OnovaApi.Models.DatabaseModels.Customer", "CustomerId")
                         .HasConstraintName("FK_Customer_CustomerID");
@@ -1692,14 +1726,6 @@ namespace OnovaApi.Migrations
                         .HasConstraintName("FK_ReviewConfirm_ReviewID");
                 });
 
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.RoleClaim", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.Role", "Role")
-                        .WithMany("RoleClaim")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.SaveForLater", b =>
                 {
                     b.HasOne("OnovaApi.Models.DatabaseModels.Customer", "Customer")
@@ -1723,12 +1749,12 @@ namespace OnovaApi.Migrations
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Staff", b =>
                 {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.Staff", "AddByNavigation")
+                    b.HasOne("OnovaApi.Models.DatabaseModels.Staff", "AddByManagerStaff")
                         .WithMany("InverseAddByNavigation")
                         .HasForeignKey("AddBy")
                         .HasConstraintName("FK_Staff_StaffManagerID");
 
-                    b.HasOne("OnovaApi.Models.DatabaseModels.UserProfile", "StaffNavigation")
+                    b.HasOne("OnovaApi.Models.DatabaseModels.ApplicationUser", "ApplicationUser")
                         .WithOne("Staff")
                         .HasForeignKey("OnovaApi.Models.DatabaseModels.Staff", "StaffId")
                         .HasConstraintName("FK_Staff_StaffID");
@@ -1776,51 +1802,6 @@ namespace OnovaApi.Migrations
                         .WithMany("UsefulReview")
                         .HasForeignKey("ReviewId")
                         .HasConstraintName("FK_UsefulReview_ReviewID");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserClaim", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.User", "User")
-                        .WithMany("UserClaim")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserLogin", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.User", "User")
-                        .WithMany("UserLogin")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserProfile", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.User", "User")
-                        .WithOne("UserProfile")
-                        .HasForeignKey("OnovaApi.Models.DatabaseModels.UserProfile", "UserId")
-                        .HasConstraintName("FK_UserProfile_UserID");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserRole", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.Role", "Role")
-                        .WithMany("UserRole")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("OnovaApi.Models.DatabaseModels.User", "User")
-                        .WithMany("UserRole")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.UserToken", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.User", "User")
-                        .WithMany("UserToken")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.WishList", b =>

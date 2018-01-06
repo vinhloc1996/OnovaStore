@@ -22,7 +22,7 @@ namespace OnovaApi.Models.DatabaseModels
         public string AnonymouseCustomerId { get; set; }
 
         public AnonymousCustomer AnonymouseCustomer { get; set; }
-        public UserProfile CustomerNavigation { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         public UserStatus UserStatus { get; set; }
         public CustomerCart CustomerCart { get; set; }
         public CustomerPurchaseInfo CustomerPurchaseInfo { get; set; }

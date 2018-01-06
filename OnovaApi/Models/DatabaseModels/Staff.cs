@@ -21,8 +21,8 @@ namespace OnovaApi.Models.DatabaseModels
         public string Address { get; set; }
         public string Phone { get; set; }
 
-        public Staff AddByNavigation { get; set; }
-        public UserProfile StaffNavigation { get; set; }
+        public Staff AddByManagerStaff { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
         public UserStatus UserStatus { get; set; }
         public ICollection<GeneralImage> GeneralImage { get; set; }
         public ICollection<Staff> InverseAddByNavigation { get; set; }
