@@ -6,10 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnovaApi.Models.DatabaseModels;
+using OnovaApi.Models.IdentityModels;
 
 namespace OnovaApi.Data
 {
-    public class OnovaDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
+    public class OnovaDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
     {
         public virtual DbSet<AnonymousCustomer> AnonymousCustomer { get; set; }
         public virtual DbSet<AnonymousCustomerCart> AnonymousCustomerCart { get; set; }
@@ -1198,14 +1199,14 @@ namespace OnovaApi.Data
             });
 
             builder.Entity<ApplicationUser>().ToTable("User");
-            builder.Entity<IdentityRole>().ToTable("Role");
+            builder.Entity<ApplicationRole>().ToTable("Role");
             builder.Entity<IdentityUserRole<string>>().ToTable("UserRole");
             builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaim");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaim");
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogin");
             builder.Entity<IdentityUserToken<string>>().ToTable("UserToken");
             builder.Entity<ApplicationUser>().Property(p => p.Id).HasColumnName("UserID");
-            builder.Entity<IdentityRole>().Property(p => p.Id).HasColumnName("RoleID");
+            builder.Entity<ApplicationRole>().Property(p => p.Id).HasColumnName("RoleID");
             builder.Entity<IdentityRoleClaim<string>>().Property(p => p.Id).HasColumnName("RoleClaimID");
             builder.Entity<IdentityUserClaim<string>>().Property(p => p.Id).HasColumnName("UserClaimID");
         }

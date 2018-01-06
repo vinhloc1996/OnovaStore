@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using OnovaApi.Models.DatabaseModels;
 
-namespace OnovaApi.Models.DatabaseModels
+namespace OnovaApi.Models.IdentityModels
 {
     public class ApplicationUser : IdentityUser<string>
     {

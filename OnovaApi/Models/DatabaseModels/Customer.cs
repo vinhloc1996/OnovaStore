@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OnovaApi.Models.IdentityModels;
 
 namespace OnovaApi.Models.DatabaseModels
 {
