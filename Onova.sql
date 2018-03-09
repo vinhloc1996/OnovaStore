@@ -1,9 +1,9 @@
---USE master
---IF EXISTS(SELECT * FROM sys.databases WHERE [name]='Onova')
---DROP DATABASE Onova
---GO
---CREATE DATABASE Onova
---GO
+USE master
+IF EXISTS(SELECT * FROM sys.databases WHERE [name]='Onova')
+DROP DATABASE Onova
+GO
+CREATE DATABASE Onova
+GO
 USE Onova
 GO
 
@@ -17,6 +17,7 @@ GO
 	#6: Remove StillAnonymous column, becasue the anonymous customer only generated when user add the product to cart. After merging the authentication, 
 		the anonymous cart will be merged to cart and it will be deleted. Afterward, the anonymous customer will be deleted to avoid the redundancy
 	#7: Remove Customer EmailConfirmation column. Add test record for regular login function
+	#8: Remove User Profile and manually add relationship with AspNetUser Table in code first after generating the model and dbcontext
 */
 
 /*-------------------- Start #User and its relate tables --------------------*/
@@ -31,7 +32,7 @@ CREATE TABLE AnonymousCustomer
 GO
 CREATE TABLE UserProfile
 (
-	UserID NVARCHAR(450) CONSTRAINT FK_UserProfile_UserID REFERENCES [User](UserID),
+	UserID NVARCHAR(450),
 	FullName VARCHAR(256),
 	Picture VARCHAR(256),
 	Gender BIT,
