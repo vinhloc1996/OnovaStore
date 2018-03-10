@@ -17,7 +17,8 @@ GO
 	#6: Remove StillAnonymous column, becasue the anonymous customer only generated when user add the product to cart. After merging the authentication, 
 		the anonymous cart will be merged to cart and it will be deleted. Afterward, the anonymous customer will be deleted to avoid the redundancy
 	#7: Remove Customer EmailConfirmation column. Add test record for regular login function
-	#8: Remove User Profile and manually add relationship with AspNetUser Table in code first after generating the model and dbcontext
+	#8: Remove UserProfile and manually add relationship with AspNetUser Table in code first after generating the model and dbcontext
+	#9: Remove Email in ShippingInfo, get email directly from User information
 */
 
 /*-------------------- Start #User and its relate tables --------------------*/
@@ -77,7 +78,6 @@ CREATE TABLE ShippingInfo
 	City NVARCHAR(100) NOT NULL,
 	Zip VARCHAR(50) NOT NULL,
 	Phone VARCHAR(20) NOT NULL,
-	Email VARCHAR(254) UNIQUE NOT NULL,
 	CustomerID NVARCHAR(450) CONSTRAINT FK_ShippingInfo_CustomerID REFERENCES Customer(CustomerID)
 )
 GO
@@ -443,22 +443,22 @@ GO
 
 CREATE TABLE CustomerCart
 (
-	CustomerID NVARCHAR(450) CONSTRAINT FK_CustomerCart_CustomerID REFERENCES Customer(CustomerID),
-	CustomerCartID INT UNIQUE NOT NULL,
+	CustomerCartID NVARCHAR(450) CONSTRAINT FK_CustomerCart_CustomerID REFERENCES Customer(CustomerID),
 	CreateDate DATETIME NOT NULL,
 	LastUpdate TIMESTAMP NOT NULL,
 	Tax FLOAT DEFAULT(0.15),
+	ShippingFee FLOAT DEFAULT(0),
 	DisplayPrice FLOAT DEFAULT(0),
 	PriceDiscount FLOAT DEFAULT(0),
 	TotalPrice FLOAT DEFAULT(0),
 	TotalQuantity INT DEFAULT(0),
 	PromotionID INT CONSTRAINT FK_CustomerCart_PromotionID REFERENCES Promotion(PromotionID),
-	CONSTRAINT PK_CustomerCart_CustomerID PRIMARY KEY(CustomerID)
+	CONSTRAINT PK_CustomerCart_CustomerCartID PRIMARY KEY(CustomerCartID)
 )
 GO
 CREATE TABLE CustomerCartDetail
 (
-	CustomerCartID INT CONSTRAINT FK_CustomerCartDetail_CartID REFERENCES CustomerCart(CustomerCartID),
+	CustomerCartID NVARCHAR(450) CONSTRAINT FK_CustomerCartDetail_CartID REFERENCES CustomerCart(CustomerCartID),
 	ProductID INT CONSTRAINT FK_CustomerCartDetail_ProductID REFERENCES Product(ProductID),
 	DisplayPrice FLOAT,
 	PriceDiscount FLOAT DEFAULT(0),
@@ -470,22 +470,22 @@ CREATE TABLE CustomerCartDetail
 GO
 CREATE TABLE AnonymousCustomerCart
 (
-	AnonymousCustomerID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomerCart_CustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
-	AnonymousCustomerCartID INT UNIQUE NOT NULL,
+	AnonymousCustomerCartID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomerCart_CustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
 	CreateDate DATETIME NOT NULL,
 	LastUpdate TIMESTAMP NOT NULL,
 	Tax FLOAT DEFAULT(0.15),
+	ShippingFee FLOAT DEFAULT(0),
 	DisplayPrice FLOAT DEFAULT(0),
 	PriceDiscount FLOAT DEFAULT(0),
 	TotalPrice FLOAT DEFAULT(0),
 	TotalQuantity INT DEFAULT(0),
 	PromotionID INT CONSTRAINT FK_AnonymousCustomerCart_PromotionID REFERENCES Promotion(PromotionID),
-	CONSTRAINT PK_AnonymousCustomerCart_AnonymousCustomerID PRIMARY KEY(AnonymousCustomerID)
+	CONSTRAINT PK_AnonymousCustomerCart_AnonymousCustomerCartID PRIMARY KEY(AnonymousCustomerCartID)
 )
 GO
 CREATE TABLE AnonymousCustomerCartDetail
 (
-	AnonymousCustomerCartID INT CONSTRAINT FK_AnonymousCustomerCartDetail_CartID REFERENCES AnonymousCustomerCart(AnonymousCustomerCartID),
+	AnonymousCustomerCartID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomerCartDetail_CartID REFERENCES AnonymousCustomerCart(AnonymousCustomerCartID),
 	ProductID INT CONSTRAINT FK_AnonymousCustomerCartDetail_ProductID REFERENCES Product(ProductID),
 	DisplayPrice FLOAT,
 	PriceDiscount FLOAT DEFAULT(0),
@@ -511,3 +511,61 @@ CREATE TABLE SaveForLater
 )
 
 /*-------------------- End #SaveForLater and its relate tables --------------------*/
+
+GO
+
+/*-------------------- Start #Order and its relate tables --------------------*/
+
+CREATE TABLE OrderStatus
+(
+	OrderStatusID INT IDENTITY(1,1) PRIMARY KEY,
+	Code VARCHAR(50) NOT NULL,
+	[Name] VARCHAR(100) NOT NULL
+)
+
+GO
+
+CREATE TABLE [Order]
+(
+	OrderID INT IDENTITY(1,1) PRIMARY KEY,
+	OrderStatusID INT CONSTRAINT FK_Order_OrderStatusID REFERENCES OrderStatus(OrderStatusID),
+	OrderTrackingNumber VARCHAR(20) UNIQUE, /*Auto-generate*/
+	CartID NVARCHAR(450),
+	OrderDate DATETIME NOT NULL,
+	Tax FLOAT DEFAULT(0.15),
+	ShippingFee FLOAT DEFAULT(0),
+	DisplayPrice FLOAT DEFAULT(0),
+	PriceDiscount FLOAT DEFAULT(0),
+	TotalPrice FLOAT DEFAULT(0),
+	TotalQuantity INT DEFAULT(0),
+	PromotionID INT CONSTRAINT FK_Order_PromotionID REFERENCES Promotion(PromotionID),
+	FullName NVARCHAR(256),
+	AddressLine1 NVARCHAR(255) NOT NULL,
+	AddressLine2 NVARCHAR(255),
+	City NVARCHAR(100) NOT NULL,
+	Zip VARCHAR(50) NOT NULL,
+	Phone VARCHAR(20) NOT NULL,
+	EstimateShippingDate DATE NOT NULL,
+	PaymentToken VARCHAR(250) NOT NULL,
+	PaymentStatus VARCHAR(100) NOT NULL,
+	InvoiceId VARCHAR(250) NOT NULL
+)
+
+GO
+
+CREATE TABLE OrderDetail
+(
+	OrderID INT CONSTRAINT FK_OrderDetail_OrderID REFERENCES [Order](OrderID),
+	ProductID INT CONSTRAINT FK_OrderDetail_ProductID REFERENCES Product(ProductID),
+	DisplayPrice FLOAT,
+	PriceDiscount FLOAT DEFAULT(0),
+	Price FLOAT,
+	Quantity INT,
+	PromotionID INT CONSTRAINT FK_OrderDetail_PromotionID REFERENCES Promotion(PromotionID),
+	CONSTRAINT PK_OrderDetail_ID PRIMARY KEY(OrderID, ProductID)
+)
+
+GO
+
+
+/*-------------------- End #Order and its relate tables --------------------*/
