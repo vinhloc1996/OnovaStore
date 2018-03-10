@@ -546,9 +546,9 @@ CREATE TABLE [Order]
 	Zip VARCHAR(50) NOT NULL,
 	Phone VARCHAR(20) NOT NULL,
 	EstimateShippingDate DATE NOT NULL,
-	PaymentToken VARCHAR(250) NOT NULL,
+	PaymentTokenId VARCHAR(250) NOT NULL,
 	PaymentStatus VARCHAR(100) NOT NULL,
-	InvoiceId VARCHAR(250) NOT NULL
+	InvoiceTokenId VARCHAR(250) NOT NULL
 )
 
 GO
