@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnovaApi.Models.DatabaseModels
 {
-    public partial class CustomerCartDetail
+    public partial class OrderDetail
     {
-        [Column("CustomerCartID")]
-        public string CustomerCartId { get; set; }
+        [Column("OrderID")]
+        public int OrderId { get; set; }
         [Column("ProductID")]
         public int ProductId { get; set; }
         public double? DisplayPrice { get; set; }
@@ -18,14 +18,14 @@ namespace OnovaApi.Models.DatabaseModels
         [Column("PromotionID")]
         public int? PromotionId { get; set; }
 
-        [ForeignKey("CustomerCartId")]
-        [InverseProperty("CustomerCartDetail")]
-        public CustomerCart CustomerCart { get; set; }
+        [ForeignKey("OrderId")]
+        [InverseProperty("OrderDetail")]
+        public Order Order { get; set; }
         [ForeignKey("ProductId")]
-        [InverseProperty("CustomerCartDetail")]
+        [InverseProperty("OrderDetail")]
         public Product Product { get; set; }
         [ForeignKey("PromotionId")]
-        [InverseProperty("CustomerCartDetail")]
+        [InverseProperty("OrderDetail")]
         public Promotion Promotion { get; set; }
     }
 }

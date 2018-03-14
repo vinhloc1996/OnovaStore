@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using OnovaApi.Models.IdentityModels;
 
 namespace OnovaApi.Models.DatabaseModels
@@ -9,25 +11,43 @@ namespace OnovaApi.Models.DatabaseModels
         public Staff()
         {
             GeneralImage = new HashSet<GeneralImage>();
-            InverseAddByNavigation = new HashSet<Staff>();
+            InverseAddByStaffManager = new HashSet<Staff>();
             ReviewConfirm = new HashSet<ReviewConfirm>();
             StaffNotification = new HashSet<StaffNotification>();
         }
 
+        [Column("StaffID")]
         public string StaffId { get; set; }
+        [Column(TypeName = "datetime")]
         public DateTime AddDate { get; set; }
+        [StringLength(450)]
         public string AddBy { get; set; }
+        [Column("UserStatusID")]
         public int? UserStatusId { get; set; }
         public double Salary { get; set; }
+        [Required]
+        [StringLength(256)]
         public string Address { get; set; }
+        [Required]
+        [StringLength(20)]
         public string Phone { get; set; }
 
-        public Staff AddByManagerStaff { get; set; }
+        [ForeignKey("AddBy")]
+        [InverseProperty("InverseAddByStaffManager")]
+        public Staff AddByStaffManager { get; set; }
+        [ForeignKey("StaffId")]
+        [InverseProperty("Staff")]
         public ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("UserStatusId")]
+        [InverseProperty("Staff")]
         public UserStatus UserStatus { get; set; }
+        [InverseProperty("Staff")]
         public ICollection<GeneralImage> GeneralImage { get; set; }
-        public ICollection<Staff> InverseAddByNavigation { get; set; }
+        [InverseProperty("AddByStaffManager")]
+        public ICollection<Staff> InverseAddByStaffManager { get; set; }
+        [InverseProperty("AssignStaff")]
         public ICollection<ReviewConfirm> ReviewConfirm { get; set; }
+        [InverseProperty("Staff")]
         public ICollection<StaffNotification> StaffNotification { get; set; }
     }
 }

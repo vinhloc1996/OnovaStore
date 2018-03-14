@@ -5,7 +5,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\" />
+    <Compile Remove="Migrations\20180314055718_InitDb.cs" />
+    <Compile Remove="Migrations\20180314055718_InitDb.Designer.cs" />
+    <Compile Remove="Migrations\20180314060623_InitDb.cs" />
+    <Compile Remove="Migrations\20180314060623_InitDb.Designer.cs" />
+    <Compile Remove="Migrations\20180314061655_InitDb.cs" />
+    <Compile Remove="Migrations\20180314061655_InitDb.Designer.cs" />
+    <Compile Remove="Migrations\20180314062808_InitDb.cs" />
+    <Compile Remove="Migrations\20180314062808_InitDb.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

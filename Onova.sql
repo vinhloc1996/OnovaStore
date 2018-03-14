@@ -65,7 +65,7 @@ CREATE TABLE Customer
 	CustomerID NVARCHAR(450) CONSTRAINT FK_Customer_CustomerID REFERENCES UserProfile(UserID),
 	UserStatusID INT CONSTRAINT FK_Customer_UserStatusID REFERENCES UserStatus(UserStatusID),
 	JoinDate DATETIME NOT NULL,
-	AnonymouseCustomerID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomer_AnonymousCustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
+	AnonymouseCustomerID NVARCHAR(450) CONSTRAINT FK_Customer_AnonymousCustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
 	CONSTRAINT PK_Customer_CustomerID PRIMARY KEY (CustomerID)
 )
 GO
@@ -388,7 +388,7 @@ CREATE TABLE Review
 	Content TEXT NOT NULL,
 	ReleaseDate DATETIME NOT NULL,
 	Rating TINYINT NOT NULL,
-	IsBought BIT DEFAULT(0) NOT NULL,
+	IsBought BIT DEFAULT(0),
 	UsefulCounting INT DEFAULT(0),
 	ReplyReviewID INT CONSTRAINT FK_Review_ReviewID REFERENCES Review(ReviewID)
 )
@@ -396,7 +396,7 @@ GO
 CREATE TABLE ReviewConfirm
 (
 	ReviewID INT CONSTRAINT FK_ReviewConfirm_ReviewID REFERENCES Review(ReviewID),
-	IsApproved BIT DEFAULT(1) NOT NULL,
+	IsApproved BIT DEFAULT(0),
 	AssignStaffID NVARCHAR(450) CONSTRAINT FK_ReviewConfirm_AssignStaffID REFERENCES Staff(StaffID),
 	StaffComment NVARCHAR(256) DEFAULT(''),
 	LastUpdateDate TIMESTAMP NOT NULL,
@@ -470,7 +470,7 @@ CREATE TABLE CustomerCartDetail
 GO
 CREATE TABLE AnonymousCustomerCart
 (
-	AnonymousCustomerCartID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomerCart_CustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
+	AnonymousCustomerCartID NVARCHAR(450) CONSTRAINT FK_AnonymousCustomerCart_AnonymousCustomerID REFERENCES AnonymousCustomer(AnonymousCustomerID),
 	CreateDate DATETIME NOT NULL,
 	LastUpdate TIMESTAMP NOT NULL,
 	Tax FLOAT DEFAULT(0.15),

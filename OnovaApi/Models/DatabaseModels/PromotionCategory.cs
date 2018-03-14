@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace OnovaApi.Models.DatabaseModels
 {
@@ -10,11 +12,19 @@ namespace OnovaApi.Models.DatabaseModels
             ExcludeProductPromotionCategory = new HashSet<ExcludeProductPromotionCategory>();
         }
 
+        [Key]
+        [Column("PromotionID")]
         public int PromotionId { get; set; }
+        [Column("CategoryID")]
         public int? CategoryId { get; set; }
 
+        [ForeignKey("CategoryId")]
+        [InverseProperty("PromotionCategory")]
         public Category Category { get; set; }
+        [ForeignKey("PromotionId")]
+        [InverseProperty("PromotionCategory")]
         public Promotion Promotion { get; set; }
+        [InverseProperty("Promotion")]
         public ICollection<ExcludeProductPromotionCategory> ExcludeProductPromotionCategory { get; set; }
     }
 }
