@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -19,6 +20,7 @@ using Microsoft.IdentityModel.Tokens;
 using OnovaApi.Data;
 using OnovaApi.Helpers;
 using OnovaApi.Models.IdentityModels;
+using OnovaApi.Services;
 
 namespace OnovaApi
 {
@@ -37,7 +39,8 @@ namespace OnovaApi
             services.AddCors();
             services.AddDbContext<OnovaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddAutoMapper();
+//            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
                     options.Password.RequireLowercase = true;
@@ -56,45 +59,6 @@ namespace OnovaApi
                 .AddEntityFrameworkStores<OnovaContext>()
                 .AddDefaultTokenProviders();
 
-            //            services.ConfigureApplicationCookie(options =>
-            //            {
-            //                options.Cookie.Name = Configuration["Authentication:Cookie:Name"];
-            //                options.Cookie.HttpOnly = true;
-            //                options.ExpireTimeSpan = TimeSpan.FromDays(30);
-            //                options.LoginPath = "/Account/Login";
-            //                options.LogoutPath = "/Account/Logout";
-            //                options.AccessDeniedPath = "Account/AccessDenied";
-            //                options.SlidingExpiration = true;
-            //                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            //            });
-
-            //            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            //            services.AddAuthentication()
-            //                .AddCookie(options =>
-            //                {
-            //                    options.Cookie.Name = Configuration["Authentication:Cookie:Name"];
-            //                    options.Cookie.HttpOnly = true;
-            //                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
-            //                    options.LoginPath = "/Account/Login";
-            //                    options.LogoutPath = "/Account/Logout";
-            //                    options.AccessDeniedPath = "Account/AccessDenied";
-            //                    options.SlidingExpiration = true;
-            //                    options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-            //                })
-            //                .AddJwtBearer(options =>
-            //                {
-            //                    options.RequireHttpsMetadata = false;
-            //                    options.SaveToken = true;
-            //                    options.TokenValidationParameters = new TokenValidationParameters
-            //                    {
-            //                        ValidIssuer = Configuration["Authentication:Jwt:Issuer"],
-            //                        ValidAudience = Configuration["Authentication:Jwt:Issuer"],
-            //                        IssuerSigningKey =
-            //                            new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Jwt:Key"])),
-            //                        ClockSkew = TimeSpan.Zero
-            //                    };
-            //                });
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -104,6 +68,18 @@ namespace OnovaApi
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
+            }).AddFacebook(fbOptions =>
+            {
+                fbOptions.AppId = Configuration["ExternalLogin:Facebook:AppID"];
+                fbOptions.AppSecret = Configuration["ExternalLogin:Facebook:AppSecret"];
+                fbOptions.SaveTokens = true;
+//                fbOptions.Scope.Add("user_birthday");
+                fbOptions.Scope.Add("public_profile");
+                fbOptions.Fields.Add("email");
+                fbOptions.Fields.Add("picture");
+                fbOptions.Fields.Add("name");
+                fbOptions.Fields.Add("gender");
+                fbOptions.Fields.Add("id");
             });
 
             services.AddMvc()
@@ -127,7 +103,7 @@ namespace OnovaApi
                 {
                     e.Run(async context =>
                     {
-                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                        context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 
                         var error = context.Features.Get<IExceptionHandlerFeature>();
                         if (error != null)
