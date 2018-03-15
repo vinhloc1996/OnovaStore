@@ -43,7 +43,7 @@ namespace OnovaApi
 //            services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
-                    options.Password.RequireLowercase = true;
+                    options.Password.RequireLowercase = false;
                     options.Password.RequireDigit = false;
                     options.Password.RequireNonAlphanumeric = false;
                     options.Password.RequireUppercase = false;
@@ -51,7 +51,7 @@ namespace OnovaApi
                     options.Lockout.MaxFailedAccessAttempts = 10;
                     options.Lockout.AllowedForNewUsers = true;
                     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                    options.SignIn.RequireConfirmedEmail = true;
+                    options.SignIn.RequireConfirmedEmail = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;
                     options.User.RequireUniqueEmail = true;
                     options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
@@ -91,7 +91,7 @@ namespace OnovaApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -116,6 +116,7 @@ namespace OnovaApi
             }
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseAuthentication();
+            Seed.SeedData(userManager, roleManager).Wait();
             app.UseMvc();
         }
     }

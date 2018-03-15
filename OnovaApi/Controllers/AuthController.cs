@@ -48,7 +48,7 @@ namespace OnovaApi.Controllers
             if (result.Succeeded)
             {
                 var tokenHandle = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration.GetSection("JwtAuthentication:Key").Value);
+                var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var claims = new List<Claim>
                 {
