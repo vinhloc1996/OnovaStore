@@ -40,8 +40,7 @@ namespace OnovaApi.Controllers
             var user = await _userManager.FindByNameAsync(userForLoginDto.Email);
             if (user == null)
             {
-                HttpContext.Response.AddApplicationError("Invalid UserName!");
-                return null;
+                return Unauthorized();
             }
             var result = await _signInManager.CheckPasswordSignInAsync(user, userForLoginDto.Password, false);
 
@@ -76,8 +75,7 @@ namespace OnovaApi.Controllers
                 return Ok(new {tokenString});
             }
 
-            HttpContext.Response.AddApplicationError("Invalid UserName or Password!");
-            return null;
+            return Unauthorized();
         }
     }
 }
