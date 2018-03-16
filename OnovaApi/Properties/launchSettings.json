@@ -23,3 +23,19 @@
     }
   }
 }
+
+
+  //            .AddFacebook(fbOptions =>
+//            {
+//                fbOptions.AppId = Configuration["ExternalLogin:Facebook:AppID"];
+//                fbOptions.AppSecret = Configuration["ExternalLogin:Facebook:AppSecret"];
+//                fbOptions.SaveTokens = true;
+////                fbOptions.Scope.Add("user_birthday");
+//                fbOptions.Scope.Add("public_profile");
+//                fbOptions.Fields.Add("email");
+//                fbOptions.Fields.Add("picture");
+//                fbOptions.Fields.Add("name");
+//                fbOptions.Fields.Add("gender");
+//                fbOptions.Fields.Add("id");
+//            });
+

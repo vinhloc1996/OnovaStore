@@ -47,13 +47,13 @@ namespace OnovaApi.Controllers
             if (result.Succeeded)
             {
                 var tokenHandle = new JwtSecurityTokenHandler();
-                var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
+                var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
                 var userRoles = await _userManager.GetRolesAsync(user);
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.NameIdentifier, user.Id),
                     new Claim(ClaimTypes.Name, user.FullName),
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Email, user.Email)
                 };
 
                 foreach (var userRole in userRoles)
@@ -61,16 +61,26 @@ namespace OnovaApi.Controllers
                     claims.Add(new Claim(ClaimTypes.Role, userRole));
                 }
 
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {
-                    Subject = new ClaimsIdentity(claims),
-                    Expires = DateTime.Now.AddDays(1),
-                    SigningCredentials =
-                        new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha512)
-                };
+                
 
-                var token = tokenHandle.CreateToken(tokenDescriptor);
-                var tokenString = tokenHandle.WriteToken(token);
+                var jwt = new JwtSecurityToken(claims: claims, expires: DateTime.Now.AddDays(1),
+                    signingCredentials:
+                    new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256));
+
+//                var claimIdentity = new ClaimsIdentity(claims);
+//                claimIdentity.AddClaims(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+//
+//                var tokenDescriptor = new SecurityTokenDescriptor
+//                {
+//                    Subject = claimIdentity,
+//                    Expires = DateTime.Now.AddDays(1),
+//                    SigningCredentials =
+//                        new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+//                };
+//
+//                var token = tokenHandle.CreateToken(tokenDescriptor);
+
+                var tokenString = tokenHandle.WriteToken(jwt);
 
                 return Ok(new {tokenString});
             }

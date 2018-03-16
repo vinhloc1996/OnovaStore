@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -35,51 +36,60 @@ namespace OnovaApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("Authentication:Jwt:Key").Value);
+            var test = Configuration.GetSection("Authentication:Jwt:Key").Value;
+            var key = Encoding.UTF8.GetBytes(test);
             services.AddCors();
             services.AddDbContext<OnovaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper();
 //            services.AddScoped<IAuthRepository, AuthRepository>();
-            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-                {
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 6;
-                    options.Lockout.MaxFailedAccessAttempts = 10;
-                    options.Lockout.AllowedForNewUsers = true;
-                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                    options.SignIn.RequireConfirmedEmail = false;
-                    options.SignIn.RequireConfirmedPhoneNumber = false;
-                    options.User.RequireUniqueEmail = true;
-                    options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
-                })
-                .AddEntityFrameworkStores<OnovaContext>()
-                .AddDefaultTokenProviders();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
             {
+                options.SaveToken = true;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    ValidateLifetime = false,
                 };
-            }).AddFacebook(fbOptions =>
+            });
+
+
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                fbOptions.AppId = Configuration["ExternalLogin:Facebook:AppID"];
-                fbOptions.AppSecret = Configuration["ExternalLogin:Facebook:AppSecret"];
-                fbOptions.SaveTokens = true;
-//                fbOptions.Scope.Add("user_birthday");
-                fbOptions.Scope.Add("public_profile");
-                fbOptions.Fields.Add("email");
-                fbOptions.Fields.Add("picture");
-                fbOptions.Fields.Add("name");
-                fbOptions.Fields.Add("gender");
-                fbOptions.Fields.Add("id");
+                options.Password.RequireLowercase = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+                options.Lockout.MaxFailedAccessAttempts = 10;
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.SignIn.RequireConfirmedEmail = false;
+                options.SignIn.RequireConfirmedPhoneNumber = false;
+                options.User.RequireUniqueEmail = true;
+                options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
+
+                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+                options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
+                options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email;
+            })
+                .AddEntityFrameworkStores<OnovaContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                                  policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+                options.AddPolicy("CustomerSupport", policy =>
+                                  policy.RequireClaim(ClaimTypes.Role, "CustomerSupport"));
+                options.AddPolicy("ProductManager", policy =>
+                                  policy.RequireClaim(ClaimTypes.Role, "ProductManager"));
+                options.AddPolicy("Shipper", policy =>
+                                  policy.RequireClaim(ClaimTypes.Role, "Shipper"));
             });
 
             services.AddMvc()
@@ -91,7 +101,8 @@ namespace OnovaApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager,
+            RoleManager<ApplicationRole> roleManager)
         {
             if (env.IsDevelopment())
             {

@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +13,7 @@ using OnovaApi.Models.DatabaseModels;
 
 namespace OnovaApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/Brand")]
     public class BrandController : Controller
@@ -23,6 +27,7 @@ namespace OnovaApi.Controllers
 
         // GET: api/Brand
         [HttpGet]
+        [Authorize(Policy = "Admin")]
         public IEnumerable<Brand> GetBrand()
         {
             return _context.Brand;
