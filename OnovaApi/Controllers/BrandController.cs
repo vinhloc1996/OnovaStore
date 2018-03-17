@@ -13,7 +13,6 @@ using OnovaApi.Models.DatabaseModels;
 
 namespace OnovaApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/Brand")]
     public class BrandController : Controller

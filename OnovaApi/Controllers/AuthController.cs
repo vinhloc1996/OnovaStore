@@ -20,7 +20,6 @@ using OnovaApi.Services;
 
 namespace OnovaApi.Controllers
 {
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/Auth")]
     public class AuthController : Controller
@@ -38,6 +37,15 @@ namespace OnovaApi.Controllers
             _repository = repository;
         }
 
+        [AllowAnonymous]
+        [HttpGet("AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            return StatusCode(403, "You don't have privilege to access this page!");
+        }
+
+
+
         [Authorize(Policy = "Admin")]
         [HttpPost("AddStaff")]
         public async Task<IActionResult> AddStaff([FromBody] StaffInfoDTO staffInfoDto)
@@ -54,7 +62,7 @@ namespace OnovaApi.Controllers
                 return StatusCode(201, "Staff has been added successfully!");
             }
 
-            throw new Exception($"Add new user failed");
+            throw new Exception("Add new user failed");
         }
 
 //        [AllowAnonymous]
