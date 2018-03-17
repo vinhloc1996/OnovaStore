@@ -10,6 +10,7 @@ using OnovaApi.Data;
 using OnovaApi.DTOs;
 using OnovaApi.Models.DatabaseModels;
 using OnovaApi.Models.IdentityModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OnovaApi.Services
 {
@@ -18,7 +19,6 @@ namespace OnovaApi.Services
         private readonly OnovaContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private const string ADMIN_USERNAME = "admin@onova.com";
 
         public AuthRepository(OnovaContext context, UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager)
@@ -28,11 +28,11 @@ namespace OnovaApi.Services
             _signInManager = signInManager;
         }
 
-        public async Task<ApplicationUser> UserExisted(string username) => await _userManager.FindByNameAsync(username);
+        public async Task<ApplicationUser> FindUserByUserName(string username) => await _userManager.FindByNameAsync(username);
 
         public async Task<SignInResult> LoginSucceeded(UserForLoginDTO userForLoginDto)
             =>
-                _signInManager.CheckPasswordSignInAsync(await UserExisted(userForLoginDto.Email),
+                _signInManager.CheckPasswordSignInAsync(await FindUserByUserName(userForLoginDto.Email),
                     userForLoginDto.Password, false).Result;
 
         public async Task<IList<string>> UserRoles(ApplicationUser user) => await _userManager.GetRolesAsync(user);
@@ -53,37 +53,37 @@ namespace OnovaApi.Services
 
             return claims;
         }
-        
-        public async Task<ApplicationUser> FindUserByName(string username)
-        {
-            //rewrite with _context
-            return await _userManager.FindByNameAsync(username);
-        }
 
-        //rewrite with removing application user
-        public async Task<IdentityResult> AddStaff(ApplicationUser user, string role, StaffInfoDTO staff)
+        public async Task<IdentityResult> AddStaff(StaffInfoDTO staff, string adminId)
         {
-            if (await UserExisted(user.UserName) == null)
+            if (await FindUserByUserName(staff.Email) == null)
             {
-                var result = _userManager.CreateAsync(user, "123456").Result;
+                var newStaff = new ApplicationUser
+                {
+                    UserName = staff.Email,
+                    Email = staff.Email,
+                    FullName = staff.FullName
+                };
+
+                var result = await _userManager.CreateAsync(newStaff, staff.Password);
 
                 if (result.Succeeded)
                 {
-                    var currentUser = await FindUserByName(user.UserName);
-                    var admin = await FindUserByName(ADMIN_USERNAME);
+                    var newUser = await FindUserByUserName(staff.Email);
+                    var currentAdmin = adminId;
 
                     await _context.Staff.AddAsync(new Staff
                     {
-                        StaffId = currentUser.Id,
-                        AddBy = admin.Id,
-                        AddDate = DateTime.Now,
+                        StaffId = newUser.Id,
+                        AddBy = currentAdmin,
+                        AddDate = staff.AddDate,
                         Address = staff.Address,
                         Phone = staff.Phone,
                         Salary = staff.Salary
                     });
                     await _context.SaveChangesAsync();
 
-                    return await _userManager.AddToRoleAsync(user, role);
+                    return await _userManager.AddToRoleAsync(newStaff, staff.Role);
                 }
             }
 

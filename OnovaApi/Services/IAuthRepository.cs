@@ -9,11 +9,10 @@ namespace OnovaApi.Services
 {
     public interface IAuthRepository
     {
-        Task<ApplicationUser> UserExisted(string username);
         Task<SignInResult> LoginSucceeded(UserForLoginDTO userForLoginDto);
         Task<IList<string>> UserRoles(ApplicationUser user);
         Task<List<Claim>> InitClaims(ApplicationUser user);
-        Task<ApplicationUser> FindUserByName(string username);
-        Task<IdentityResult> AddStaff(ApplicationUser user, string role, StaffInfoDTO staff);
+        Task<ApplicationUser> FindUserByUserName(string username);
+        Task<IdentityResult> AddStaff(StaffInfoDTO staff, string adminId);
     }
 }

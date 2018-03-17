@@ -20,6 +20,7 @@ using OnovaApi.Services;
 
 namespace OnovaApi.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [Produces("application/json")]
     [Route("api/Auth")]
     public class AuthController : Controller
@@ -37,11 +38,23 @@ namespace OnovaApi.Controllers
             _repository = repository;
         }
 
-        [AllowAnonymous]
+        [Authorize(Policy = "Admin")]
         [HttpPost("AddStaff")]
-        public async Task<IActionResult> AddStaff([FromBody] UserForRegisterDTO userForRegisterDto)
+        public async Task<IActionResult> AddStaff([FromBody] StaffInfoDTO staffInfoDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
+            var result = await _repository.AddStaff(staffInfoDto, User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            if (result.Succeeded)
+            {
+                return StatusCode(201, "Staff has been added successfully!");
+            }
+
+            throw new Exception($"Add new user failed");
         }
 
 //        [AllowAnonymous]
@@ -55,7 +68,7 @@ namespace OnovaApi.Controllers
         [HttpPost("Login")]
         public async Task<IActionResult> Login([FromBody] UserForLoginDTO userForLoginDto)
         {
-            var user = await _repository.UserExisted(userForLoginDto.Email);
+            var user = await _repository.FindUserByUserName(userForLoginDto.Email);
             if (user == null)
             {
                 return Unauthorized();

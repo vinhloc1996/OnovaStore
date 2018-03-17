@@ -102,7 +102,7 @@ namespace OnovaApi
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager, OnovaContext dbContext)
         {
             if (env.IsDevelopment())
             {
@@ -127,7 +127,8 @@ namespace OnovaApi
             }
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseAuthentication();
-            Seed.SeedData(userManager, roleManager).Wait();
+            //Run only in first-run
+//            Seed.SeedData(userManager, roleManager, dbContext).Wait();
             app.UseMvc();
         }
     }

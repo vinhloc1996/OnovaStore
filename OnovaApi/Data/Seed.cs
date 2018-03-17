@@ -1,5 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using OnovaApi.Models.DatabaseModels;
 using OnovaApi.Models.IdentityModels;
 
 namespace OnovaApi.Data
@@ -35,6 +39,39 @@ namespace OnovaApi.Data
             {
                 ApplicationRole role = new ApplicationRole {Name = "Shipper"};
                 await roleManager.CreateAsync(role);
+            }
+        }
+
+        public static async Task SeedStaffs(OnovaContext dbContext)
+        {
+            if (await dbContext.Staff.CountAsync() == 0)
+            {
+                var admin = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "admin@onova.com");
+                var staff = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "staffsupport@onova.com");
+
+                var staffInits = new List<Staff>
+                {
+                    new Staff
+                    {
+                        StaffId = admin.Id,
+                        AddBy = null,
+                        AddDate = DateTime.Now,
+                        Address = "Onova",
+                        Phone = "11111111",
+                        Salary = 0
+                    },
+                    new Staff
+                    {
+                        StaffId = staff.Id,
+                        AddBy = admin.Id,
+                        AddDate = DateTime.Now,
+                        Address = "Onova",
+                        Phone = "22222222",
+                        Salary = 0
+                    }
+                };
+                await dbContext.Staff.AddRangeAsync(staffInits);
+                await dbContext.SaveChangesAsync();
             }
         }
 
@@ -83,10 +120,11 @@ namespace OnovaApi.Data
 
         public static async Task SeedData
         (UserManager<ApplicationUser> userManager,
-            RoleManager<ApplicationRole> roleManager)
+            RoleManager<ApplicationRole> roleManager, OnovaContext context)
         {
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
+            await SeedStaffs(context);
         }
     }
 }
