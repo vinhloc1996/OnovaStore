@@ -38,10 +38,18 @@ namespace OnovaApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("Register")]
-        public async Task<IActionResult> Register([FromBody] UserForRegisterDTO userForRegisterDto)
+        [HttpPost("AddStaff")]
+        public async Task<IActionResult> AddStaff([FromBody] UserForRegisterDTO userForRegisterDto)
         {
+
         }
+
+//        [AllowAnonymous]
+//        [HttpPost("Register")]
+//        public async Task<IActionResult> Register([FromBody] UserForRegisterDTO userForRegisterDto)
+//        {
+//
+//        }
 
         [AllowAnonymous]
         [HttpPost("Login")]

@@ -13,5 +13,7 @@ namespace OnovaApi.Services
         Task<SignInResult> LoginSucceeded(UserForLoginDTO userForLoginDto);
         Task<IList<string>> UserRoles(ApplicationUser user);
         Task<List<Claim>> InitClaims(ApplicationUser user);
+        Task<ApplicationUser> FindUserByName(string username);
+        Task<IdentityResult> AddStaff(ApplicationUser user, string role, StaffInfoDTO staff);
     }
 }
