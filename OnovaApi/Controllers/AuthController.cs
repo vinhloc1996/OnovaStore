@@ -65,12 +65,24 @@ namespace OnovaApi.Controllers
             throw new Exception("Add new user failed");
         }
 
-//        [AllowAnonymous]
-//        [HttpPost("Register")]
-//        public async Task<IActionResult> Register([FromBody] UserForRegisterDTO userForRegisterDto)
-//        {
-//
-//        }
+        [AllowAnonymous]
+        [HttpPost("Register")]
+        public async Task<IActionResult> Register([FromBody] UserForRegisterDTO userForRegisterDto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var result = await _repository.UserRegister(userForRegisterDto);
+
+            if (result.Succeeded)
+            {
+                return StatusCode(201, "Customer has been created successfully!");
+            }
+
+            throw new Exception("User register failed");
+        }
 
         [AllowAnonymous]
         [HttpPost("Login")]

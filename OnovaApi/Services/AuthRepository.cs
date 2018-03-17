@@ -89,5 +89,33 @@ namespace OnovaApi.Services
 
             return IdentityResult.Failed();
         }
+
+        public async Task<IdentityResult> UserRegister(UserForRegisterDTO dto)
+        {
+            if (await FindUserByUserName(dto.Email) == null)
+            {
+                var createNewCustomer = await _userManager.CreateAsync(new ApplicationUser
+                {
+                    Email = dto.Email,
+                    UserName = dto.Email,
+                    FullName = dto.FullName
+                }, dto.Password);
+
+                if (createNewCustomer.Succeeded)
+                {
+                    var newUser = await FindUserByUserName(dto.Email);
+
+                    await _context.Customer.AddAsync(new Customer
+                    {
+                        CustomerId = newUser.Id,
+                        JoinDate = dto.JoinDate
+                    });
+
+                    return await _context.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
+                }
+            }
+
+            return IdentityResult.Failed();
+        }
     }
 }

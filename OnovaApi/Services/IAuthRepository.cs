@@ -14,5 +14,6 @@ namespace OnovaApi.Services
         Task<List<Claim>> InitClaims(ApplicationUser user);
         Task<ApplicationUser> FindUserByUserName(string username);
         Task<IdentityResult> AddStaff(StaffInfoDTO staff, string adminId);
+        Task<IdentityResult> UserRegister(UserForRegisterDTO dto);
     }
 }
