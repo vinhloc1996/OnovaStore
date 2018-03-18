@@ -26,7 +26,9 @@ namespace OnovaApi.Controllers
 
         // GET: api/Brand
         [HttpGet]
-        [Authorize(Policy = "Admin")]
+        //Working both Roles and Policy
+//        [Authorize(Policy = "Admin")]
+        [Authorize(Roles = "Administrator")]
         public IEnumerable<Brand> GetBrand()
         {
             return _context.Brand;

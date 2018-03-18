@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -76,6 +77,12 @@ namespace OnovaApi
                     ValidateLifetime = false,
                 };
             });
+
+//            services.Configure<SecurityStampValidatorOptions>(
+//                options =>
+//                {
+//                    options.ValidationInterval = TimeSpan.FromSeconds(10);
+//                });
 
             services.ConfigureApplicationCookie(options =>
             {
