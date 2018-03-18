@@ -18,6 +18,7 @@
     "OnovaStore": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "http://localhost:58212/simple/test",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

@@ -28,6 +28,8 @@ namespace OnovaApi.Models.DatabaseModels
         [Column("AnonymouseCustomerID")]
         [StringLength(450)]
         public string AnonymouseCustomerId { get; set; }
+        [Column("FacebookID")]
+        public string FacebookId { get; set; }
 
         [ForeignKey("AnonymouseCustomerId")]
         [InverseProperty("Customer")]
