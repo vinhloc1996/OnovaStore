@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -30,6 +31,7 @@ namespace OnovaApi.Controllers
 //        private readonly UserManager<ApplicationUser> _userManager;
 //        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
+
         private readonly IAuthRepository _repository;
         private static readonly HttpClient Client = new HttpClient();
 
@@ -66,6 +68,15 @@ namespace OnovaApi.Controllers
             }
 
             throw new Exception("Add new user failed");
+        }
+
+        [AllowAnonymous]
+        [HttpGet("CheckUserExisted")]
+        public async Task<IActionResult> CheckUserExisted([FromQuery] string username)
+        {
+            var result = await _repository.FindUserByUserName(username) == null;
+
+            return Json(new {isExisted = result});
         }
 
         [AllowAnonymous]
@@ -109,64 +120,37 @@ namespace OnovaApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("FacebookLogin")]
-        public async Task<IActionResult> FacebookLogin([FromQuery] string access_token)
+        [HttpPost("FacebookLogin")]
+        public async Task<IActionResult> FacebookLogin([FromBody] FacebookUserData userData)
         {
             var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
 
-            var appAccessTokenResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/oauth/access_token?client_id={_configuration.GetSection("ExternalLogin:Facebook:AppID").Value}&client_secret={_configuration.GetSection("ExternalLogin:Facebook:AppSecret")}&grant_type=client_credentials");
-            var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
-
-            var userAccessTokenValidationResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/debug_token?input_token={access_token}&access_token={appAccessToken.AccessToken}");
-            var userAccessTokenValidation =
-                JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
-
-            if (!userAccessTokenValidation.Data.IsValid)
+            var appUser = new ApplicationUser()
             {
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Invalid facebook token.", ModelState));
-            }
+                FullName = userData.Name,
+                Email = userData.Email,
+                UserName = userData.Email,
+                Gender = userData.Gender.ToLower() == "male",
+            };
 
-            // 3. we've got a valid token so we can request user data from fb
-            var userInfoResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={access_token}");
-            var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
+            //Process in mvc controller, if login facebook success then return user info in json with password.
 
-            // 4. ready to create the local user account (if necessary) and jwt
-            var user = await _repository.FindUserByUserName(userInfo.Email);
 
-            if (user == null)
+            var result = await _repository.CreateUser(appUser, userData.Password);
+
+            if (!result.Succeeded)
+                return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+
+            await _repository.AddCustomer(new Customer
             {
-                var appUser = new ApplicationUser()
-                {
-                    FullName = userInfo.Name,
-                    Email = userInfo.Email,
-                    UserName = userInfo.Email,
-                    Gender = userInfo.Gender.ToLower() == "male",
-                };
+                CustomerId = appUser.Id,
+                JoinDate = DateTime.Now,
+                FacebookId = userData.Id
+            });
 
-                //Process in mvc controller, if login facebook success then return user info in json with password.
-
-
-                var result = await _repository.CreateUser(appUser, string.Empty);
-
-                if (!result.Succeeded)
-                    return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
-
-                await _repository.AddCustomer(new Customer
-                {
-                    CustomerId = appUser.Id,
-                    JoinDate = DateTime.Now,
-                    FacebookId = userInfo.Id
-                });
-            }
 
             // generate the jwt for the local user...
-            var localUser = await _repository.FindUserByUserName(userInfo.Email);
+            var localUser = await _repository.FindUserByUserName(userData.Email);
 
             if (localUser == null)
             {
@@ -174,9 +158,8 @@ namespace OnovaApi.Controllers
                     BadRequest(Errors.AddErrorToModelState("login_failure", "Failed to create local user account.",
                         ModelState));
             }
-
-            var jwt = await _repository.GenerateJwtToken(localUser, key);
-            return new OkObjectResult(jwt);
+            
+            return Ok(await _repository.GenerateJwtToken(localUser, key));
         }
     }
 }

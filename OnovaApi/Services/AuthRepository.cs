@@ -30,7 +30,7 @@ namespace OnovaApi.Services
             _signInManager = signInManager;
         }
 
-        public async Task<string> GenerateJwtToken(ApplicationUser user, byte[] key)
+        public async Task<object> GenerateJwtToken(ApplicationUser user, byte[] key)
         {
             var tokenHandle = new JwtSecurityTokenHandler();
             var token = new JwtSecurityToken
@@ -41,7 +41,7 @@ namespace OnovaApi.Services
                     new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             );
 
-            return tokenHandle.WriteToken(token);
+            return new{access_token = tokenHandle.WriteToken(token)};
         }
 
         public async Task<ApplicationUser> FindUserByUserName(string username) => await _userManager.FindByNameAsync(username);

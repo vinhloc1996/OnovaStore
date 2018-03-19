@@ -19,6 +19,6 @@ namespace OnovaApi.Services
         Task<IdentityResult> UserRegister(UserForRegisterDTO dto);
         Task<IdentityResult> CreateUser(ApplicationUser user, string password);
         Task<int> AddCustomer(Customer customer);
-        Task<string> GenerateJwtToken(ApplicationUser user, byte[] key);
+        Task<object> GenerateJwtToken(ApplicationUser user, byte[] key);
     }
 }

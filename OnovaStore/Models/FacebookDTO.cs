@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace OnovaApi.DTOs
+namespace OnovaStore.Models
 {
     public class FacebookAppAccessToken
     {
