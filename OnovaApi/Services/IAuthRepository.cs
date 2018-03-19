@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using OnovaApi.DTOs;
+using OnovaApi.Models.DatabaseModels;
 using OnovaApi.Models.IdentityModels;
 
 namespace OnovaApi.Services
@@ -15,5 +17,8 @@ namespace OnovaApi.Services
         Task<ApplicationUser> FindUserByUserName(string username);
         Task<IdentityResult> AddStaff(StaffInfoDTO staff, string adminId);
         Task<IdentityResult> UserRegister(UserForRegisterDTO dto);
+        Task<IdentityResult> CreateUser(ApplicationUser user, string password);
+        Task<int> AddCustomer(Customer customer);
+        Task<string> GenerateJwtToken(ApplicationUser user, byte[] key);
     }
 }

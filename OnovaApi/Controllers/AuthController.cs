@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 using OnovaApi.DTOs;
 using OnovaApi.Helpers;
+using OnovaApi.Models.DatabaseModels;
 using OnovaApi.Models.IdentityModels;
 using OnovaApi.Services;
 
@@ -99,34 +100,9 @@ namespace OnovaApi.Controllers
 
             if (result.Succeeded)
             {
-                var tokenHandle = new JwtSecurityTokenHandler();
                 var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
 
-                var claims = await _repository.InitClaims(user);
-
-                var jwt = new JwtSecurityToken(
-                    claims: claims,
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials:
-                    new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-                );
-
-//                var claimIdentity = new ClaimsIdentity(claims);
-//                claimIdentity.AddClaims(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
-//
-//                var tokenDescriptor = new SecurityTokenDescriptor
-//                {
-//                    Subject = claimIdentity,
-//                    Expires = DateTime.Now.AddDays(1),
-//                    SigningCredentials =
-//                        new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-//                };
-//
-//                var token = tokenHandle.CreateToken(tokenDescriptor);
-
-                var tokenString = tokenHandle.WriteToken(jwt);
-
-                return Ok(new {tokenString});
+                return Ok(await _repository.GenerateJwtToken(user, key));
             }
 
             return Unauthorized();
@@ -136,6 +112,8 @@ namespace OnovaApi.Controllers
         [HttpGet("FacebookLogin")]
         public async Task<IActionResult> FacebookLogin([FromQuery] string access_token)
         {
+            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
+
             var appAccessTokenResponse =
                 await Client.GetStringAsync(
                     $"https://graph.facebook.com/oauth/access_token?client_id={_configuration.GetSection("ExternalLogin:Facebook:AppID").Value}&client_secret={_configuration.GetSection("ExternalLogin:Facebook:AppSecret")}&grant_type=client_credentials");
@@ -167,38 +145,38 @@ namespace OnovaApi.Controllers
                 {
                     FullName = userInfo.Name,
                     Email = userInfo.Email,
-                    UserName = userInfo.Email
+                    UserName = userInfo.Email,
+                    Gender = userInfo.Gender.ToLower() == "male",
                 };
 
-                //1. Make migration for generate facebookid column
-                //2. create login via facebook method in authrepository
+                //Process in mvc controller, if login facebook success then return user info in json with password.
 
-                /*
-                var result = await _userManager.CreateAsync(appUser, Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 8));
 
-                if (!result.Succeeded) return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+                var result = await _repository.CreateUser(appUser, string.Empty);
 
-                await _appDbContext.Customers.AddAsync(new Customer { IdentityId = appUser.Id, Location = "", Locale = userInfo.Locale, Gender = userInfo.Gender });
-                await _appDbContext.SaveChangesAsync();
+                if (!result.Succeeded)
+                    return new BadRequestObjectResult(Errors.AddErrorsToModelState(result, ModelState));
+
+                await _repository.AddCustomer(new Customer
+                {
+                    CustomerId = appUser.Id,
+                    JoinDate = DateTime.Now,
+                    FacebookId = userInfo.Id
+                });
             }
 
             // generate the jwt for the local user...
-            var localUser = await _userManager.FindByNameAsync(userInfo.Email);
+            var localUser = await _repository.FindUserByUserName(userInfo.Email);
 
             if (localUser == null)
             {
-                return BadRequest(Errors.AddErrorToModelState("login_failure", "Failed to create local user account.", ModelState));
+                return
+                    BadRequest(Errors.AddErrorToModelState("login_failure", "Failed to create local user account.",
+                        ModelState));
             }
 
-            var jwt = await Tokens.GenerateJwt(_jwtFactory.GenerateClaimsIdentity(localUser.UserName, localUser.Id),
-              _jwtFactory, localUser.UserName, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
-              return new OkObjectResult(jwt);
-                 
-            */
-                return Ok(); //remove after done
-
-            }
-            return Ok(); //remove after done
+            var jwt = await _repository.GenerateJwtToken(localUser, key);
+            return new OkObjectResult(jwt);
         }
     }
 }
