@@ -134,8 +134,7 @@ namespace OnovaApi.Controllers
             };
 
             //Process in mvc controller, if login facebook success then return user info in json with password.
-
-
+            
             var result = await _repository.CreateUser(appUser, userData.Password);
 
             if (!result.Succeeded)
@@ -147,17 +146,8 @@ namespace OnovaApi.Controllers
                 JoinDate = DateTime.Now,
                 FacebookId = userData.Id
             });
-
-
-            // generate the jwt for the local user...
+            
             var localUser = await _repository.FindUserByUserName(userData.Email);
-
-            if (localUser == null)
-            {
-                return
-                    BadRequest(Errors.AddErrorToModelState("login_failure", "Failed to create local user account.",
-                        ModelState));
-            }
             
             return Ok(await _repository.GenerateJwtToken(localUser, key));
         }

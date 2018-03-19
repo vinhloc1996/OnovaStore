@@ -17,6 +17,7 @@ namespace OnovaStore.Controllers
     {
         private readonly IConfiguration _configuration;
         private static readonly HttpClient Client = new HttpClient();
+
         public SimpleController(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -28,11 +29,14 @@ namespace OnovaStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginViaFacebook([FromQuery] string access_token, [FromQuery] string error, [FromQuery] string error_description)
+        public async Task<IActionResult> LoginViaFacebook([FromQuery] string access_token)
         {
+//            var access_token = HttpContext.Request.Query["access_token"];
+            var client_id = _configuration.GetSection("ExternalLogin:Facebook:AppID").Value;
+            var app_secret = _configuration.GetSection("ExternalLogin:Facebook:AppSecret").Value;
             var appAccessTokenResponse =
                 await Client.GetStringAsync(
-                    $"https://graph.facebook.com/oauth/access_token?client_id={_configuration.GetSection("ExternalLogin:Facebook:AppID").Value}&client_secret={_configuration.GetSection("ExternalLogin:Facebook:AppSecret")}&grant_type=client_credentials");
+                    $"https://graph.facebook.com/oauth/access_token?client_id={client_id}&client_secret={app_secret}&grant_type=client_credentials");
             var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
 
             var userAccessTokenValidationResponse =
@@ -51,23 +55,38 @@ namespace OnovaStore.Controllers
                     $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={access_token}");
             var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
 
-            dynamic userExisted = Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}", "get");
+            dynamic userExisted = Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
+                "get");
 
             if (!userExisted.isExisted)
             {
                 //Display the view with password input field
                 //userInfo.Password = View(...)
 
-                StringContent userFb = new StringContent(JsonConvert.SerializeObject(userInfo), Encoding.UTF8, "application/json");
+                return View(LoginFacebookCallback(userInfo));
+            }
+            return
+                View(Errors.AddErrorToModelState("login_failure", "Email is already existed in database", ModelState));
+        }
+
+        [HttpPost]
+        public IActionResult LoginFacebookCallback(FacebookUserData model)
+        {
+            if (model?.Password != null)
+            {
+                StringContent userFb = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
+                    "application/json");
 
                 dynamic result = Extensions.JsonDataFromApi($"api/auth/FacebookLogin", "post", userFb);
-            }
-            else
-            {
-                return View(Errors.AddErrorToModelState("login_failure", "Email is already existed in database", ModelState));
-            }
 
+                return View(ReturnAccessToken(result.access_token));
+            }
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult ReturnAccessToken(string token)
+        {
             return View();
         }
     }
