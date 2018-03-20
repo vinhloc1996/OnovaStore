@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
@@ -30,50 +32,53 @@ namespace OnovaStore.Controllers
             return View();
         }
 
-        [HttpGet]
-        public IActionResult LoginViaFacebook()
+        public IActionResult GetAccessToken()
         {
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> LoginViaFacebook([FromBody] dynamic data)
+        [HttpGet]
+        public async Task<IActionResult> LoginViaFacebook([FromQuery] string accessToken, [FromQuery] bool status, [FromQuery] string error, [FromQuery] string errorDescription)
         {
-//            var result = JsonConvert.DeserializeObject(data);
-//            var access_token = HttpContext.Request.Query["access_token"];
-            var client_id = _configuration.GetSection("ExternalLogin:Facebook:AppID").Value;
-            var app_secret = _configuration.GetSection("ExternalLogin:Facebook:AppSecret").Value;
-            var appAccessTokenResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/oauth/access_token?client_id={client_id}&client_secret={app_secret}&grant_type=client_credentials");
-            var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
-
-            var userAccessTokenValidationResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/debug_token?input_token={data.accessToken}&access_token={appAccessToken.AccessToken}");
-            var userAccessTokenValidation =
-                JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
-
-            if (!userAccessTokenValidation.Data.IsValid)
+            if (status)
             {
-                return View(Errors.AddErrorToModelState("login_failure", "Invalid facebook token.", ModelState));
+                var client_id = _configuration.GetSection("ExternalLogin:Facebook:AppID").Value;
+                var app_secret = _configuration.GetSection("ExternalLogin:Facebook:AppSecret").Value;
+                var appAccessTokenResponse =
+                    await Client.GetStringAsync(
+                        $"https://graph.facebook.com/oauth/access_token?client_id={client_id}&client_secret={app_secret}&grant_type=client_credentials");
+                var appAccessToken = JsonConvert.DeserializeObject<FacebookAppAccessToken>(appAccessTokenResponse);
+
+                var userAccessTokenValidationResponse =
+                    await Client.GetStringAsync(
+                        $"https://graph.facebook.com/debug_token?input_token={accessToken}&access_token={appAccessToken.AccessToken}");
+                var userAccessTokenValidation =
+                    JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
+
+                if (!userAccessTokenValidation.Data.IsValid)
+                {
+                    return View(Errors.AddErrorToModelState("login_failure", "Invalid facebook token.", ModelState));
+                }
+
+                var userInfoResponse =
+                    await Client.GetStringAsync(
+                        $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={accessToken}");
+                var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
+
+                dynamic userExisted =
+                    await Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
+                        "get");
+
+                if (userExisted.isExisted == false)
+                {
+                    TempData.Put("userInfo", userInfo);
+                    //                var a = Url.Action("LoginFacebookCallback");
+                    return RedirectToAction("LoginFacebookCallback");
+                }
             }
-
-            var userInfoResponse =
-                await Client.GetStringAsync(
-                    $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={data.accessToken}");
-            var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
-
-            dynamic userExisted = await Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
-                "get");
-
-            if (userExisted.isExisted == false)
-            {
-                TempData.Put("userInfo", userInfo);
-                return RedirectToAction("LoginFacebookCallback");
-            }
+            
             return
-                View(Errors.AddErrorToModelState("login_failure", "Email is already existed in database", ModelState));
+                View(Errors.AddErrorToModelState(error, errorDescription, ModelState));
         }
 
         [HttpGet]
@@ -84,25 +89,27 @@ namespace OnovaStore.Controllers
         }
 
         [HttpPost]
-        public IActionResult LoginFacebookConfirm(FacebookUserData model)
+        public async Task<IActionResult> LoginFacebookCallback(FacebookUserData model)
         {
             if (ModelState.IsValid)
             {
                 StringContent userFb = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
                     "application/json");
 
-                dynamic result = Extensions.JsonDataFromApi($"api/auth/FacebookLogin", "post", userFb);
+                dynamic result = await Extensions.JsonDataFromApi($"api/auth/FacebookLogin", "post", userFb);
 
-                return View(ReturnAccessToken(result.access_token));
+                TempData["access_token"] = result.access_token.ToString();
+                return RedirectToAction("ReturnAccessToken");
             }
 
-            return RedirectToAction("LoginFacebookCallback");
+            return View(model);
         }
 
-        [HttpPost]
-        public IActionResult ReturnAccessToken(string token)
+        [HttpGet]
+        public IActionResult ReturnAccessToken()
         {
-            return View();
+            var access_token = TempData["access_token"].ToString();
+            return View("ReturnAccessToken", access_token);
         }
     }
 }

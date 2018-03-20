@@ -1,0 +1,41 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>GetAccessToken</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<script type="text/javascript">
+    function getParameterByName(name, url) {
+        if (!url) url = window.location.href;
+        name = name.replace(/[\[\]]/g, "\\$&");
+        var regex = new RegExp("[?&#]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, " "));
+    }
+
+    var accessToken = getParameterByName("access_token");
+    var message = {};
+    $(document).ready(function () {
+        if (accessToken) {
+            message.status = true;
+            message.accessToken = accessToken;
+            location.replace("/simple/loginviafacebook?" + $.param(message));
+        } else {
+            message.status = false;
+            message.error = getParameterByName("error");
+            message.errorDescription = getParameterByName("error_description");
+            location.replace("/simple/loginviafacebook?" + $.param(message));
+        }
+    });
+</script>
+</body>
+</html>

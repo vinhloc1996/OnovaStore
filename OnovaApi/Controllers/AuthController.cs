@@ -131,6 +131,7 @@ namespace OnovaApi.Controllers
                 Email = userData.Email,
                 UserName = userData.Email,
                 Gender = userData.Gender.ToLower() == "male",
+                Picture = userData.Picture.Data.Url
             };
 
             //Process in mvc controller, if login facebook success then return user info in json with password.

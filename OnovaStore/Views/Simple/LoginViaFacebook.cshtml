@@ -13,40 +13,48 @@
 </head>
 <body>
 <script type="text/javascript">
-    function getParameterByName(name, url) {
-        if (!url) url = window.location.href;
-        name = name.replace(/[\[\]]/g, "\\$&");
-        var regex = new RegExp("[?&#]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
-        if (!results) return null;
-        if (!results[2]) return '';
-        return decodeURIComponent(results[2].replace(/\+/g, " "));
-    }
-
-    var accessToken = getParameterByName("access_token");
-    var message = {};
-    if (accessToken) {
-        message.status = true;
-        message.accessToken = accessToken;
-    }
-    else {
-        message.status = false;
-        message.error = getParameterByName("error");
-        message.errorDescription = getParameterByName("error_description");
-    }
-
-    $(function () {
-        $.ajax({
-            type: "POST",
-            data: JSON.stringify(message),
-            url: "/simple/loginviafacebook",
-            contentType: "application/json",
-            success: function (data) {
-                self.close();
-            }
-        });
-    });
-    
+//    function getParameterByName(name, url) {
+//        if (!url) url = window.location.href;
+//        name = name.replace(/[\[\]]/g, "\\$&");
+//        var regex = new RegExp("[?&#]" + name + "(=([^&#]*)|&|#|$)"),
+//            results = regex.exec(url);
+//        if (!results) return null;
+//        if (!results[2]) return '';
+//        return decodeURIComponent(results[2].replace(/\+/g, " "));
+//    }
+//
+//    var accessToken = getParameterByName("access_token");
+//    var message = {};
+//    if (accessToken) {
+//        message.status = true;
+//        message.accessToken = accessToken;
+//    }
+//    else {
+//        message.status = false;
+//        message.error = getParameterByName("error");
+//        message.errorDescription = getParameterByName("error_description");
+//    }
+//
+//    $(function () {
+//        $.ajax({
+//            type: "POST",
+//            data: JSON.stringify(message),
+//            url: "/simple/loginviafacebook",
+//            contentType: "application/json",
+//            success: function (result) {
+//                $.ajax({
+//                    type: "POST",
+//                    data: result.data,
+//                    url: result.url,
+//                    contentType: "application/json",
+//                    success: function() {
+//                        location.replace(result.url);
+//                    }
+//                });
+//            }
+//        });
+//    });
+//    self.close();
 </script>
 </body>
 </html>
