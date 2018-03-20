@@ -22,7 +22,9 @@ namespace OnovaStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            
+            services.AddMvc().AddSessionStateTempDataProvider();
+            services.AddSession();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -39,6 +41,7 @@ namespace OnovaStore
             }
 
             app.UseStaticFiles();
+            app.UseSession();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

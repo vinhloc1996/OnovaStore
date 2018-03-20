@@ -6,7 +6,9 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Newtonsoft.Json;
 using OnovaStore.Helpers;
 using OnovaStore.Models;
@@ -29,8 +31,15 @@ namespace OnovaStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginViaFacebook([FromQuery] string access_token)
+        public IActionResult LoginViaFacebook()
         {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> LoginViaFacebook([FromBody] dynamic data)
+        {
+//            var result = JsonConvert.DeserializeObject(data);
 //            var access_token = HttpContext.Request.Query["access_token"];
             var client_id = _configuration.GetSection("ExternalLogin:Facebook:AppID").Value;
             var app_secret = _configuration.GetSection("ExternalLogin:Facebook:AppSecret").Value;
@@ -41,7 +50,7 @@ namespace OnovaStore.Controllers
 
             var userAccessTokenValidationResponse =
                 await Client.GetStringAsync(
-                    $"https://graph.facebook.com/debug_token?input_token={access_token}&access_token={appAccessToken.AccessToken}");
+                    $"https://graph.facebook.com/debug_token?input_token={data.accessToken}&access_token={appAccessToken.AccessToken}");
             var userAccessTokenValidation =
                 JsonConvert.DeserializeObject<FacebookUserAccessTokenValidation>(userAccessTokenValidationResponse);
 
@@ -52,27 +61,32 @@ namespace OnovaStore.Controllers
 
             var userInfoResponse =
                 await Client.GetStringAsync(
-                    $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={access_token}");
+                    $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={data.accessToken}");
             var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
 
-            dynamic userExisted = Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
+            dynamic userExisted = await Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
                 "get");
 
-            if (!userExisted.isExisted)
+            if (userExisted.isExisted == false)
             {
-                //Display the view with password input field
-                //userInfo.Password = View(...)
-
-                return View(LoginFacebookCallback(userInfo));
+                TempData.Put("userInfo", userInfo);
+                return RedirectToAction("LoginFacebookCallback");
             }
             return
                 View(Errors.AddErrorToModelState("login_failure", "Email is already existed in database", ModelState));
         }
 
-        [HttpPost]
-        public IActionResult LoginFacebookCallback(FacebookUserData model)
+        [HttpGet]
+        public IActionResult LoginFacebookCallback()
         {
-            if (model?.Password != null)
+            var model = TempData.Get<FacebookUserData>("userInfo");
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult LoginFacebookConfirm(FacebookUserData model)
+        {
+            if (ModelState.IsValid)
             {
                 StringContent userFb = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
                     "application/json");
@@ -81,7 +95,8 @@ namespace OnovaStore.Controllers
 
                 return View(ReturnAccessToken(result.access_token));
             }
-            return View();
+
+            return RedirectToAction("LoginFacebookCallback");
         }
 
         [HttpPost]

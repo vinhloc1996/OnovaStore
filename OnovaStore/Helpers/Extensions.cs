@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace OnovaStore.Helpers
 {
@@ -14,7 +18,7 @@ namespace OnovaStore.Helpers
             response.Headers.Add("Access-Control-Allow-Origin", "*");
         }
 
-        public static dynamic JsonDataFromApi(string url, string method, StringContent data = null)
+        public static async Task<dynamic> JsonDataFromApi(string url, string method, StringContent data = null)
         {
             dynamic result = null;
             if (!string.IsNullOrEmpty(url))
@@ -24,19 +28,43 @@ namespace OnovaStore.Helpers
                     client.BaseAddress = new Uri("http://localhost:5000");
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage response = null;
                     switch (method)
                     {
                         case "post":
-                            result = client.PostAsync(url, data).Result;
+                            response = await client.PostAsync(url, data);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+                            }
                             break;
                         case "get":
-                            result = client.GetAsync(url).Result;
+                            response = await client.GetAsync(url);
+                            if (response.IsSuccessStatusCode)
+                            {
+                                result = JObject.Parse(response.Content.ReadAsStringAsync().Result);
+                            }
                             break;
                     }
                 }
             }
 
             return result;
+        }
+    }
+
+    public static class TempDataExtensions
+    {
+        public static void Put<T>(this ITempDataDictionary tempData, string key, T value) where T : class
+        {
+            tempData[key] = JsonConvert.SerializeObject(value);
+        }
+
+        public static T Get<T>(this ITempDataDictionary tempData, string key) where T : class
+        {
+            object o;
+            tempData.TryGetValue(key, out o);
+            return o == null ? null : JsonConvert.DeserializeObject<T>((string)o);
         }
     }
 }

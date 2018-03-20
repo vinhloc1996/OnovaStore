@@ -34,7 +34,15 @@ namespace OnovaStore.Models
     {
         public string Id { get; set; }
         public string Email { get; set; }
+        [Required]
+        [StringLength(32, MinimumLength = 6, ErrorMessage = "Password length from 6 to 32 characters.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
         public string Password { get; set; }
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
         public string PictureUrl { get; set; }

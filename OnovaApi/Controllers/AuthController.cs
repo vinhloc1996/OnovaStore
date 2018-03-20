@@ -74,7 +74,7 @@ namespace OnovaApi.Controllers
         [HttpGet("CheckUserExisted")]
         public async Task<IActionResult> CheckUserExisted([FromQuery] string username)
         {
-            var result = await _repository.FindUserByUserName(username) == null;
+            var result = await _repository.FindUserByUserName(username) != null;
 
             return Json(new {isExisted = result});
         }
