@@ -71,12 +71,23 @@ namespace OnovaApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet("CheckUserExisted")]
-        public async Task<IActionResult> CheckUserExisted([FromQuery] string username)
+        [HttpPost("CheckUserExisted")]
+        public async Task<IActionResult> CheckUserExisted([FromBody] FacebookUserData model)
         {
-            var result = await _repository.FindUserByUserName(username) != null;
+            var user = await _repository.FindUserByUserName(model.Email);
+            bool userExisted = user != null;
+            
+            if (userExisted)
+            {
+                var customer = await _repository.CurrentCustomer(user.Id);
+                
+                if (customer.FacebookId == model.Id)
+                {
+                    return Json(new { isExisted = userExisted, data = await _repository.GenerateJwtToken(user, Extensions.KeyJwt(_configuration)) });
+                }
+            }
 
-            return Json(new {isExisted = result});
+            return Json(new {isExisted = userExisted });
         }
 
         [AllowAnonymous]
@@ -111,7 +122,7 @@ namespace OnovaApi.Controllers
 
             if (result.Succeeded)
             {
-                var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
+                var key = Extensions.KeyJwt(_configuration);
 
                 return Ok(await _repository.GenerateJwtToken(user, key));
             }
@@ -123,7 +134,7 @@ namespace OnovaApi.Controllers
         [HttpPost("FacebookLogin")]
         public async Task<IActionResult> FacebookLogin([FromBody] FacebookUserData userData)
         {
-            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("Authentication:Jwt:Key").Value);
+            var key = Extensions.KeyJwt(_configuration);
 
             var appUser = new ApplicationUser()
             {
@@ -133,8 +144,6 @@ namespace OnovaApi.Controllers
                 Gender = userData.Gender.ToLower() == "male",
                 Picture = userData.Picture.Data.Url
             };
-
-            //Process in mvc controller, if login facebook success then return user info in json with password.
             
             var result = await _repository.CreateUser(appUser, userData.Password);
 

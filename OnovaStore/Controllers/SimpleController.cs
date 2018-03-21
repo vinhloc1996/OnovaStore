@@ -38,7 +38,8 @@ namespace OnovaStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> LoginViaFacebook([FromQuery] string accessToken, [FromQuery] bool status, [FromQuery] string error, [FromQuery] string errorDescription)
+        public async Task<IActionResult> LoginViaFacebook([FromQuery] string accessToken, [FromQuery] bool status,
+            [FromQuery] string error, [FromQuery] string errorDescription)
         {
             if (status)
             {
@@ -57,28 +58,31 @@ namespace OnovaStore.Controllers
 
                 if (!userAccessTokenValidation.Data.IsValid)
                 {
-                    return View(Errors.AddErrorToModelState("login_failure", "Invalid facebook token.", ModelState));
+                    return View("LoginViaFacebook", "Access token is invalid");
                 }
 
                 var userInfoResponse =
                     await Client.GetStringAsync(
                         $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={accessToken}");
+
                 var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
 
                 dynamic userExisted =
-                    await Extensions.JsonDataFromApi($"api/auth/CheckUserExisted?username={userInfo.Email}",
-                        "get");
+                    await Extensions.JsonDataFromApi($"api/auth/CheckUserExisted",
+                        "post", new StringContent(userInfoResponse, Encoding.UTF8,
+                            "application/json"));
 
                 if (userExisted.isExisted == false)
                 {
                     TempData.Put("userInfo", userInfo);
-                    //                var a = Url.Action("LoginFacebookCallback");
                     return RedirectToAction("LoginFacebookCallback");
                 }
+                TempData["access_token"] = userExisted.data.access_token.ToString();
+
+                return RedirectToAction("ReturnAccessToken");
             }
-            
-            return
-                View(Errors.AddErrorToModelState(error, errorDescription, ModelState));
+                                                                                      
+            return View("LoginViaFacebook", "Unthorization error, user cancel");
         }
 
         [HttpGet]
@@ -109,6 +113,7 @@ namespace OnovaStore.Controllers
         public IActionResult ReturnAccessToken()
         {
             var access_token = TempData["access_token"].ToString();
+
             return View("ReturnAccessToken", access_token);
         }
     }

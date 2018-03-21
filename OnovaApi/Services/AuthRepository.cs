@@ -145,5 +145,10 @@ namespace OnovaApi.Services
 
             return await _context.SaveChangesAsync();
         }
+
+        public async Task<Customer> CurrentCustomer(string userId)
+        {
+            return await _context.Customer.FindAsync(userId);
+        }
     }
 }
