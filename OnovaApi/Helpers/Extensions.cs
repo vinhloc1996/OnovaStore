@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
@@ -16,6 +17,13 @@ namespace OnovaApi.Helpers
         public static byte[] KeyJwt(IConfiguration configuration)
         {
             return Encoding.UTF8.GetBytes(configuration.GetSection("Authentication:Jwt:Key").Value);
+        }
+
+        public static Int64 ToUnixEpochDate(this DateTime dateTime)
+        {
+            var result = (Int64)Math.Round((dateTime.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+            return result;
         }
     }
 }

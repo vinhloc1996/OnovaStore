@@ -1,0 +1,25 @@
+﻿@using OnovaStore.Models.Brand
+@model List<Brand>
+@inject System.Security.Claims.IClaimPrincipalManager claimManager
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Success</title>
+</head>
+<body>
+    @{
+        foreach (var brand in Model)
+        {
+            <p>@brand.BrandId</p>
+            <p>@brand.Name</p>
+        }
+    }
+</body>
+</html>

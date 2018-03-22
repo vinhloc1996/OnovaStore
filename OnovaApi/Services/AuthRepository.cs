@@ -13,6 +13,7 @@ using OnovaApi.Models.DatabaseModels;
 using OnovaApi.Models.IdentityModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using OnovaApi.Helpers;
 
 namespace OnovaApi.Services
 {
@@ -36,15 +37,15 @@ namespace OnovaApi.Services
             var token = new JwtSecurityToken
             (
                 claims: await InitClaims(user),
-                    expires: DateTime.Now.AddDays(1),
-                    signingCredentials:
-                    new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+                signingCredentials:
+                new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             );
 
-            return new{access_token = tokenHandle.WriteToken(token)};
+            return new {access_token = tokenHandle.WriteToken(token)};
         }
 
-        public async Task<ApplicationUser> FindUserByUserName(string username) => await _userManager.FindByNameAsync(username);
+        public async Task<ApplicationUser> FindUserByUserName(string username)
+            => await _userManager.FindByNameAsync(username);
 
         public async Task<SignInResult> LoginSucceeded(UserForLoginDTO userForLoginDto)
             =>
@@ -57,9 +58,11 @@ namespace OnovaApi.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Name, user.FullName),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FullName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddDays(1).ToUnixEpochDate().ToString(), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixEpochDate().ToString(), ClaimValueTypes.Integer64)
             };
 
             foreach (var userRole in await UserRoles(user))

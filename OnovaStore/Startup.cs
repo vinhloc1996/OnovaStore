@@ -1,12 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Config;
 using System.Linq;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 
 namespace OnovaStore
 {
@@ -22,13 +30,75 @@ namespace OnovaStore
 
         public void ConfigureServices(IServiceCollection services)
         {
-            
+            var value = Configuration.GetSection("JwtTokenValidationSettings:SecretKey").Value;
+            var key = Encoding.UTF8.GetBytes(value);
+
+            // Setup REST client
+            services.Configure<RestClientSettings>(Configuration.GetSection(nameof(RestClientSettings)));
+            services.AddTransient<IRestClient, RestClientFactory>();
+
+            // setup JWT Token validation
+            services.Configure<JwtTokenValidationSettings>(Configuration.GetSection(nameof(JwtTokenValidationSettings)));
+            services.AddSingleton<IJwtTokenValidationSettings, JwtTokenValidationSettingsFactory>();
+
+            // Setup JWT Issuer Settings
+            services.Configure<JwtTokenIssuerSettings>(Configuration.GetSection(nameof(JwtTokenIssuerSettings)));
+            services.AddSingleton<IJwtTokenIssuerSettings, JwtTokenIssuerSettingsFactory>();
+
+            // Setup ClaimPrincipalManager
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IClaimPrincipalManager, ClaimPrincipalManager>();
+
+            // Setup Authentication Cookies
+            services.Configure<AuthenticationSettings>(Configuration.GetSection(nameof(AuthenticationSettings)));
+            services.AddSingleton<IAuthenticationSettings, AuthenticationSettingsFactory>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var authenticationSettings = serviceProvider.GetService<IAuthenticationSettings>();
+
+//            services.Configure<JwtBearerOptions>(options =>
+//            {
+//                options.SaveToken = true;
+//                options.TokenValidationParameters = new TokenValidationParameters
+//                {
+//                    ValidateIssuerSigningKey = true,
+//                    IssuerSigningKey = new SymmetricSecurityKey(key),
+//                    ValidateIssuer = false,
+//                    ValidateAudience = false,
+//                    ValidateLifetime = false
+//                };
+//            });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddCookie(JwtBearerDefaults.AuthenticationScheme,
+                  options =>
+                  {
+                      options.LoginPath = authenticationSettings.LoginPath;
+                      options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
+                      options.Events = new CookieAuthenticationEvents
+                      {
+                          // Check if JWT needs refreshment 
+//                          OnValidatePrincipal = RefreshTokenMonitor.ValidateAsync
+                      };
+                  }
+                );
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator"));
+                options.AddPolicy("Admin Only", policy => policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+//                options.AddPolicy("");
+            });
+
             services.AddMvc().AddSessionStateTempDataProvider();
             services.AddSession();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+            loggerFactory.AddDebug();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

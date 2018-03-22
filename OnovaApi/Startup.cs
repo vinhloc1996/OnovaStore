@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
 using System.Security.Claims;
 using System.Text;
@@ -32,8 +33,7 @@ namespace OnovaApi
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var test = Configuration.GetSection("Authentication:Jwt:Key").Value;
-            var key = Encoding.UTF8.GetBytes(test);
+            var key = Encoding.UTF8.GetBytes(Configuration.GetSection("Authentication:Jwt:Key").Value);
             services.AddCors();
             services.AddDbContext<OnovaContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
@@ -41,42 +41,41 @@ namespace OnovaApi
             services.AddScoped<IAuthRepository, AuthRepository>();
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-            {
-                options.Password.RequireLowercase = false;
-                options.Password.RequireDigit = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 6;
-                options.Lockout.MaxFailedAccessAttempts = 10;
-                options.Lockout.AllowedForNewUsers = true;
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                options.SignIn.RequireConfirmedEmail = false;
-                options.SignIn.RequireConfirmedPhoneNumber = false;
-                options.User.RequireUniqueEmail = true;
-                options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
+                {
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 6;
+                    options.Lockout.MaxFailedAccessAttempts = 10;
+                    options.Lockout.AllowedForNewUsers = true;
+                    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                    options.SignIn.RequireConfirmedEmail = false;
+                    options.SignIn.RequireConfirmedPhoneNumber = false;
+                    options.User.RequireUniqueEmail = true;
+                    options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
 
-                options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
-                options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
-                options.ClaimsIdentity.UserNameClaimType = ClaimTypes.Email;
-            })
+                    options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
+                    options.ClaimsIdentity.UserIdClaimType = JwtRegisteredClaimNames.NameId;
+                    options.ClaimsIdentity.UserNameClaimType = JwtRegisteredClaimNames.Email;
+                })
                 .AddEntityFrameworkStores<OnovaContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
-                options.SaveToken = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+            services.AddAuthentication(
+                    options => { options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; })
+                .AddJwtBearer(options =>
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateLifetime = false
-                };
-            });
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(key),
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = false
+                    };
+                });
 
 //            services.Configure<SecurityStampValidatorOptions>(
 //                options =>
@@ -93,13 +92,14 @@ namespace OnovaApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("Admin", policy =>
-                                  policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+                    policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+                options.AddPolicy("Admin Only", policy => policy.RequireRole("Administrator"));
                 options.AddPolicy("CustomerSupport", policy =>
-                                  policy.RequireClaim(ClaimTypes.Role, "CustomerSupport"));
+                    policy.RequireClaim(ClaimTypes.Role, "CustomerSupport"));
                 options.AddPolicy("ProductManager", policy =>
-                                  policy.RequireClaim(ClaimTypes.Role, "ProductManager"));
+                    policy.RequireClaim(ClaimTypes.Role, "ProductManager"));
                 options.AddPolicy("Shipper", policy =>
-                                  policy.RequireClaim(ClaimTypes.Role, "Shipper"));
+                    policy.RequireClaim(ClaimTypes.Role, "Shipper"));
             });
 
             services.AddMvc()

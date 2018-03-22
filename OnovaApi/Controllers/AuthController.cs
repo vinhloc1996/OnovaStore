@@ -28,17 +28,12 @@ namespace OnovaApi.Controllers
     [Route("api/Auth")]
     public class AuthController : Controller
     {
-//        private readonly UserManager<ApplicationUser> _userManager;
-//        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
 
         private readonly IAuthRepository _repository;
-        private static readonly HttpClient Client = new HttpClient();
 
         public AuthController(IConfiguration configuration, IAuthRepository repository)
         {
-//            _userManager = userManager;
-//            _signInManager = signInManager;
             _configuration = configuration;
             _repository = repository;
         }
@@ -47,7 +42,8 @@ namespace OnovaApi.Controllers
         [HttpGet("AccessDenied")]
         public IActionResult AccessDenied()
         {
-            return StatusCode(403, "You don't have privilege to access this page!");
+            return StatusCode(403,
+                new {message = "You don't have privilege to access this page!"});
         }
 
 
@@ -76,18 +72,24 @@ namespace OnovaApi.Controllers
         {
             var user = await _repository.FindUserByUserName(model.Email);
             bool userExisted = user != null;
-            
+
             if (userExisted)
             {
                 var customer = await _repository.CurrentCustomer(user.Id);
-                
+
                 if (customer.FacebookId == model.Id)
                 {
-                    return Json(new { isExisted = userExisted, data = await _repository.GenerateJwtToken(user, Extensions.KeyJwt(_configuration)) });
+                    return
+                        Json(
+                            new
+                            {
+                                isExisted = userExisted,
+                                data = await _repository.GenerateJwtToken(user, Extensions.KeyJwt(_configuration))
+                            });
                 }
             }
 
-            return Json(new {isExisted = userExisted });
+            return Json(new {isExisted = userExisted});
         }
 
         [AllowAnonymous]
@@ -144,7 +146,7 @@ namespace OnovaApi.Controllers
                 Gender = userData.Gender.ToLower() == "male",
                 Picture = userData.Picture.Data.Url
             };
-            
+
             var result = await _repository.CreateUser(appUser, userData.Password);
 
             if (!result.Succeeded)
@@ -156,9 +158,9 @@ namespace OnovaApi.Controllers
                 JoinDate = DateTime.Now,
                 FacebookId = userData.Id
             });
-            
+
             var localUser = await _repository.FindUserByUserName(userData.Email);
-            
+
             return Ok(await _repository.GenerateJwtToken(localUser, key));
         }
     }
