@@ -21,6 +21,7 @@ namespace System.Security.Claims
     public interface IClaimPrincipalManager
     {
         String UserName { get; }
+        String GivenName { get; }
         Boolean IsAuthenticated { get; }
 
         ClaimsPrincipal User { get; }
@@ -43,10 +44,7 @@ namespace System.Security.Claims
 
         public Boolean IsAuthenticated
         {
-            get
-            {
-                return User.Identities.Any(u => u.IsAuthenticated);
-            }
+            get { return User.Identities.Any(u => u.IsAuthenticated); }
         }
 
         //=> User.Identities.Any(u => u.IsAuthenticated);
@@ -54,7 +52,17 @@ namespace System.Security.Claims
         {
             get
             {
-                return User.Identities.FirstOrDefault(u => u.IsAuthenticated)?.FindFirst(c => c.Type == JwtRegisteredClaimNames.Sub)?.Value;
+                return User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
+            }
+        }
+
+        public String GivenName
+        {
+            get
+            {
+                return User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.GivenName)?.Value;
             }
         }
 
@@ -62,10 +70,10 @@ namespace System.Security.Claims
         public ClaimsPrincipal User => httpContext?.User;
 
         public ClaimPrincipalManager(IHttpContextAccessor httpContextAccessor,
-                                     IAuthorizationService authorizationService,
-                                     IJwtTokenValidationSettings jwtTokenValidationSettings,
-                                     IJwtTokenIssuerSettings jwtTokenIssuerSettings,
-                                     IAuthenticationSettings authenticationSettings)
+            IAuthorizationService authorizationService,
+            IJwtTokenValidationSettings jwtTokenValidationSettings,
+            IJwtTokenIssuerSettings jwtTokenIssuerSettings,
+            IAuthenticationSettings authenticationSettings)
         {
             this.httpContext = httpContextAccessor.HttpContext;
             this.authorizationService = authorizationService;
@@ -85,7 +93,7 @@ namespace System.Security.Claims
         {
             var url = new Uri(jwtTokenIssuerSettings.BaseAddress);
 
-            var result = new HttpClient() { BaseAddress = url };
+            var result = new HttpClient() {BaseAddress = url};
 
             result.DefaultRequestHeaders.Accept.Clear();
             result.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -105,11 +113,14 @@ namespace System.Security.Claims
                     Email = email,
                     Password = password
                 };
-                using (var content = new StringContent(JsonConvert.SerializeObject(resource), Encoding.UTF8, "application/json"))
+                using (var content = new StringContent(JsonConvert.SerializeObject(resource), Encoding.UTF8,
+                    "application/json"))
                 {
                     using (var response = await client.PostAsync(apiUrl, content))
                     {
-                        dynamic result = response.StatusCode == HttpStatusCode.OK ? await response.Content.ReadAsStringAsync() : String.Empty;
+                        dynamic result = response.StatusCode == HttpStatusCode.OK
+                            ? await response.Content.ReadAsStringAsync()
+                            : String.Empty;
 
                         if (!string.IsNullOrEmpty(result))
                         {
@@ -150,7 +161,7 @@ namespace System.Security.Claims
 
                 // Retrieve principal from Jwt token
                 var principal = tokenHandler.ValidateToken(jwtToken, settings, out var validatedToken);
-                
+
                 // Cast needed for accessing claims property
                 var identity = principal.Identity as ClaimsIdentity;
 
@@ -172,13 +183,17 @@ namespace System.Security.Claims
                 // ExpiresUtc is used in sliding expiration 
                 var authenticationProperties = new AuthenticationProperties()
                 {
-                    IssuedUtc = Convert.ToInt64(identity.Claims.First(c => c.Type == JwtRegisteredClaimNames.Iat)?.Value).ToUnixEpochDate(),
-                    ExpiresUtc = Convert.ToInt64(identity.Claims.First(c => c.Type == JwtRegisteredClaimNames.Exp)?.Value).ToUnixEpochDate(),
+                    IssuedUtc = Convert
+                        .ToInt64(identity.Claims.First(c => c.Type == JwtRegisteredClaimNames.Iat)?.Value)
+                        .ToUnixEpochDate(),
+                    ExpiresUtc = Convert.ToInt64(identity.Claims.First(c => c.Type == JwtRegisteredClaimNames.Exp)
+                        ?.Value).ToUnixEpochDate(),
                     IsPersistent = true
                 };
 
                 // The actual Login
-                await httpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principal, authenticationProperties);
+                await httpContext.SignInAsync(JwtBearerDefaults.AuthenticationScheme, principal,
+                    authenticationProperties);
 
                 return identity.IsAuthenticated;
             }
@@ -196,7 +211,7 @@ namespace System.Security.Claims
 
             using (var httpClient = CreateClient())
             {
-                using (var content = new FormUrlEncodedContent(new Dictionary<String, String>() { { "", jwtToken } }))
+                using (var content = new FormUrlEncodedContent(new Dictionary<String, String>() {{"", jwtToken}}))
                 {
                     using (var response = await httpClient.PostAsync(apiUrl, content))
                     {
