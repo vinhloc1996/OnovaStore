@@ -19,7 +19,7 @@
     <Folder Include="Areas\Manage\Models\" />
     <Folder Include="System\Settings\" />
     <Folder Include="System\Security\" />
-    <Folder Include="wwwroot\" />
+    <Folder Include="wwwroot\html\assets\js\components\" />
   </ItemGroup>
 
   <ItemGroup>

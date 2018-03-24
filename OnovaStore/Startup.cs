@@ -20,7 +20,6 @@ namespace OnovaStore
 {
     public class Startup
     {
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -71,16 +70,16 @@ namespace OnovaStore
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddCookie(JwtBearerDefaults.AuthenticationScheme,
-                  options =>
-                  {
-                      options.LoginPath = authenticationSettings.LoginPath;
-                      options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
-                      options.Events = new CookieAuthenticationEvents
-                      {
-                          // Check if JWT needs refreshment 
+                    options =>
+                    {
+                        options.LoginPath = authenticationSettings.LoginPath;
+                        options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
+                        options.Events = new CookieAuthenticationEvents
+                        {
+                            // Check if JWT needs refreshment 
 //                          OnValidatePrincipal = RefreshTokenMonitor.ValidateAsync
-                      };
-                  }
+                        };
+                    }
                 );
 
             services.AddAuthorization(options =>
@@ -114,6 +113,11 @@ namespace OnovaStore
             app.UseSession();
             app.UseMvc(routes =>
             {
+                routes.MapRoute(
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}"
