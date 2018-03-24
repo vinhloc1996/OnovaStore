@@ -25,12 +25,14 @@ namespace OnovaStore.Controllers
         }
 
         [AllowAnonymous]
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
         }
     
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Success()
         {
             using (var client = restClient.CreateClient(User))
