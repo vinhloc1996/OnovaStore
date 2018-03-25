@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.WindowsAzure.Storage.File;
 using Newtonsoft.Json;
 using OnovaApi.DTOs;
 using OnovaApi.Helpers;
@@ -67,8 +68,8 @@ namespace OnovaApi.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("CheckUserExisted")]
-        public async Task<IActionResult> CheckUserExisted([FromBody] FacebookUserData model)
+        [HttpPost("CheckUserExistedForFbLogin")]
+        public async Task<IActionResult> CheckUserExistedForFbLogin([FromBody] FacebookUserData model)
         {
             var user = await _repository.FindUserByUserName(model.Email);
             bool userExisted = user != null;
@@ -101,14 +102,20 @@ namespace OnovaApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _repository.UserRegister(userForRegisterDto);
+            var userExisted = await _repository.FindUserByUserName(userForRegisterDto.Email);
 
-            if (result.Succeeded)
+            if (userExisted == null)
             {
-                return StatusCode(201, "Customer has been created successfully!");
+                var results = await _repository.UserRegister(userForRegisterDto);
+                if (results.Succeeded)
+                {
+                    return Json(new { result = results.Succeeded, message = "Customer has been signed up successful" });
+                }
+
+                return Json(new { result = results.Succeeded, message = "Error while signing up customer, try again" });
             }
 
-            throw new Exception("User register failed");
+            return Json(new { result = userExisted != null, message = "User already existed in the system" });
         }
 
         [AllowAnonymous]

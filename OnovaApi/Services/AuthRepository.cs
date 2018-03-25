@@ -61,8 +61,10 @@ namespace OnovaApi.Services
                 new Claim(JwtRegisteredClaimNames.NameId, user.Id),
                 new Claim(JwtRegisteredClaimNames.GivenName, user.FullName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddDays(1).ToUnixEpochDate().ToString(), ClaimValueTypes.Integer64),
-                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixEpochDate().ToString(), ClaimValueTypes.Integer64)
+                new Claim(JwtRegisteredClaimNames.Exp, DateTime.Now.AddDays(1).ToUnixEpochDate().ToString(),
+                    ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUnixEpochDate().ToString(),
+                    ClaimValueTypes.Integer64)
             };
 
             foreach (var userRole in await UserRoles(user))
@@ -116,27 +118,24 @@ namespace OnovaApi.Services
 
         public async Task<IdentityResult> UserRegister(UserForRegisterDTO dto)
         {
-            if (await FindUserByUserName(dto.Email) == null)
+            var createNewCustomer = await CreateUser(new ApplicationUser
             {
-                var createNewCustomer = await CreateUser(new ApplicationUser
+                Email = dto.Email,
+                UserName = dto.Email,
+                FullName = dto.FullName
+            }, dto.Password);
+
+            if (createNewCustomer.Succeeded)
+            {
+                var newUser = await FindUserByUserName(dto.Email);
+
+                var result = await AddCustomer(new Customer
                 {
-                    Email = dto.Email,
-                    UserName = dto.Email,
-                    FullName = dto.FullName
-                }, dto.Password);
+                    CustomerId = newUser.Id,
+                    JoinDate = dto.JoinDate
+                });
 
-                if (createNewCustomer.Succeeded)
-                {
-                    var newUser = await FindUserByUserName(dto.Email);
-
-                    var result = await AddCustomer(new Customer
-                    {
-                        CustomerId = newUser.Id,
-                        JoinDate = dto.JoinDate
-                    });
-
-                    return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
-                }
+                return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
             }
 
             return IdentityResult.Failed();

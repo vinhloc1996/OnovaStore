@@ -34,7 +34,7 @@
             message.errorDescription = getParameterByName("error_description");
         }
 //        location.replace("/simple/loginviafacebook?" + $.param(message));
-        location.replace('@Url.Action("LoginViaFacebook", "Simple")' + '?' + $.param(message));
+        location.replace('@Url.Action("LoginViaFacebook", "Account")' + '?' + $.param(message));
 
     });
     </script>

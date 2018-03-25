@@ -1,0 +1,126 @@
+@model OnovaStore.Models.FacebookUserData
+
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Confirm Password";
+}
+
+
+@*<div class="row">*@
+@*    <div class="col-md-4">*@
+@*        <form asp-action="LoginFacebookCallback" method="post">*@
+@*            <div asp-validation-summary="ModelOnly" class="text-danger"></div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="Id" class="control-label"></label>*@
+@*                <input asp-for="Id" class="form-control" readonly/>*@
+@*                <span asp-validation-for="Id" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="Email" class="control-label"></label>*@
+@*                <input asp-for="Email" class="form-control" readonly/>*@
+@*                <span asp-validation-for="Email" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="Password" class="control-label"></label>*@
+@*                <input asp-for="Password" class="form-control"/>*@
+@*                <span asp-validation-for="Password" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="ConfirmPassword" class="control-label"></label>*@
+@*                <input asp-for="ConfirmPassword" class="form-control"/>*@
+@*                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="Name" class="control-label"></label>*@
+@*                <input asp-for="Name" class="form-control" readonly/>*@
+@*                <span asp-validation-for="Name" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <label asp-for="Gender" class="control-label"></label>*@
+@*                <input asp-for="Gender" class="form-control" readonly/>*@
+@*                <span asp-validation-for="Gender" class="text-danger"></span>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <input asp-for="@Model.Picture.Data.Url" class="control-label" hidden id="urlPicture"/>*@
+@*                <img src="" id="renderUrlPicture" class="form-control"/>*@
+@*            </div>*@
+@*            <div class="form-group">*@
+@*                <input type="submit" value="Save" class="btn btn-default"/>*@
+@*            </div>*@
+@*        </form>*@
+@*    </div>*@
+@*</div>*@
+
+<section class="container g-pt-100 g-pb-20">
+    <div class="row">
+        <div class="col-lg-6 order-lg-2 g-mb-80">
+            <div class="g-brd-around g-brd-gray-light-v3 g-bg-white rounded g-px-30 g-py-50 mb-3">
+                <header class="text-center mb-4">
+                    <h1 class="h4 g-color-black g-font-weight-400">Create password for this account</h1>
+                    <small class="form-text text-muted">Next time you can use the email and password to signin.</small>
+                </header>
+                <!-- Form -->
+                <form asp-controller="Account" asp-action="LoginFacebookCallback" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="g-py-15">
+                    <div class="g-mb-20">
+                        <input asp-for="Name" hidden readonly class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" type="text" placeholder="Full Name" />
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="Id" hidden readonly class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" type="text" placeholder="Id" />
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="Gender" hidden readonly class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" type="text" placeholder="Gender" />
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="@Model.Picture.Data.Url" hidden readonly class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" type="text" placeholder="Picture URL" />
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="Email" readonly class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" type="text" placeholder="Email" />
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="Password" required class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" placeholder="Password" />
+                        <div class="form-group has-danger mb-0">
+                            <span asp-validation-for="Password" class="form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="g-mb-20">
+                        <input asp-for="ConfirmPassword" required class="form-control g-color-black g-bg-white g-bg-white--focus g-brd-gray-light-v3 rounded g-py-15 g-px-15" placeholder="Confirm Password" />
+                        <div class="form-group has-danger mb-0">
+                            <span asp-validation-for="ConfirmPassword" class="form-control-feedback"></span>
+                        </div>
+                    </div>
+                    <div class="mb-1" style="visibility: hidden">
+                        <label class="form-check-inline u-check g-color-gray-dark-v5 g-font-size-13 g-pl-25 mb-2">
+                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
+                            <span class="d-block u-check-icon-checkbox-v6 g-absolute-centered--y g-left-0">
+                                <i class="fa" data-check-icon="&#xf00c"></i>
+                            </span>
+                            I accept the <a href="#!">Terms and Conditions</a>
+                        </label>
+                    </div>
+                    <div class="mb-3" style="visibility: hidden">
+                        <label class="form-check-inline u-check g-color-gray-dark-v5 g-font-size-13 g-pl-25 mb-2">
+                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
+                            <span class="d-block u-check-icon-checkbox-v6 g-absolute-centered--y g-left-0">
+                                <i class="fa" data-check-icon="&#xf00c"></i>
+                            </span>
+                            Subscribe to our newsletter
+                        </label>
+                    </div>
+                    <div class="mb-4">
+                        <button class="btn btn-block u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="submit">Confirm</button>
+                    </div>
+                </form>
+                <!-- End Form -->
+            </div>
+        </div>
+        <div class="col-lg-3 order-lg-1 g-mb-80"></div>
+        <div class="col-lg-3 order-lg-3 g-mb-80"></div>
+    </div>
+</section>
+
+<script type="text/javascript">
+    var url = document.getElementById("urlPicture").value;
+    var img = document.getElementById("renderUrlPicture");
+
+    img.src = url;
+</script>

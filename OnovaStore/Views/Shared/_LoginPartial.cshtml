@@ -34,7 +34,8 @@
                 </a>
             </li>
             <li>
-                <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-font-weight-400 g-py-5 g-px-20" href="#">
+                <form id="logoutForm" asp-controller="Account" asp-action="Logout" method="post" hidden></form>
+                <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-font-weight-400 g-py-5 g-px-20" href="javascript:document.getElementById('logoutForm').submit()">
                     Logout
                 </a>
             </li>
@@ -46,10 +47,10 @@
 else
 {
     <li class="list-inline-item g-mx-4">
-        <a class="g-color-text g-color-primary--hover g-font-weight-400 g-text-underline--none--hover" href="#">Register</a>
+        <a class="g-color-text g-color-primary--hover g-font-weight-400 g-text-underline--none--hover" href="@Url.Action("Register", "Account")">Register</a>
     </li>
     <li class="list-inline-item g-color-gray-light-v3 g-mx-4">|</li>
     <li class="list-inline-item g-mx-4">
-        <a class="g-color-text g-color-primary--hover g-font-weight-400 g-text-underline--none--hover" href="#">Login</a>
+        <a class="g-color-text g-color-primary--hover g-font-weight-400 g-text-underline--none--hover" href="@Url.Action("Login", "Account")">Login</a>
     </li>
 }

@@ -27,6 +27,7 @@ namespace System.Security.Claims
         ClaimsPrincipal User { get; }
 
         Task<Boolean> LoginAsync(String email, String password);
+        Task<Boolean> LoginFbAsync(String jwtToken);
         Task LogoutAsync();
         Task RenewTokenAsync(String jwtToken);
 
@@ -133,6 +134,10 @@ namespace System.Security.Claims
             }
         }
 
+        public async Task<Boolean> LoginFbAsync(String jwtToken)
+        {
+            return await Login(jwtToken);
+        }
 
         public async Task<Boolean> LoginAsync(String email, String password)
         {
