@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -32,12 +33,15 @@ namespace OnovaStore.Controllers
             return View();
         }
 
+        [HttpGet]
+        [AllowAnonymous]
         public IActionResult GetAccessToken()
         {
             return View();
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> LoginViaFacebook([FromQuery] string accessToken, [FromQuery] bool status,
             [FromQuery] string error, [FromQuery] string errorDescription)
         {
@@ -45,6 +49,7 @@ namespace OnovaStore.Controllers
             {
                 var client_id = _configuration.GetSection("ExternalLogin:Facebook:AppID").Value;
                 var app_secret = _configuration.GetSection("ExternalLogin:Facebook:AppSecret").Value;
+
                 var appAccessTokenResponse =
                     await Client.GetStringAsync(
                         $"https://graph.facebook.com/oauth/access_token?client_id={client_id}&client_secret={app_secret}&grant_type=client_credentials");
@@ -77,11 +82,12 @@ namespace OnovaStore.Controllers
                     TempData.Put("userInfo", userInfo);
                     return RedirectToAction("LoginFacebookCallback");
                 }
+
                 TempData["access_token"] = userExisted.data.access_token.ToString();
 
                 return RedirectToAction("ReturnAccessToken");
             }
-                                                                                      
+
             return View("LoginViaFacebook", "Unthorization error, user cancel");
         }
 

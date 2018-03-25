@@ -65,6 +65,10 @@ namespace OnovaStore.Controllers
         [AllowAnonymous]
         public IActionResult Register(String returnUrl = null)
         {
+            if (claimPrincipalManager.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             ViewData["ReturnUrl"] = returnUrl;
             return View();
         }

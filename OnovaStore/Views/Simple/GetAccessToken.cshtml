@@ -8,10 +8,10 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>GetAccessToken</title>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="~/html/assets/vendor/jquery/jquery-3.2.1.min.js"></script>
 </head>
 <body>
-<script type="text/javascript">
+    <script type="text/javascript">
     function getParameterByName(name, url) {
         if (!url) url = window.location.href;
         name = name.replace(/[\[\]]/g, "\\$&");
@@ -28,14 +28,15 @@
         if (accessToken) {
             message.status = true;
             message.accessToken = accessToken;
-            location.replace("/simple/loginviafacebook?" + $.param(message));
         } else {
             message.status = false;
             message.error = getParameterByName("error");
             message.errorDescription = getParameterByName("error_description");
-            location.replace("/simple/loginviafacebook?" + $.param(message));
         }
+//        location.replace("/simple/loginviafacebook?" + $.param(message));
+        location.replace('@Url.Action("LoginViaFacebook", "Simple")' + '?' + $.param(message));
+
     });
-</script>
+    </script>
 </body>
 </html>
