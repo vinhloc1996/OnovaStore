@@ -23,7 +23,7 @@ namespace OnovaApi.Services
         Task<object> GenerateJwtToken(ApplicationUser user, byte[] key);
         Task<Customer> CurrentCustomer(string userId);
         Task<string> PasswordResetToken(ApplicationUser user);
-        Task SendEmailPasswordReset(string email, string callBackUrl);
+        Task SendEmailPasswordReset(string email, string callBackUrl, string fullname);
         Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword);
     }
 }

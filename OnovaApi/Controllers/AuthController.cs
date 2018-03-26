@@ -163,7 +163,7 @@ namespace OnovaApi.Controllers
 
             if (user != null)
             {
-                await _repository.SendEmailPasswordReset(model.Email, model.CallbackUrl);
+                await _repository.SendEmailPasswordReset(model.Email, model.CallbackUrl, user.FullName);
 
                 return Json(new { result = true, message = "The reset password link was sent." });
             }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using SendGrid;
@@ -16,21 +17,33 @@ namespace OnovaApi.Services
             _configuration = configuration;
         }
 
-        public Task SendEmailAsync(string email, string subject, string message)
+        public Task SendEmailAsync(string email, string subject, string link, string fullname)
         {
             var key = _configuration.GetSection("SendGridService:Key").Value;
-            return Execute(key, subject, message, email);
+            return Execute(key, subject, link, email, fullname);
         }
 
-        public Task Execute(string apiKey, string subject, string message, string email)
+        public Task Execute(string apiKey, string subject, string link, string email, string fullname)
         {
             var client = new SendGridClient(apiKey);
+            var personalize = new Personalization();
+            personalize.Substitutions = new Dictionary<string, string>
+            {
+                {":userFullname", fullname },
+                {":resetLink", link }
+            };
+
             var msg = new SendGridMessage()
             {
                 From = new EmailAddress("support@onova.com", "Support Onova"),
                 Subject = subject,
-                PlainTextContent = message,
-                HtmlContent = message
+                TemplateId = "f5393e0a-75d7-4f1c-9a9c-8d1f36590509",
+                Personalizations = new List<Personalization> { personalize}
+//                Sections = new Dictionary<string, string>
+//                {
+//                    {":userFullname", fullname },
+//                    {":resetLink", link }
+//                }
             };
             msg.AddTo(new EmailAddress(email));
             return client.SendEmailAsync(msg);
