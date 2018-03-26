@@ -109,13 +109,13 @@ namespace OnovaApi.Controllers
                 var results = await _repository.UserRegister(userForRegisterDto);
                 if (results.Succeeded)
                 {
-                    return Json(new { result = results.Succeeded, message = "Customer has been signed up successful" });
+                    return Json(new {result = results.Succeeded, message = "Customer has been signed up successful"});
                 }
 
-                return Json(new { result = results.Succeeded, message = "Error while signing up customer, try again" });
+                return Json(new {result = results.Succeeded, message = "Error while signing up customer, try again"});
             }
 
-            return Json(new { result = userExisted != null, message = "User already existed in the system" });
+            return Json(new {result = userExisted != null, message = "User already existed in the system"});
         }
 
         [AllowAnonymous]
@@ -137,6 +137,58 @@ namespace OnovaApi.Controllers
             }
 
             return Unauthorized();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ForgotPasswordToken")]
+        public async Task<IActionResult> ForgotPasswordToken([FromBody] string email)
+        {
+            var user = await _repository.FindUserByUserName(email);
+
+            if (user == null)
+            {
+                return Json(new {result = false, message = "The user doesn't exist in system"});
+            }
+
+            var code = await _repository.PasswordResetToken(user);
+
+            return Json(new {result = true, userId = user.Id, token = code});
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword([FromBody] UserForgotPassword model)
+        {
+            var user = await _repository.FindUserByUserName(model.Email);
+
+            if (user != null)
+            {
+                await _repository.SendEmailPasswordReset(model.Email, model.CallbackUrl);
+
+                return Json(new { result = true, message = "The reset password link was sent." });
+            }
+
+            return Json(new {result = false, message = "Email doesn't exist in the system"});
+        }
+
+        [AllowAnonymous]
+        [HttpPost("ResetPassword")]
+        public async Task<IActionResult> ResetPassword([FromBody] UserResetPassword model)
+        {
+            var user = await _repository.FindUserById(model.Id);
+            var results = false;
+
+            if (user != null)
+            {
+                results = await _repository.ResetPassword(user, model.Code, model.Password) == IdentityResult.Success;
+
+                if (results)
+                {
+                    return Json(new { result = results, message = "The password has been resetted successful." });
+                }
+            }
+
+            return Json(new {result = results, message = "The password cannot reset, invalid user!"});
         }
 
         [AllowAnonymous]

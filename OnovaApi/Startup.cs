@@ -39,6 +39,7 @@ namespace OnovaApi
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddAutoMapper();
             services.AddScoped<IAuthRepository, AuthRepository>();
+//            services.Configure<SendGridService>(Configuration);
 
             services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
                 {
@@ -53,7 +54,7 @@ namespace OnovaApi
                     options.SignIn.RequireConfirmedEmail = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;
                     options.User.RequireUniqueEmail = true;
-                    options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
+//                    options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
 
                     options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
                     options.ClaimsIdentity.UserIdClaimType = JwtRegisteredClaimNames.NameId;
@@ -108,6 +109,8 @@ namespace OnovaApi
                     {
                         opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     });
+
+            services.AddSingleton<IEmailSender, EmailSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

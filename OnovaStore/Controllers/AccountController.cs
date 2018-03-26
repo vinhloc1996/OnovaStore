@@ -200,6 +200,105 @@ namespace OnovaStore.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                StringContent email = new StringContent(JsonConvert.SerializeObject(model.Email), Encoding.UTF8,
+                    "application/json");
+
+                dynamic data = await Extensions.JsonDataFromApi($"api/auth/ForgotPasswordToken", "post", email);
+
+                if (data.result == false)
+                {
+                    ModelState.AddModelError(String.Empty, data.message.ToString());
+                    return View(model);
+                }
+
+                string userId = data.userId.ToString();
+                string token = data.token.ToString();
+
+                model.CallbackUrl = Url.ResetPasswordCallbackLink(userId, token, Request.Scheme);
+
+                StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
+                    "application/json");
+                dynamic forgotPassword = await Extensions.JsonDataFromApi($"api/auth/ForgotPassword", "post", content);
+
+                if (forgotPassword.result == true)
+                {
+                    return RedirectToAction("ForgotPasswordConfirmation");
+                }
+
+                ModelState.AddModelError(String.Empty, forgotPassword.message.ToString());
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPassword([FromQuery] string code = null, [FromQuery] string userId = null)
+        {
+            if (string.IsNullOrEmpty(code) || string.IsNullOrEmpty(userId))
+            {
+                throw new ApplicationException("A code and userId must be supplied for password reset.");
+            }
+
+            var model = new ResetPasswordViewModel
+            {
+                Id = userId,
+                Code = code
+            };
+
+            return View(model);
+        }
+
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
+                    "application/json");
+                dynamic resetPassword = await Extensions.JsonDataFromApi($"api/auth/ResetPassword", "post", content);
+
+                if (resetPassword.result == true)
+                {
+                    return RedirectToAction("ResetPasswordSuccess");
+                }
+
+                ModelState.AddModelError(String.Empty, resetPassword.message.ToString());
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ResetPasswordSuccess()
+        {
+            return View();
+        }
+
         private IActionResult RedirectToLocal(String returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))

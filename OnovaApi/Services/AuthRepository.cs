@@ -22,13 +22,15 @@ namespace OnovaApi.Services
         private readonly OnovaContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailSender _emailSender;
 
         public AuthRepository(OnovaContext context, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager, IEmailSender emailSender)
         {
             _context = context;
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailSender = emailSender;
         }
 
         public async Task<object> GenerateJwtToken(ApplicationUser user, byte[] key)
@@ -43,6 +45,8 @@ namespace OnovaApi.Services
 
             return new {access_token = tokenHandle.WriteToken(token)};
         }
+
+        public async Task<ApplicationUser> FindUserById(string id) => await _userManager.FindByIdAsync(id);
 
         public async Task<ApplicationUser> FindUserByUserName(string username)
             => await _userManager.FindByNameAsync(username);
@@ -151,6 +155,21 @@ namespace OnovaApi.Services
         public async Task<Customer> CurrentCustomer(string userId)
         {
             return await _context.Customer.FindAsync(userId);
+        }
+
+        public async Task<string> PasswordResetToken (ApplicationUser user)
+        {
+            return await _userManager.GeneratePasswordResetTokenAsync(user);
+        }
+
+        public async Task SendEmailPasswordReset(string email, string callBackUrl)
+        {
+            await _emailSender.SendEmailConfirmationAsync(email, callBackUrl);
+        }
+
+        public async Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword)
+        {
+            return await _userManager.ResetPasswordAsync(user, code, newPassword);
         }
     }
 }

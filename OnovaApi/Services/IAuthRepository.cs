@@ -14,6 +14,7 @@ namespace OnovaApi.Services
         Task<SignInResult> LoginSucceeded(UserForLoginDTO userForLoginDto);
         Task<IList<string>> UserRoles(ApplicationUser user);
         Task<List<Claim>> InitClaims(ApplicationUser user);
+        Task<ApplicationUser> FindUserById(string id);
         Task<ApplicationUser> FindUserByUserName(string username);
         Task<IdentityResult> AddStaff(StaffInfoDTO staff, string adminId);
         Task<IdentityResult> UserRegister(UserForRegisterDTO dto);
@@ -21,5 +22,8 @@ namespace OnovaApi.Services
         Task<int> AddCustomer(Customer customer);
         Task<object> GenerateJwtToken(ApplicationUser user, byte[] key);
         Task<Customer> CurrentCustomer(string userId);
+        Task<string> PasswordResetToken(ApplicationUser user);
+        Task SendEmailPasswordReset(string email, string callBackUrl);
+        Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword);
     }
 }
