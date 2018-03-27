@@ -164,7 +164,7 @@ namespace OnovaApi.Services
 
         public async Task SendEmailPasswordReset(string email, string callBackUrl, string fullname)
         {
-            await _emailSender.SendEmailConfirmationAsync(email, callBackUrl, fullname);
+            await _emailSender.SendEmailResetPasswordAsync(email, callBackUrl, fullname);
         }
 
         public async Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword)
