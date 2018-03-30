@@ -86,7 +86,6 @@ namespace OnovaStore
             {
                 options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator"));
                 options.AddPolicy("Admin Only", policy => policy.RequireClaim(ClaimTypes.Role, "Administrator"));
-//                options.AddPolicy("");
             });
 
             services.AddMvc().AddSessionStateTempDataProvider();
@@ -114,13 +113,13 @@ namespace OnovaStore
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
-                    name: "areaRoute",
-                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
                 routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
+                    name: "areaRoute",
+                    template: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
                 );
             });
         }

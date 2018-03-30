@@ -31,7 +31,8 @@ namespace OnovaStore.Controllers
             return View();
         }
     
-        [Authorize]
+        //test role function
+        [Authorize(Roles = "Administrator, CustomerSupport")]
         [HttpGet]
         public async Task<IActionResult> Success()
         {
