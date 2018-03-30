@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -86,6 +87,7 @@ namespace OnovaStore
             {
                 options.AddPolicy("Administrator", policy => policy.RequireRole("Administrator"));
                 options.AddPolicy("Admin Only", policy => policy.RequireClaim(ClaimTypes.Role, "Administrator"));
+                options.AddPolicy("Staff Only", policy => policy.RequireRole("CustomerSupport", "Administrator", "ProductManager", "Shipper"));
             });
 
             services.AddMvc().AddSessionStateTempDataProvider();

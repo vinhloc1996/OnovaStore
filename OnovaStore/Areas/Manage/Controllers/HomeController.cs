@@ -12,7 +12,7 @@ namespace OnovaStore.Areas.Manage.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HomeController : Controller
     {
-        [Authorize()]
+        [Authorize(Policy = "Staff Only")]
         [HttpGet]
         public IActionResult Index()
         {
