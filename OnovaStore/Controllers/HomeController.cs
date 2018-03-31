@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -19,15 +20,24 @@ namespace OnovaStore.Controllers
     {
         private readonly IRestClient restClient;
 
-        public HomeController(IRestClient restClient)
+        private readonly IClaimPrincipalManager _claimPrincipalManager;
+        
+        public HomeController(IRestClient restClient, IClaimPrincipalManager claimPrincipalManager)
         {
             this.restClient = restClient;
+            _claimPrincipalManager = claimPrincipalManager;
         }
 
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var meetPolicy = await _claimPrincipalManager.HasPolicy("Staff Only");
+            if (meetPolicy)
+            {
+                return RedirectToAction("Index", "Home", new { area = "Manage" });
+            }
+
             return View();
         }
     

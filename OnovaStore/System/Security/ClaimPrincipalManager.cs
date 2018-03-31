@@ -23,6 +23,7 @@ namespace System.Security.Claims
         String UserName { get; }
         String GivenName { get; }
         Boolean IsAuthenticated { get; }
+        String Role { get; }
 
         ClaimsPrincipal User { get; }
 
@@ -46,6 +47,15 @@ namespace System.Security.Claims
         public Boolean IsAuthenticated
         {
             get { return User.Identities.Any(u => u.IsAuthenticated); }
+        }
+
+        public String Role
+        {
+            get
+            {
+                return User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                    ?.FindFirst(c => c.Type == ClaimTypes.Role)?.Value;
+            }
         }
 
         //=> User.Identities.Any(u => u.IsAuthenticated);

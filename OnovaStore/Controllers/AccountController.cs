@@ -64,7 +64,10 @@ namespace OnovaStore.Controllers
             }
 
             if (await _claimPrincipalManager.LoginAsync(model.Email, model.Password))
+            {
                 return RedirectToLocal(returnUrl);
+            }
+                
 
             ModelState.AddModelError(String.Empty, "Invalid login attempt.");
             return View(model);
@@ -101,7 +104,10 @@ namespace OnovaStore.Controllers
             if (user.result == true)
             {
                 if (await _claimPrincipalManager.LoginAsync(model.Email, model.Password))
+                {
                     return RedirectToLocal(returnUrl);
+                }
+                    
             }
 
             ModelState.AddModelError(String.Empty, user.message.ToString());
