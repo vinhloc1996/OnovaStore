@@ -10,7 +10,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace OnovaStore.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Route("Manage/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class HomeController : Controller
     {
@@ -34,7 +33,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                     return RedirectToAction("Index", "Admin", new {Area = "Manage"});
 
                 case "ProductManager":
-                    return RedirectToAction("Index", "Product", new { Area = "Manage" });
+                    return RedirectToAction("Index", "Manager", new { Area = "Manage" });
 
                 case "Shipper":
                     return RedirectToAction("Index", "Shipper", new { Area = "Manage" });

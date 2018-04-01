@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace OnovaStore.Areas.Manage.Controllers
 {
     [Area("Manage")]
-    [Route("Manage/[controller]/[action]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class SupportController : Controller
     {
@@ -19,6 +18,11 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         public IActionResult ListReview()
+        {
+            return View();
+        }
+
+        public IActionResult ListQuestion()
         {
             return View();
         }
