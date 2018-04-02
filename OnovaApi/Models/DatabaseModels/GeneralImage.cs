@@ -23,6 +23,8 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [Column("ImageURL", TypeName = "text")]
         public string ImageUrl { get; set; }
+        [Required]
+        public string PublicId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime AddDate { get; set; }
         [Column("StaffID")]

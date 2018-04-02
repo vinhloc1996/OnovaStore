@@ -16,6 +16,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using OnovaStore.Helpers;
 
 namespace OnovaStore
 {
@@ -52,6 +53,8 @@ namespace OnovaStore
             // Setup Authentication Cookies
             services.Configure<AuthenticationSettings>(Configuration.GetSection(nameof(AuthenticationSettings)));
             services.AddSingleton<IAuthenticationSettings, AuthenticationSettingsFactory>();
+
+            services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
 
             var serviceProvider = services.BuildServiceProvider();
             var authenticationSettings = serviceProvider.GetService<IAuthenticationSettings>();

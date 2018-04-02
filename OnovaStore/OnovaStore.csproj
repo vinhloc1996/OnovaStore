@@ -14,14 +14,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Manage\Data\" />
-    <Folder Include="Areas\Manage\Models\" />
     <Folder Include="System\Settings\" />
     <Folder Include="System\Security\" />
     <Folder Include="wwwroot\html\assets\js\components\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.1" PrivateAssets="All" />
   </ItemGroup>

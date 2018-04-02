@@ -10,6 +10,7 @@ namespace OnovaStore.Areas.Manage.Controllers
 {
     [Area("Manage")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Roles = "CustomerSupport")]
     public class SupportController : Controller
     {
         public IActionResult Index()
@@ -17,12 +18,12 @@ namespace OnovaStore.Areas.Manage.Controllers
             return View();
         }
 
-        public IActionResult ListReview()
+        public IActionResult Reviews()
         {
             return View();
         }
 
-        public IActionResult ListQuestion()
+        public IActionResult Questions()
         {
             return View();
         }

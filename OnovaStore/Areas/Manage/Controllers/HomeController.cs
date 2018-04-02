@@ -11,6 +11,7 @@ namespace OnovaStore.Areas.Manage.Controllers
 {
     [Area("Manage")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(Policy = "Staff Only")]
     public class HomeController : Controller
     {
         private readonly IClaimPrincipalManager _claimPrincipalManager;
@@ -20,7 +21,6 @@ namespace OnovaStore.Areas.Manage.Controllers
             _claimPrincipalManager = claimPrincipalManager;
         }
 
-        [Authorize(Policy = "Staff Only")]
         [HttpGet]
         public IActionResult Index()
         {

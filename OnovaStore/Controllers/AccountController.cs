@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using OnovaStore.DTOs;
 using OnovaStore.Helpers;
 using OnovaStore.Models;
 using OnovaStore.Models.Account;
