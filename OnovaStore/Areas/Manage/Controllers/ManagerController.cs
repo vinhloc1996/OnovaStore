@@ -52,36 +52,38 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpPost]
-        public IActionResult UploadImage([FromForm] UploadImageViewModel model)
+        public IActionResult UploadImage(UploadImageViewModel model)
         {
             if (ModelState.IsValid)
             {
                 var staffId = _claimPrincipalManager.Id;
-                var image = model.ImageFile;
                 var uploadResult = new ImageUploadResult();
+                var length = model.Files.Count;
 
-                if (image.Length > 0)
+                if (length > 0)
                 {
-                    using (var stream = image.OpenReadStream())
+                    foreach (var file in model.Files)
                     {
-                        var uploadParams = new ImageUploadParams
+                        using (var stream = file.OpenReadStream())
                         {
-                            File = new FileDescription(model.Name, stream)
-                        };
+                            var uploadParams = new ImageUploadParams
+                            {
+                                File = new FileDescription(file.FileName, stream)
+                            };
 
-                        uploadResult = _cloudinary.Upload(uploadParams);
-                    }
+                            uploadResult = _cloudinary.Upload(uploadParams);
 
-                    if (uploadResult.StatusCode == HttpStatusCode.OK)
-                    {
-                        var photoDto = new ImageUploadDTO
-                        {
-                            AddDate = uploadResult.CreatedAt,
-                            Name = model.Name,
-                            StaffId = staffId,
-                            ImageUrl = uploadResult.Uri.ToString(),
-                            PublicId = uploadResult.PublicId
-                        };
+                            if (uploadResult.StatusCode == HttpStatusCode.OK)
+                            {
+                                var photoDto = new ImageUploadDTO
+                                {
+                                    AddDate = uploadResult.CreatedAt,
+                                    StaffId = staffId,
+                                    ImageUrl = uploadResult.Uri.ToString(),
+                                    PublicId = uploadResult.PublicId
+                                };
+                            }
+                        }
                     }
                 }
             }

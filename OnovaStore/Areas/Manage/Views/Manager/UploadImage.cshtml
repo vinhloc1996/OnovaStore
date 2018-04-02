@@ -1,7 +1,45 @@
 ﻿@model OnovaStore.Areas.Manage.Models.Image.UploadImageViewModel
 @{
-    ViewData["Title"] = "UploadImage";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Upload Image";
+    Layout = "_Layout";
 }
+<div style="text-align: center; padding-top: 50px">
+    <form method="post" enctype="multipart/form-data"
+          asp-controller="Manager" asp-action="UploadImage">
+        <div class="form-group">
+            <h4 class="h6 g-font-weight-600 g-color-black g-mb-20">File input</h4>
+
+            <div class="input-group u-file-attach-v1 g-brd-gray-light-v2" style="padding-left: 25%;padding-right: 25%;">
+                <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
+
+                <div class="input-group-btn">
+                    <button class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                    <input asp-for="Files" type="file" name="files" multiple accept="image/*">
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group has-danger mb-0">
+            <span asp-validation-for="Files" class="form-control-feedback"></span>
+        </div>
+        <br />
+        <div class="form-group">
+            <button type="submit" class="btn btn-md u-btn-primary rounded-0"><i class="icon-cloud-upload"></i> Submit</button>
+        </div>
+
+    </form>
+</div>
 
 
+<script type="text/javascript">
+    document.getElementById('Files').addEventListener('change', handleFileSelect, false);
+
+    function handleFileSelect(evt) {
+        var input = document.getElementById('Files');
+        var output = document.getElementById('fileName');
+
+        for (var i = 0; i < input.files.length; ++i) {
+            output.value += input.files.item(i).name + " ";
+        }
+    }
+</script>

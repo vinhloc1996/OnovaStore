@@ -18,8 +18,6 @@ namespace OnovaApi.Models.DatabaseModels
 
         [Column("GeneralImageID")]
         public int GeneralImageId { get; set; }
-        [StringLength(200)]
-        public string Name { get; set; }
         [Required]
         [Column("ImageURL", TypeName = "text")]
         public string ImageUrl { get; set; }

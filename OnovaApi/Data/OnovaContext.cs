@@ -346,8 +346,6 @@ namespace OnovaApi.Data
 
             modelBuilder.Entity<GeneralImage>(entity =>
             {
-                entity.Property(e => e.Name).IsUnicode(false);
-
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.GeneralImage)
                     .HasForeignKey(d => d.StaffId)
