@@ -32,7 +32,7 @@ namespace OnovaApi.Models.DatabaseModels
         public string AddressLine1 { get; set; }
         [StringLength(255)]
         public string AddressLine2 { get; set; }
-        public int? BrandImage { get; set; }
+        public string BrandImage { get; set; }
         [Required]
         [StringLength(100)]
         public string City { get; set; }

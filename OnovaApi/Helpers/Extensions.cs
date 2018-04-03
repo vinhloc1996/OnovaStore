@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.Extensions.Configuration;
 
 namespace OnovaApi.Helpers

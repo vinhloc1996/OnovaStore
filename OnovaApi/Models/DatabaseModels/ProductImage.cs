@@ -10,7 +10,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Column("ProductID")]
         public int ProductId { get; set; }
         [Column("GeneralImageID")]
-        public int GeneralImageId { get; set; }
+        public string GeneralImageId { get; set; }
 
         [ForeignKey("GeneralImageId")]
         [InverseProperty("ProductImage")]

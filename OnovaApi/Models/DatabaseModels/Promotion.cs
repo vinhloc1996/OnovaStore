@@ -31,7 +31,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [StringLength(50)]
         public string PromotionCode { get; set; }
-        public int? PromotionImage { get; set; }
+        public string PromotionImage { get; set; }
         [Required]
         [StringLength(50)]
         public string TargetApply { get; set; }

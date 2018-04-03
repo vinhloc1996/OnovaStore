@@ -15,6 +15,7 @@ namespace OnovaApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Brand")]
+    [Authorize(Policy = "Staff Only")]
     public class BrandController : Controller
     {
         private readonly OnovaContext _context;
@@ -26,9 +27,6 @@ namespace OnovaApi.Controllers
 
         // GET: api/Brand
         [HttpGet]
-        //Working both Roles and Policy
-        [Authorize]
-//        [Authorize(Roles = "Administrator")]
         public IEnumerable<Brand> GetBrand()
         {
             return _context.Brand;

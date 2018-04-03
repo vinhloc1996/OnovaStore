@@ -101,6 +101,7 @@ namespace OnovaApi
                     policy.RequireClaim(ClaimTypes.Role, "ProductManager"));
                 options.AddPolicy("Shipper", policy =>
                     policy.RequireClaim(ClaimTypes.Role, "Shipper"));
+                options.AddPolicy("Staff Only", policy => policy.RequireRole("CustomerSupport", "Administrator", "ProductManager", "Shipper"));
             });
 
             services.AddMvc()

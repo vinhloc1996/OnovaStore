@@ -5,6 +5,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20180403103704_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403103704_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403103903_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403103903_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403104530_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403104530_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403110929_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403110929_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403112125_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403112125_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403125043_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403125043_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403142249_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403142249_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180403143204_ChangeGeneralImageId.cs" />
+    <Compile Remove="Migrations\20180403143204_ChangeGeneralImageId.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

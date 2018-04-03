@@ -43,7 +43,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [Column(TypeName = "text")]
         public string ProductLongDesc { get; set; }
-        public int? ProductThumbImage { get; set; }
+        public string ProductThumbImage { get; set; }
         [Required]
         [StringLength(400)]
         public string Slug { get; set; }

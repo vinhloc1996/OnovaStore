@@ -11,9 +11,10 @@ using System;
 namespace OnovaApi.Migrations
 {
     [DbContext(typeof(OnovaContext))]
-    partial class OnovaContextModelSnapshot : ModelSnapshot
+    [Migration("20180403143706_ChangeGeneralImageId")]
+    partial class ChangeGeneralImageId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,8 +221,6 @@ namespace OnovaApi.Migrations
                     b.Property<string>("AddressLine2")
                         .HasMaxLength(255);
 
-                    b.Property<string>("BrandImage");
-
                     b.Property<string>("City")
                         .IsRequired()
                         .HasMaxLength(100);
@@ -257,8 +256,6 @@ namespace OnovaApi.Migrations
 
                     b.HasKey("BrandId");
 
-                    b.HasIndex("BrandImage");
-
                     b.HasIndex("ContactEmail")
                         .IsUnique()
                         .HasName("UQ__Brand__FFA796CD1509DF89");
@@ -276,8 +273,6 @@ namespace OnovaApi.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .IsUnicode(false);
-
-                    b.Property<string>("CategoryImage");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -299,8 +294,6 @@ namespace OnovaApi.Migrations
                     b.HasIndex("CategoryCode")
                         .IsUnique()
                         .HasName("UQ__Category__371BA955A542D42E");
-
-                    b.HasIndex("CategoryImage");
 
                     b.HasIndex("ParentCategoryId");
 
@@ -794,8 +787,6 @@ namespace OnovaApi.Migrations
                     b.Property<int?>("ProductStatusId")
                         .HasColumnName("ProductStatusID");
 
-                    b.Property<string>("ProductThumbImage");
-
                     b.Property<float?>("Rating")
                         .ValueGeneratedOnAdd()
                         .HasDefaultValueSql("((0))");
@@ -829,24 +820,7 @@ namespace OnovaApi.Migrations
 
                     b.HasIndex("ProductStatusId");
 
-                    b.HasIndex("ProductThumbImage");
-
                     b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.ProductImage", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .HasColumnName("ProductID");
-
-                    b.Property<string>("GeneralImageId")
-                        .HasColumnName("GeneralImageID");
-
-                    b.HasKey("ProductId", "GeneralImageId");
-
-                    b.HasIndex("GeneralImageId");
-
-                    b.ToTable("ProductImage");
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.ProductNotification", b =>
@@ -993,8 +967,6 @@ namespace OnovaApi.Migrations
                     b.Property<string>("PromotionDescription")
                         .HasColumnType("ntext");
 
-                    b.Property<string>("PromotionImage");
-
                     b.Property<string>("PromotionName")
                         .IsRequired()
                         .HasMaxLength(255);
@@ -1015,8 +987,6 @@ namespace OnovaApi.Migrations
                     b.HasIndex("PromotionCode")
                         .IsUnique()
                         .HasName("UQ__Promotio__A617E4B6943E9D2E");
-
-                    b.HasIndex("PromotionImage");
 
                     b.ToTable("Promotion");
                 });
@@ -1537,21 +1507,8 @@ namespace OnovaApi.Migrations
                         .HasConstraintName("FK_AnonymousCustomerCartDetail_PromotionID");
                 });
 
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Brand", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.GeneralImage", "BrandImageNavigation")
-                        .WithMany("Brand")
-                        .HasForeignKey("BrandImage")
-                        .HasConstraintName("FK_Brand_GeneralImageID");
-                });
-
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Category", b =>
                 {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.GeneralImage", "CategoryImageNavigation")
-                        .WithMany("Category")
-                        .HasForeignKey("CategoryImage")
-                        .HasConstraintName("FK_Category_GeneralImageID");
-
                     b.HasOne("OnovaApi.Models.DatabaseModels.Category", "ParentCategory")
                         .WithMany("InverseParentCategory")
                         .HasForeignKey("ParentCategoryId")
@@ -1745,24 +1702,6 @@ namespace OnovaApi.Migrations
                         .WithMany("Product")
                         .HasForeignKey("ProductStatusId")
                         .HasConstraintName("FK_Product_ProductStatusID");
-
-                    b.HasOne("OnovaApi.Models.DatabaseModels.GeneralImage", "ProductThumbImageNavigation")
-                        .WithMany("Product")
-                        .HasForeignKey("ProductThumbImage")
-                        .HasConstraintName("FK_Product_ProductThumbImage");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.ProductImage", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.GeneralImage", "GeneralImage")
-                        .WithMany("ProductImage")
-                        .HasForeignKey("GeneralImageId")
-                        .HasConstraintName("FK_ProductImage_GeneralImageID");
-
-                    b.HasOne("OnovaApi.Models.DatabaseModels.Product", "Product")
-                        .WithMany("ProductImage")
-                        .HasForeignKey("ProductId")
-                        .HasConstraintName("FK_ProductImage_ProductID");
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.ProductNotification", b =>
@@ -1810,14 +1749,6 @@ namespace OnovaApi.Migrations
                         .WithMany("ProductSprcificationValue")
                         .HasForeignKey("ProductSpecificationId")
                         .HasConstraintName("FK_ProductSprcificationValue_ProductSpecificationID");
-                });
-
-            modelBuilder.Entity("OnovaApi.Models.DatabaseModels.Promotion", b =>
-                {
-                    b.HasOne("OnovaApi.Models.DatabaseModels.GeneralImage", "PromotionImageNavigation")
-                        .WithMany("Promotion")
-                        .HasForeignKey("PromotionImage")
-                        .HasConstraintName("FK_Promotion_GeneralImageID");
                 });
 
             modelBuilder.Entity("OnovaApi.Models.DatabaseModels.PromotionBrand", b =>
