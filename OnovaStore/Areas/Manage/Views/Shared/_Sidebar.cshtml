@@ -59,11 +59,25 @@
                         <span class="media-body align-self-center">Upload Image(Test)</span>
                     </a>
 
-                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "manager" && viewName == "listquestion" ? "active" : "")" href="@Url.Action("Products", "Manager", new {area = "Manage"})">
+                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "manager" && viewName == "products" ? "active" : "")" href="@Url.Action("Products", "Manager", new {area = "Manage"})">
                         <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">
                             <i class="hs-admin-package"></i>
                         </span>
                         <span class="media-body align-self-center">Products</span>
+                    </a>
+
+                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "manager" && viewName == "brands" ? "active" : "")" href="@Url.Action("Brands", "Manager", new {area = "Manage"})">
+                        <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">
+                            <i class="hs-admin-crown"></i>
+                        </span>
+                        <span class="media-body align-self-center">Brands</span>
+                    </a>
+                
+                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "manager" && viewName == "categories" ? "active" : "")" href="@Url.Action("Categories", "Manager", new {area = "Manage"})">
+                        <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">
+                            <i class="hs-admin-view-list"></i>
+                        </span>
+                        <span class="media-body align-self-center">Categories</span>
                     </a>
                 }
             </li>

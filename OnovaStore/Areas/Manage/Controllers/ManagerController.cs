@@ -121,5 +121,23 @@ namespace OnovaStore.Areas.Manage.Controllers
 
             return View(model);
         }
+
+        [HttpGet]
+        public IActionResult Products()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddProduct()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProduct(object model)
+        {
+            return View();
+        }
     }
 }
