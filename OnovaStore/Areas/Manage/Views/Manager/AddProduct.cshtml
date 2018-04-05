@@ -1,25 +1,72 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Add Product";
     Layout = "_Layout";
 }
 
 
-<select class="selectpicker" data-live-search="true">
-    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-    <option data-tokens="mustard">Burger, Shake and a Smile</option>
-    <option data-tokens="frosting">Sugar, Spice and all things nice</option>
-</select>
+@*<select class="selectpicker" data-live-search="true">*@
+@*    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>*@
+@*    <option data-tokens="mustard">Burger, Shake and a Smile</option>*@
+@*    <option data-tokens="frosting">Sugar, Spice and all things nice</option>*@
+@*</select>*@
+@**@
+@*<select class="form-control form-control-md form-control-lg rounded-0 g-mb-25 selectpicker" data-live-search="true">*@
+@*    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>*@
+@*    <option data-tokens="mustard">Burger, Shake and a Smile</option>*@
+@*    <option data-tokens="frosting">Sugar, Spice and all things nice</option>*@
+@*</select>*@
 
-<select class="form-control form-control-md form-control-lg rounded-0 g-mb-25 selectpicker" data-live-search="true">
-    <option data-tokens="ketchup mustard">Hot Dog, Fries and a Soda</option>
-    <option data-tokens="mustard">Burger, Shake and a Smile</option>
-    <option data-tokens="frosting">Sugar, Spice and all things nice</option>
-</select>
+<div class="row" style="padding-top: 50px">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <!-- Select with Search -->
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Add new product</h3>
 
-<select class="js-custom-select u-select-v1 g-brd-gray-light-v3 g-color-gray-dark-v5 rounded g-py-12" style="width: 100%; display: none;" data-placeholder="Gender" data-open-icon="fa fa-angle-down" data-close-icon="fa fa-angle-up">
-    <option></option>
-    <option value="First Option">Male</option>
-    <option value="Second Option">Female</option>
-    <option value="Third Option">Other</option>
-</select>
+            <!-- Default Select -->
+            <div class="g-mb-30">
+                <label class="g-mb-10">Category</label>
+
+                <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                    <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                        <select id="selectCategory" name="selectCategory" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Placeholder" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
+                            <option value="selectListItem1" data-tokens="1">Select List Item 1</option>
+                            <option value="selectListItem2" data-tokens="2">Select List Item 2</option>
+                            <option value="selectListItem3" data-tokens="3">Select List Item 3</option>
+                            <option value="selectListItem4" data-tokens="4">Select List Item 4</option>
+                            <option value="selectListItem1" data-tokens="1">Select List Item 5</option>
+                            <option value="selectListItem2" data-tokens="2">Select List Item 6</option>
+                            <option value="selectListItem3" data-tokens="Loc">Select List Item 7</option>
+                            <option value="selectListItem4" data-tokens="4">Select List Item 8</option>
+                            <option value="selectListItem1" data-tokens="1">Select List Item 9</option>
+                            <option value="selectListItem2" data-tokens="2">Select List Item 10</option>
+                            <option value="selectListItem3" data-tokens="3">Select List Item 11</option>
+                            <option value="selectListItem4" data-tokens="4">Select List Item 12</option>
+                            <option value="selectListItem1" data-tokens="1">Select List Item 13</option>
+                            <option value="selectListItem2" data-tokens="2">Select List Item 14</option>
+                            <option value="selectListItem3" data-tokens="3">Select List Item 15</option>
+                            <option value="selectListItem4" data-tokens="16">Select List Item 16</option>
+                        </select>
+                    </div>
+
+                    <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                        <i class="hs-admin-angle-down"></i>
+                    </div>
+                </div>
+            </div>
+            <!-- End Default Select -->
+        </div>
+        <!-- End Select with Search -->
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+@section Styles {
+    <style type="text/css">
+        ul.dropdown-menu {
+            height: 200px;
+        }
+    </style>
+}
