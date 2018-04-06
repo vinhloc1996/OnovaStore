@@ -1,0 +1,131 @@
+﻿@model OnovaStore.Areas.Manage.Models.Brand.AddBrandViewModel
+@{
+    ViewData["Title"] = "Add new brand";
+    Layout = "_Layout";
+}
+
+<div class="row" style="padding-top: 50px">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Add new brand</h3>
+            <form method="post" enctype="multipart/form-data"
+                  asp-controller="Manager" asp-action="AddBrand" asp-area="Manage">
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Brand Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Name" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Brand Name">
+                    </div>
+                    <span asp-validation-for="Name" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Contact Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="ContactName" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Name">
+                    </div>
+                    <span asp-validation-for="ContactName" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group">
+                    <label class="g-mb-10">Contact Title</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div>
+                                <label class="u-check g-pl-25">
+                                    <input Value="Mr." class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" asp-for="ContactTitle" required checked type="radio">
+                                    <div class="u-check-icon-font g-absolute-centered--y g-left-0">
+                                        <i class="fa" data-check-icon="" data-uncheck-icon=""></i>
+                                    </div>
+                                    Mr.
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div>
+                                <label class="u-check g-pl-25">
+                                    <input Value="Ms." asp-for="ContactTitle" class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="radio">
+                                    <div class="u-check-icon-font g-absolute-centered--y g-left-0">
+                                        <i class="fa" data-check-icon="" data-uncheck-icon=""></i>
+                                    </div>
+                                    Ms.
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <span asp-validation-for="ContactTitle" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Contact Email</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="ContactEmail" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Email">
+                    </div>
+                    <span asp-validation-for="ContactEmail" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Contact Phone</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="ContactPhone" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Phone">
+                    </div>
+                    <span asp-validation-for="ContactPhone" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30 ">
+                    <label class="g-mb-10">Brand Image</label>
+
+                    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
+                        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
+
+                        <div class="input-group-btn">
+                            <button class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                            <input type="file" name="files" accept="image/*">
+                        </div>
+                    </div>
+                    <span asp-validation-for="BrandImage" class="form-control-feedback"></span>
+                </div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("keyName", new {@class = "form-control-feedback" })</div>
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('Files').addEventListener('change', handleFileSelect, false);
+
+    function handleFileSelect(evt) {
+        var input = document.getElementById('Files');
+        var output = document.getElementById('fileName');
+
+        for (var i = 0; i < input.files.length; ++i) {
+            output.value += input.files.item(i).name + " ";
+        }
+    }
+</script>
+
+@section Styles {
+    <style type="text/css">
+        ul {
+            list-style-type: none;
+        }
+    </style>
+}

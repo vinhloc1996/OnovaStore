@@ -27,18 +27,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [StringLength(254)]
         public string ContactEmail { get; set; }
-        [Required]
-        [StringLength(255)]
-        public string AddressLine1 { get; set; }
-        [StringLength(255)]
-        public string AddressLine2 { get; set; }
         public string BrandImage { get; set; }
-        [Required]
-        [StringLength(100)]
-        public string City { get; set; }
-        [Required]
-        [StringLength(50)]
-        public string Zip { get; set; }
         [Required]
         [StringLength(200)]
         public string Slug { get; set; }

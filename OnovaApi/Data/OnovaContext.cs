@@ -139,8 +139,6 @@ namespace OnovaApi.Data
 
                 entity.Property(e => e.Slug).IsUnicode(false);
 
-                entity.Property(e => e.Zip).IsUnicode(false);
-
                 entity.HasOne(d => d.BrandImageNavigation)
                     .WithMany(p => p.Brand)
                     .HasForeignKey(d => d.BrandImage)

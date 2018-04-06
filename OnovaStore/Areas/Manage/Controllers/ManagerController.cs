@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using OnovaStore.Areas.Manage.Data;
+using OnovaStore.Areas.Manage.Models.Brand;
 using OnovaStore.Areas.Manage.Models.Image;
 using OnovaStore.Helpers;
 using OnovaStore.Models.Brand;
@@ -136,6 +137,67 @@ namespace OnovaStore.Areas.Manage.Controllers
 
         [HttpPost]
         public async Task<IActionResult> AddProduct(object model)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Brands()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult AddBrand()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddBrand(AddBrandViewModel model)
+        {
+//            ModelState.AddModelError("keyName", "Form is not valid");
+
+            if (ModelState.IsValid)
+            {
+                
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult Categories()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddCategory()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddCategory(object model)
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Promotions()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddPromotion()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddPromotion(object model)
         {
             return View();
         }
