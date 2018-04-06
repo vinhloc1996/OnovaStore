@@ -96,9 +96,18 @@ namespace OnovaApi.Controllers
             }
 
             _context.Brand.Add(brand);
-            await _context.SaveChangesAsync();
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                brand.Slug = "/b" + brand.BrandId + "/" + brand.Slug;
+                _context.Entry(brand).State = EntityState.Modified;
 
-            return CreatedAtAction("GetBrand", new { id = brand.BrandId }, brand);
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    return StatusCode(201);
+                }
+            }
+
+            return StatusCode(424);
         }
 
         // DELETE: api/Brand/5

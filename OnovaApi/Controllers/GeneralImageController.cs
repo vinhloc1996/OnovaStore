@@ -104,8 +104,7 @@ namespace OnovaApi.Controllers
 
             _context.GeneralImage.Add(image);
             
-
-            return await _context.SaveChangesAsync() > 0 ? StatusCode(201) : StatusCode(424);
+            return await _context.SaveChangesAsync() > 0 ? StatusCode(201, new {imageId = image.GeneralImageId}) : StatusCode(424, new { imageId = string.Empty });
         }
 
         // DELETE: api/GeneralImage/5

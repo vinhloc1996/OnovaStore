@@ -92,13 +92,13 @@
                         <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
 
                         <div class="input-group-btn">
-                            <button class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
-                            <input type="file" name="files" accept="image/*">
+                            <button id="selectImage" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                            <input type="file" asp-for="BrandImage" accept="image/*">
                         </div>
                     </div>
                     <span asp-validation-for="BrandImage" class="form-control-feedback"></span>
                 </div>
-                <div class="form-group has-danger text-center">@Html.ValidationMessage("keyName", new {@class = "form-control-feedback" })</div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("OverLength", new {@class = "form-control-feedback" })</div>
                 <div class="form-group" style="text-align: center">
                     <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
                 </div>
@@ -110,22 +110,30 @@
 </div>
 
 <script type="text/javascript">
-    document.getElementById('Files').addEventListener('change', handleFileSelect, false);
+    document.getElementById('BrandImage').addEventListener('change', handleFileSelect, false);
 
     function handleFileSelect(evt) {
-        var input = document.getElementById('Files');
+        var input = document.getElementById('BrandImage');
         var output = document.getElementById('fileName');
 
         for (var i = 0; i < input.files.length; ++i) {
             output.value += input.files.item(i).name + " ";
         }
     }
+
+    document.getElementById('fileName').addEventListener('click', function(event) {
+        document.getElementById('BrandImage').click();
+    }, false);;
 </script>
 
 @section Styles {
     <style type="text/css">
         ul {
             list-style-type: none;
+        }
+
+        #fileName {
+            cursor: pointer;
         }
     </style>
 }

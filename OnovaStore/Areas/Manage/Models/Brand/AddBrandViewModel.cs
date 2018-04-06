@@ -27,5 +27,6 @@ namespace OnovaStore.Areas.Manage.Models.Brand
         [DataType(DataType.Upload)]
         [DisplayName("Brand Image")]
         public IFormFile BrandImage { get; set; }
+        public string Slug { get; set; }
     }
 }
