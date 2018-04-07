@@ -28,9 +28,7 @@ namespace OnovaApi.Models.DatabaseModels
 
         [Column("ProductID")]
         public int ProductId { get; set; }
-        [Required]
-        [StringLength(200)]
-        public string ProductCode { get; set; }
+        public bool? IsHide { get; set; }
         [Required]
         [StringLength(255)]
         public string Name { get; set; }
@@ -51,13 +49,10 @@ namespace OnovaApi.Models.DatabaseModels
         public int? CategoryId { get; set; }
         [Column("BrandID")]
         public int? BrandId { get; set; }
-        public int TotalQuantity { get; set; }
         public int CurrentQuantity { get; set; }
         public int MaximumQuantity { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime AddDate { get; set; }
-        [Required]
-        public byte[] LastUpdateDate { get; set; }
         public float? Rating { get; set; }
         public int? WishCounting { get; set; }
         [Column("ProductStatusID")]

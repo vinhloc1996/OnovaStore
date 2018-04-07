@@ -127,10 +127,6 @@ namespace OnovaApi.Data
 
             modelBuilder.Entity<Brand>(entity =>
             {
-                entity.HasIndex(e => e.ContactEmail)
-                    .HasName("UQ__Brand__FFA796CD1509DF89")
-                    .IsUnique();
-
                 entity.Property(e => e.ContactEmail).IsUnicode(false);
 
                 entity.Property(e => e.ContactPhone).IsUnicode(false);
@@ -147,12 +143,6 @@ namespace OnovaApi.Data
 
             modelBuilder.Entity<Category>(entity =>
             {
-                entity.HasIndex(e => e.CategoryCode)
-                    .HasName("UQ__Category__371BA955A542D42E")
-                    .IsUnique();
-
-                entity.Property(e => e.CategoryCode).IsUnicode(false);
-
                 entity.Property(e => e.Slug).IsUnicode(false);
 
                 entity.Property(e => e.TotalProduct).HasDefaultValueSql("((0))");
@@ -432,14 +422,6 @@ namespace OnovaApi.Data
 
             modelBuilder.Entity<Product>(entity =>
             {
-                entity.HasIndex(e => e.ProductCode)
-                    .HasName("UQ__Product__2F4E024F48BD80E6")
-                    .IsUnique();
-
-                entity.Property(e => e.LastUpdateDate).IsRowVersion();
-
-                entity.Property(e => e.ProductCode).IsUnicode(false);
-
                 entity.Property(e => e.Rating).HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.Slug).IsUnicode(false);

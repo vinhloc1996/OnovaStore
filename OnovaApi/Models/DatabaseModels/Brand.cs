@@ -24,6 +24,7 @@ namespace OnovaApi.Models.DatabaseModels
         public string ContactTitle { get; set; }
         [StringLength(20)]
         public string ContactPhone { get; set; }
+        public bool? IsHide { get; set; }
         [Required]
         [StringLength(254)]
         public string ContactEmail { get; set; }

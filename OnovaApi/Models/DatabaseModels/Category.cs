@@ -21,11 +21,9 @@ namespace OnovaApi.Models.DatabaseModels
         public string Name { get; set; }
         [Required]
         [StringLength(200)]
-        public string CategoryCode { get; set; }
-        [Required]
-        [StringLength(200)]
         public string Slug { get; set; }
         public int TotalProduct { get; set; }
+        public bool? IsHide { get; set; }
         public string CategoryImage { get; set; }
         [Column("ParentCategoryID")]
         public int? ParentCategoryId { get; set; }

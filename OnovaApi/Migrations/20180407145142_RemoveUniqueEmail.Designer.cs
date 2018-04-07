@@ -11,9 +11,10 @@ using System;
 namespace OnovaApi.Migrations
 {
     [DbContext(typeof(OnovaContext))]
-    partial class OnovaContextModelSnapshot : ModelSnapshot
+    [Migration("20180407145142_RemoveUniqueEmail")]
+    partial class RemoveUniqueEmail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,8 +232,6 @@ namespace OnovaApi.Migrations
                         .HasMaxLength(20)
                         .IsUnicode(false);
 
-                    b.Property<bool?>("IsHide");
-
                     b.Property<string>("Name")
                         .HasMaxLength(100);
 
@@ -254,9 +253,12 @@ namespace OnovaApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnName("CategoryID");
 
-                    b.Property<string>("CategoryImage");
+                    b.Property<string>("CategoryCode")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
 
-                    b.Property<bool?>("IsHide");
+                    b.Property<string>("CategoryImage");
 
                     b.Property<string>("Name")
                         .HasMaxLength(100);
@@ -274,6 +276,10 @@ namespace OnovaApi.Migrations
                         .HasDefaultValueSql("((0))");
 
                     b.HasKey("CategoryId");
+
+                    b.HasIndex("CategoryCode")
+                        .IsUnique()
+                        .HasName("UQ__Category__371BA955A542D42E");
 
                     b.HasIndex("CategoryImage");
 
@@ -739,7 +745,10 @@ namespace OnovaApi.Migrations
 
                     b.Property<double>("DisplayPrice");
 
-                    b.Property<bool?>("IsHide");
+                    b.Property<byte[]>("LastUpdateDate")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate();
 
                     b.Property<int>("MaximumQuantity");
 
@@ -749,6 +758,11 @@ namespace OnovaApi.Migrations
 
                     b.Property<int?>("ParentProductId")
                         .HasColumnName("ParentProductID");
+
+                    b.Property<string>("ProductCode")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
 
                     b.Property<string>("ProductLongDesc")
                         .IsRequired()
@@ -774,6 +788,8 @@ namespace OnovaApi.Migrations
                         .HasMaxLength(400)
                         .IsUnicode(false);
 
+                    b.Property<int>("TotalQuantity");
+
                     b.Property<double?>("Weight");
 
                     b.Property<int?>("WishCounting")
@@ -787,6 +803,10 @@ namespace OnovaApi.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("ParentProductId");
+
+                    b.HasIndex("ProductCode")
+                        .IsUnique()
+                        .HasName("UQ__Product__2F4E024F48BD80E6");
 
                     b.HasIndex("ProductStatusId");
 

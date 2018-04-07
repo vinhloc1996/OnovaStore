@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OnovaApi.Data;
+using OnovaApi.DTOs;
 using OnovaApi.Models.DatabaseModels;
 
 namespace OnovaApi.Controllers
@@ -25,11 +27,97 @@ namespace OnovaApi.Controllers
             _context = context;
         }
 
-        // GET: api/Brand
         [HttpGet]
-        public IEnumerable<Brand> GetBrand()
+        [Route("GetBrandsForStaff")]
+        public async Task<IEnumerable<GetBrandForStaff>> GetBrandsForStaff([FromQuery] string sortOrder)
         {
-            return _context.Brand;
+            string sortQuery = "";
+            string groupByQuery = "GROUP BY b.BrandID, b.Name, b.ContactEmail, sale.TotalSale";
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
+
+            switch (sortOrder)
+            {
+                case "id_desc":
+                    sortQuery = "ORDER BY b.BrandID DESC";
+                    break;
+                case "name":
+                    sortQuery = "ORDER BY b.Name";
+                    break;
+                case "name_desc":
+                    sortQuery = "ORDER BY b.Name DESC";
+                    break;
+                case "totalproduct":
+                    sortQuery = "ORDER BY TotalProduct";
+                    groupByQuery += ", TotalProduct";
+                    break;
+                case "totalproduct_desc":
+                    sortQuery = "ORDER BY TotalProduct DESC";
+                    groupByQuery += ", TotalProduct";
+                    break;
+                case "totalsale":
+                    sortQuery = "ORDER BY sale.TotalSale";
+                    break;
+                case "totalsale_desc":
+                    sortQuery = "ORDER BY sale.TotalSale DESC";
+                    break;
+                case "rate":
+                    sortQuery = "ORDER BY Rate";
+                    groupByQuery += ", Rate";
+                    break;
+                case "rate_desc":
+                    sortQuery = "ORDER BY Rate DESC";
+                    groupByQuery += ", Rate";
+                    break;
+                default:
+                    sortQuery = "ORDER BY b.BrandID";
+                    break;
+            }
+
+            var conn = _context.Database.GetDbConnection();
+            var brands = new List<GetBrandForStaff>();
+            try
+            {
+                await conn.OpenAsync();
+                using (var command = conn.CreateCommand())
+                {
+                    string query = "SELECT b.BrandID, b.Name, b.ContactEmail, " +
+                                   "COUNT(p.ProductID) AS TotalProduct, AVG(p.Rating) AS Rate, sale.TotalSale " +
+                                   "FROM Brand b JOIN Product p ON b.BrandID = p.BrandID JOIN (" +
+                                   "SELECT b.BrandID, SUM(od.Price) AS TotalSale " +
+                                   "FROM OrderDetail od JOIN Product p ON od.ProductID = p.ProductID " +
+                                   "JOIN Brand b ON p.BrandID = b.BrandID GROUP BY b.BrandID" +
+                                   ") sale ON b.BrandID = sale.BrandID " +
+                                   groupByQuery + " " + sortQuery; 
+
+                    command.CommandText = query;
+                    DbDataReader reader = await command.ExecuteReaderAsync();
+
+                    if (reader.HasRows)
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var row = new GetBrandForStaff
+                            {
+                                BrandId = reader.GetInt32(0),
+                                BrandName = reader.GetString(1),
+                                ContactEmail = reader.GetString(2),
+                                TotalProducts = reader.GetInt32(3),
+                                Rate = Math.Round(reader.GetDouble(4), 1),
+                                TotalSales = Math.Round(reader.GetDouble(5), 3)
+                            };
+
+                            brands.Add(row);
+                        }
+                    }
+
+                }
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return brands;
         }
 
         // GET: api/Brand/5

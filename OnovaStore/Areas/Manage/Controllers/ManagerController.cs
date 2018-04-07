@@ -101,9 +101,34 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Brands()
+        public async Task<IActionResult> Brands(string sortOrder)
         {
-            return View();
+            var brands = new List<GetBrandForStaff>();
+
+            var sortQuery = new List<string>
+            {
+                "id", "id_desc", "name", "name_desc", "totalproduct", "totalproduct_desc", "totalsale", "totalsale_desc", "rate", "rate_desc"
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
+
+            if (sortQuery.Contains(sortOrder))
+            {
+                ViewData["SortOrder"] = sortOrder;
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.GetAsync("/api/brand/GetBrandsForStaff"))
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(await response.Content.ReadAsStringAsync());
+                        }
+                    }
+                }
+            }
+            
+            return View(brands);
         }
 
         [HttpGet]
@@ -160,6 +185,12 @@ namespace OnovaStore.Areas.Manage.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult EditBrand([FromRoute] int id)
+        {
+            return View();
         }
 
         [HttpGet]

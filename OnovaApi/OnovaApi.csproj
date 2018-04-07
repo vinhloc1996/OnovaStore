@@ -21,6 +21,12 @@
     <Compile Remove="Migrations\20180403142249_ChangeGeneralImageId.Designer.cs" />
     <Compile Remove="Migrations\20180403143204_ChangeGeneralImageId.cs" />
     <Compile Remove="Migrations\20180403143204_ChangeGeneralImageId.Designer.cs" />
+    <Compile Remove="Migrations\20180406155913_AddDefaultValue.cs" />
+    <Compile Remove="Migrations\20180406155913_AddDefaultValue.Designer.cs" />
+    <Compile Remove="Migrations\20180406160318_AddDefaultValue.cs" />
+    <Compile Remove="Migrations\20180406160318_AddDefaultValue.Designer.cs" />
+    <Compile Remove="Migrations\20180406160402_AddDefaultValue.cs" />
+    <Compile Remove="Migrations\20180406160402_AddDefaultValue.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
