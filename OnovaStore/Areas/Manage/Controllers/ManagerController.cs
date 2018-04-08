@@ -101,9 +101,18 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Brands(string sortOrder, string searchString)
+        public async Task<IActionResult> Brands(string sortOrder, string currentFilter, string searchString, int? page = 1)
         {
             var brands = new List<GetBrandForStaff>();
+
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                page = 1;
+            }
 
             var sortQuery = new List<string>
             {
@@ -139,11 +148,113 @@ namespace OnovaStore.Areas.Manage.Controllers
                     {
                         brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(
                             await response.Content.ReadAsStringAsync());
+
+                        //init test value
+
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 1,
+//                                BrandName = "Loc",
+//                                TotalProducts = 22,
+//                                ContactEmail = "abc@a.sa",
+//                                TotalSales = 111.2,
+//                                Rate = 4.2
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 2,
+//                                BrandName = "qwe",
+//                                TotalProducts = 11,
+//                                ContactEmail = "aaaaawww",
+//                                TotalSales = 1000,
+//                                Rate = 1.2
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 3,
+//                                BrandName = "OWKSI KANDU",
+//                                TotalProducts = 67,
+//                                ContactEmail = "A1asdas",
+//                                TotalSales = 223,
+//                                Rate = 4.9
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 24,
+//                                BrandName = "Kaiiiii",
+//                                TotalProducts = 1,
+//                                ContactEmail = "getthja",
+//                                TotalSales = 453,
+//                                Rate = 5
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 22,
+//                                BrandName = "king",
+//                                TotalProducts = 11,
+//                                ContactEmail = "qweashhhwe",
+//                                TotalSales = 222,
+//                                Rate = 4
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 52,
+//                                BrandName = "AqwWWae",
+//                                TotalProducts = 121,
+//                                ContactEmail = "ASasd",
+//                                TotalSales = 2,
+//                                Rate = 3.2
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 32,
+//                                BrandName = "tttyy",
+//                                TotalProducts = 2,
+//                                ContactEmail = "hjr",
+//                                TotalSales = 56,
+//                                Rate = 3
+//                            }
+//                        );
+//
+//                        brands.Add(
+//                            new GetBrandForStaff
+//                            {
+//                                BrandId = 928,
+//                                BrandName = "wwwww",
+//                                TotalProducts = 222,
+//                                ContactEmail = "aaaxxxccccc",
+//                                TotalSales = 11,
+//                                Rate = 2
+//                            }
+//                        );
                     }
                 }
             }
 
-            return View(brands);
+            int pageSize = 5;
+            ViewData["LengthEntry"] = brands.Count;
+            ViewData["CurrentEntry"] = pageSize * page;
+            
+            return View(PaginatedList<GetBrandForStaff>.CreateAsync(brands, page ?? 1, pageSize));
         }
 
         [HttpGet]

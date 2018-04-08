@@ -1,4 +1,4 @@
-﻿@model List<OnovaStore.Areas.Manage.Data.GetBrandForStaff>
+﻿@model OnovaStore.Helpers.PaginatedList<OnovaStore.Areas.Manage.Data.GetBrandForStaff>
 @{
     ViewData["Title"] = "List of Brand";
     Layout = "_Layout";
@@ -31,7 +31,7 @@
             <div class="d-flex g-ml-15 g-ml-55--md">
                 <div class="input-group g-pos-rel g-width-320--md">
 
-                    <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for brand name, contact email" value="@ViewData["currentFilter"]" name="SearchString">
+                    <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for brand name, contact email" value="@ViewData["CurrentFilter"]" name="SearchString">
                     <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0" type="submit">
                         <i class="hs-admin-search g-absolute-centered"></i>
                     </button>
@@ -41,134 +41,176 @@
     </div>
 </div>
 <div class="g-mb-40">
-<div class="table-responsive">
-<table class="js-datatable table u-table--v3 u-editable-table--v1 g-color-black" data-dt-info="#datatableInfo1" data-dt-search="#datatableSearch1" data-dt-entries="#datatableEntries1" data-dt-pagination="datatablePagination1" data-dt-page-length="5" data-dt-is-responsive="false"
-       data-dt-pagination-classes="list-inline text-right mb-0" data-dt-pagination-items-classes="list-inline-item g-hidden-sm-down" data-dt-pagination-links-classes="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15"
-       data-dt-pagination-next-classes="list-inline-item" data-dt-pagination-next-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-next-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-right"></i></span><span class="sr-only">Next</span>'
-       data-dt-pagination-prev-classes="list-inline-item" data-dt-pagination-prev-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-prev-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-left"></i></span><span class="sr-only">Prev</span>'>
-<thead>
-<tr>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center">Id</div>
-            <div class="d-flex align-self-center ml-auto">
-                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="id">
-                        <i class="hs-admin-angle-up"></i>
-                    </a>
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="id_desc">
-                        <i class="hs-admin-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </th>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center">Brand Name</div>
-            <div class="d-flex align-self-center ml-auto">
-                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="name">
-                        <i class="hs-admin-angle-up"></i>
-                    </a>
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="name_desc">
-                        <i class="hs-admin-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </th>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center">Contact Email</div>
-        </div>
-    </th>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center">Total Sales</div>
-            <div class="d-flex align-self-center ml-auto">
-                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalsale" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalsale">
-                        <i class="hs-admin-angle-up"></i>
-                    </a>
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalsale_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalsale_desc">
-                        <i class="hs-admin-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </th>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center">Total Products</div>
-            <div class="d-flex align-self-center ml-auto">
-                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalproduct" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalproduct">
-                        <i class="hs-admin-angle-up"></i>
-                    </a>
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalproduct_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalproduct_desc">
-                        <i class="hs-admin-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </th>
-    <th>
-        <div class="media">
-            <div class="d-flex align-self-center g-nowrap">Rates</div>
-            <div class="d-flex align-self-center ml-auto">
-                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rate" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="rate">
-                        <i class="hs-admin-angle-up"></i>
-                    </a>
-                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rate_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="rate_desc">
-                        <i class="hs-admin-angle-down"></i>
-                    </a>
-                </span>
-            </div>
-        </div>
-    </th>
-    <th></th>
-</tr>
-</thead>
-<tbody>
-@if (Model.Count > 0)
-{
-    foreach (var brand in Model)
-    {
-        <tr>
-            <td>@brand.BrandId</td>
-            <td>@brand.BrandName</td>
-            <td>@brand.ContactEmail</td>
-            <td>@brand.TotalSales</td>
-            <td>@brand.TotalProducts</td>
-            <td>@brand.Rate</td>
-            <td class="text-right">
-                <div class="g-pos-rel g-top-3 d-inline-block">
-                    <a id="dropDown1Invoker" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="dropDown1" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="#dropDown1">
-                        <i class="hs-admin-more-alt"></i>
-                    </a>
-                    <div id="dropDown1" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="dropDown1Invoker">
-                        <ul class="list-unstyled g-nowrap mb-0">
-                            <li>
-                                <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" asp-action="EditBrand" asp-route-id="@brand.BrandId">
-                                    <i class="hs-admin-pencil g-font-size-18 g-color-gray-light-v6 g-mr-10 g-mr-15--md"></i>
-                                    Edit
+    <div class="table-responsive">
+        <table class="js-datatable table u-table--v3 u-editable-table--v1 g-color-black" data-dt-info="#datatableInfo1" data-dt-search="#datatableSearch1" data-dt-entries="#datatableEntries1" data-dt-pagination="datatablePagination1" data-dt-page-length="5" data-dt-is-responsive="false"
+               data-dt-pagination-classes="list-inline text-right mb-0" data-dt-pagination-items-classes="list-inline-item g-hidden-sm-down" data-dt-pagination-links-classes="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15"
+               data-dt-pagination-next-classes="list-inline-item" data-dt-pagination-next-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-next-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-right"></i></span><span class="sr-only">Next</span>'
+               data-dt-pagination-prev-classes="list-inline-item" data-dt-pagination-prev-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-prev-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-left"></i></span><span class="sr-only">Prev</span>'>
+            <thead>
+            <tr>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center">Id</div>
+                        <div class="d-flex align-self-center ml-auto">
+                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="id" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-up"></i>
                                 </a>
-                            </li>
-                        </ul>
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="id_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-down"></i>
+                                </a>
+                            </span>
+                        </div>
                     </div>
-                </div>
-            </td>
-        </tr>
-    }
+                </th>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center">Brand Name</div>
+                        <div class="d-flex align-self-center ml-auto">
+                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="name" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-up"></i>
+                                </a>
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="name_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-down"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center">Contact Email</div>
+                    </div>
+                </th>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center">Total Sales</div>
+                        <div class="d-flex align-self-center ml-auto">
+                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalsale" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalsale" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-up"></i>
+                                </a>
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalsale_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalsale_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-down"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center">Total Products</div>
+                        <div class="d-flex align-self-center ml-auto">
+                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalproduct" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalproduct" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-up"></i>
+                                </a>
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "totalproduct_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="totalproduct_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-down"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th>
+                    <div class="media">
+                        <div class="d-flex align-self-center g-nowrap">Rates</div>
+                        <div class="d-flex align-self-center ml-auto">
+                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rate" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="rate" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-up"></i>
+                                </a>
+                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rate_desc" ? "color: #007bff !important;" : "")" asp-action="Brands" asp-route-sortOrder="rate_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                    <i class="hs-admin-angle-down"></i>
+                                </a>
+                            </span>
+                        </div>
+                    </div>
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @if (Model.Count > 0)
+            {
+                foreach (var brand in Model)
+                {
+                    <tr>
+                        <td>@brand.BrandId</td>
+                        <td>@brand.BrandName</td>
+                        <td>@brand.ContactEmail</td>
+                        <td>@brand.TotalSales</td>
+                        <td>@brand.TotalProducts</td>
+                        <td>@brand.Rate</td>
+                        <td class="text-right">
+                            <div class="g-pos-rel g-top-3 d-inline-block">
+                                <a id="dropDown1Invoker" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="dropDown1" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="#dropDown1">
+                                    <i class="hs-admin-more-alt"></i>
+                                </a>
+                                <div id="dropDown1" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="dropDown1Invoker">
+                                    <ul class="list-unstyled g-nowrap mb-0">
+                                        <li>
+                                            <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" asp-action="EditBrand" asp-route-id="@brand.BrandId">
+                                                <i class="hs-admin-pencil g-font-size-18 g-color-gray-light-v6 g-mr-10 g-mr-15--md"></i>
+                                                Edit
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    var length = (int) ViewData["LengthEntry"];
+    var currentEntry = (int) ViewData["CurrentEntry"];
 }
-</tbody>
-</table>
-</div>
-</div>
 <div class="media align-items-center g-mb-45">
-    <div id="datatableInfo1" class="media-body"></div>
-    <nav id="datatablePagination1" class="d-flex ml-auto" aria-label="Page Navigation"></nav>
+    <div class="media-body">Showing @(length < Model.PageSize ? length : currentEntry) of @length entries</div>
+    <nav id="" class="d-flex ml-auto" aria-label="Page Navigation">
+        <ul class="list-inline text-right mb-0">
+            <li class="list-inline-item">
+                <a asp-action="Brands" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex - 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @prevDisabled" aria-label="Previous">
+                    <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                        <i class="hs-admin-angle-left"></i>
+                    </span><span class="sr-only">Prev</span>
+                </a>
+            </li>
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="list-inline-item g-hidden-sm-down">
+                    <a asp-action="Brands" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15 active">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="list-inline-item">
+                <a asp-action="Brands" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex + 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @nextDisabled" aria-label="Next">
+                    <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                        <i class="hs-admin-angle-right"></i>
+                    </span><span class="sr-only">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>
 </div>
+
+@section Styles {
+    <style type="text/css">
+        a.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+}
