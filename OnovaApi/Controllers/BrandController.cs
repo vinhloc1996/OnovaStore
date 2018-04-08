@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -29,10 +30,12 @@ namespace OnovaApi.Controllers
 
         [HttpGet]
         [Route("GetBrandsForStaff")]
-        public async Task<IEnumerable<GetBrandForStaff>> GetBrandsForStaff([FromQuery] string sortOrder)
+        public async Task<IEnumerable<GetBrandForStaff>> GetBrandsForStaff([FromQuery] string sortOrder, [FromQuery] string searchString)
         {
             string sortQuery = "";
-            string groupByQuery = "GROUP BY b.BrandID, b.Name, b.ContactEmail, sale.TotalSale";
+            string groupByQuery = " GROUP BY b.BrandID, b.Name, b.ContactEmail, sale.TotalSale ";
+            string whereQuery = string.IsNullOrEmpty(searchString) ? "" : " WHERE LOWER(b.Name) LIKE @searchString";
+            
             sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
 
             switch (sortOrder)
@@ -87,9 +90,15 @@ namespace OnovaApi.Controllers
                                    "FROM OrderDetail od JOIN Product p ON od.ProductID = p.ProductID " +
                                    "JOIN Brand b ON p.BrandID = b.BrandID GROUP BY b.BrandID" +
                                    ") sale ON b.BrandID = sale.BrandID " +
-                                   groupByQuery + " " + sortQuery; 
-
+                                   whereQuery + groupByQuery + " " + sortQuery + " ";
+                    
                     command.CommandText = query;
+
+                    if (whereQuery != "")
+                    {
+                        command.Parameters.Add(new SqlParameter("@searchString", "%" + searchString.ToLower() + "%"));
+                    }
+
                     DbDataReader reader = await command.ExecuteReaderAsync();
 
                     if (reader.HasRows)

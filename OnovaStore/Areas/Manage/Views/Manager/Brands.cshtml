@@ -27,14 +27,17 @@
                 <i class="hs-admin-angle-down g-absolute-centered--y g-right-0 g-color-gray-light-v6"></i>
             </div>
         </div>
-        <div class="d-flex g-ml-15 g-ml-55--md">
-            <div class="input-group g-pos-rel g-width-320--md">
-                <input id="datatableSearch1" class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for product, category and brand name">
-                <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0" type="submit">
-                    <i class="hs-admin-search g-absolute-centered"></i>
-                </button>
+        <form asp-action="Brands" method="get">
+            <div class="d-flex g-ml-15 g-ml-55--md">
+                <div class="input-group g-pos-rel g-width-320--md">
+
+                    <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for brand name, contact email" value="@ViewData["currentFilter"]" name="SearchString">
+                    <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0" type="submit">
+                        <i class="hs-admin-search g-absolute-centered"></i>
+                    </button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <div class="g-mb-40">

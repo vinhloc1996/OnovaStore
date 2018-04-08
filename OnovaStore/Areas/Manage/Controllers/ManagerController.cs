@@ -101,33 +101,48 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Brands(string sortOrder)
+        public async Task<IActionResult> Brands(string sortOrder, string searchString)
         {
             var brands = new List<GetBrandForStaff>();
 
             var sortQuery = new List<string>
             {
-                "id", "id_desc", "name", "name_desc", "totalproduct", "totalproduct_desc", "totalsale", "totalsale_desc", "rate", "rate_desc"
+                "id",
+                "id_desc",
+                "name",
+                "name_desc",
+                "totalproduct",
+                "totalproduct_desc",
+                "totalsale",
+                "totalsale_desc",
+                "rate",
+                "rate_desc"
             };
 
-            sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "id"
+                : sortOrder.Trim().ToLower();
 
-            if (sortQuery.Contains(sortOrder))
+            var queryString = nameof(sortOrder) + "=" + sortOrder + (!string.IsNullOrEmpty(searchString)
+                                  ? "&" + nameof(searchString) + "=" + searchString
+                                  : "");
+
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["CurrentFilter"] = searchString;
+
+            using (var client = _restClient.CreateClient(User))
             {
-                ViewData["SortOrder"] = sortOrder;
-                using (var client = _restClient.CreateClient(User))
+                using (
+                    var response = await client.GetAsync("/api/brand/GetBrandsForStaff?" + queryString))
                 {
-                    using (
-                        var response = await client.GetAsync("/api/brand/GetBrandsForStaff"))
+                    if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        if (response.StatusCode == HttpStatusCode.OK)
-                        {
-                            brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(await response.Content.ReadAsStringAsync());
-                        }
+                        brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(
+                            await response.Content.ReadAsStringAsync());
                     }
                 }
             }
-            
+
             return View(brands);
         }
 
@@ -179,7 +194,6 @@ namespace OnovaStore.Areas.Manage.Controllers
                         {
                             return View("Brands");
                         }
-                        
                     }
                 }
             }
