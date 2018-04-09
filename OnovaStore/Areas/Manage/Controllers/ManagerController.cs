@@ -313,9 +313,57 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public IActionResult EditBrand([FromRoute] int id)
+        public async Task<IActionResult> EditBrand([FromRoute] int id)
         {
-            return View();
+            var brand = new Brand();
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/brand/" + id))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        brand = JsonConvert.DeserializeObject<Brand>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        return View("Brands");
+                    }
+                }
+            }
+
+            return View(brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditBrand([FromRoute] int id, Brand brand)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == brand.BrandId)
+                {
+                    using (var client = _restClient.CreateClient(User))
+                    {
+                        using (
+                            var response = await client.PutAsync("/api/brand",
+                                new StringContent(JsonConvert.SerializeObject(brand), Encoding.UTF8,
+                                    "application/json")))
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                return RedirectToAction("Brands");
+                            }
+                        }
+                    }
+                }
+
+                ModelState.AddModelError(String.Empty, "Update failed");
+            }
+
+
+            return View(brand);
         }
 
         [HttpGet]

@@ -149,19 +149,9 @@ namespace OnovaApi.Controllers
         }
 
         // PUT: api/Brand/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBrand([FromRoute] int id, [FromBody] Brand brand)
+        [HttpPut]
+        public async Task<IActionResult> PutBrand([FromBody] Brand brand)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != brand.BrandId)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(brand).State = EntityState.Modified;
 
             try
@@ -170,17 +160,10 @@ namespace OnovaApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!BrandExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Brand
@@ -192,7 +175,10 @@ namespace OnovaApi.Controllers
                 return BadRequest(ModelState);
             }
 
+            brand.IsHide = false;
+
             _context.Brand.Add(brand);
+
             if (await _context.SaveChangesAsync() > 0)
             {
                 brand.Slug = "/b" + brand.BrandId + "/" + brand.Slug;

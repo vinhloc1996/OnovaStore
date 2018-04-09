@@ -10,6 +10,51 @@ namespace OnovaApi.Data
 {
     public static class Seed
     {
+        public static async Task SeedProductStatus(OnovaContext context)
+        {
+            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "Available") == null)
+            {
+                context.ProductStatus.Add(new ProductStatus
+                {
+                    StatusCode = "Available",
+                    StatusDescription = "Product Available",
+                    StatusName = "Available"
+                });
+            }
+
+            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "SoldOut") == null)
+            {
+                context.ProductStatus.Add(new ProductStatus
+                {
+                    StatusCode = "SoldOut",
+                    StatusDescription = "Product Solde Out",
+                    StatusName = "Sold Out"
+                });
+            }
+
+            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "OpenReserve") == null)
+            {
+                context.ProductStatus.Add(new ProductStatus
+                {
+                    StatusCode = "OpenReserve",
+                    StatusDescription = "Product Open for Reserving",
+                    StatusName = "Open Reserve"
+                });
+            }
+
+            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "StopSelling") == null)
+            {
+                context.ProductStatus.Add(new ProductStatus
+                {
+                    StatusCode = "StopSelling",
+                    StatusDescription = "Product Stop Selling",
+                    StatusName = "Stop Selling"
+                });
+            }
+
+            await context.SaveChangesAsync();
+        }
+
         public static async Task SeedRoles
             (RoleManager<ApplicationRole> roleManager)
         {
@@ -125,6 +170,7 @@ namespace OnovaApi.Data
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
             await SeedStaffs(context);
+            await SeedProductStatus(context)
         }
     }
 }
