@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
-namespace OnovaStore.Models.Brand
+namespace OnovaStore.Areas.Manage.Models.Brand
 {
     public class Brand
     {

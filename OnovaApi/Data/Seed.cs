@@ -170,7 +170,7 @@ namespace OnovaApi.Data
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
             await SeedStaffs(context);
-            await SeedProductStatus(context)
+            await SeedProductStatus(context);
         }
     }
 }

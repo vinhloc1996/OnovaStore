@@ -17,9 +17,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OnovaStore.Areas.Manage.Data;
 using OnovaStore.Areas.Manage.Models.Brand;
+using OnovaStore.Areas.Manage.Models.Category;
 using OnovaStore.Areas.Manage.Models.Image;
 using OnovaStore.Helpers;
-using OnovaStore.Models.Brand;
 
 namespace OnovaStore.Areas.Manage.Controllers
 {
@@ -303,7 +303,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                     {
                         if (response.StatusCode == HttpStatusCode.Created)
                         {
-                            return View("Brands");
+                            return RedirectToAction("Brands");
                         }
                     }
                 }
@@ -367,21 +367,199 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Categories()
+        public async Task<IActionResult> Categories(string sortOrder, string currentFilter, string searchString, int? page = 1)
         {
-            return View();
+            var categories = new List<GetCategoryForStaff>();
+
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                page = 1;
+            }
+
+            var sortQuery = new List<string>
+            {
+                "id",
+                "id_desc",
+                "name",
+                "name_desc",
+                "totalproduct",
+                "totalproduct_desc"
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "id"
+                : sortOrder.Trim().ToLower();
+
+            var queryString = nameof(sortOrder) + "=" + sortOrder + (!string.IsNullOrEmpty(searchString)
+                                  ? "&" + nameof(searchString) + "=" + searchString
+                                  : "");
+
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["CurrentFilter"] = searchString;
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/GetCategoriesForStaff?" + queryString))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        categories = JsonConvert.DeserializeObject<List<GetCategoryForStaff>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            int pageSize = 5;
+            ViewData["LengthEntry"] = categories.Count;
+            ViewData["CurrentEntry"] = pageSize * page;
+
+            return View(PaginatedList<GetCategoryForStaff>.CreateAsync(categories, page ?? 1, pageSize));
         }
 
         [HttpGet]
         public async Task<IActionResult> AddCategory()
         {
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/GetCategories"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["ListCategories"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddCategory(object model)
+        public async Task<IActionResult> AddCategory(AddCategoryViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var size = model.CategoryImage.Length;
+
+                if (size > 5242880)
+                {
+                    ModelState.AddModelError("OverLength", "File Size is not greater than 5MB");
+                    return View(model);
+                }
+
+                var imageId = await UploadImages(new List<IFormFile>
+                {
+                    model.CategoryImage
+                });
+
+                //check parent categori is existed
+                if (model.ParentCategoryID != 0)
+                {
+                    using (var client = _restClient.CreateClient(User))
+                    {
+                        using (
+                            var response =
+                                await client.GetAsync("/api/category/CheckCategoryExisted?id=" +
+                                                      model.ParentCategoryID))
+                        {
+                            if (response.StatusCode == HttpStatusCode.NotFound)
+                            {
+                                ModelState.AddModelError(string.Empty, "Category Parent Id is not existed");
+                                return View(model);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    model.ParentCategoryID = null;
+                }
+                
+
+                var category = new AddCategoryDTO()
+                {
+                    CategoryImage = imageId[0],
+                    Slug = model.Name.URLFriendly(),
+                    Name = model.Name,
+                    ParentCategoryID = model.ParentCategoryID
+                };
+
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.PostAsync("/api/category",
+                            new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8,
+                                "application/json")))
+                    {
+                        if (response.StatusCode == HttpStatusCode.Created)
+                        {
+                            return RedirectToAction("Categories");
+                        }
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditCategory([FromRoute] int id)
+        {
+            var brand = new Brand();
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/brand/" + id))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        brand = JsonConvert.DeserializeObject<Brand>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        return View("Brands");
+                    }
+                }
+            }
+
+            return View(brand);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditCategory([FromRoute] int id, Category category)
+        {
+            if (ModelState.IsValid)
+            {
+                if (id == brand.BrandId)
+                {
+                    using (var client = _restClient.CreateClient(User))
+                    {
+                        using (
+                            var response = await client.PutAsync("/api/brand",
+                                new StringContent(JsonConvert.SerializeObject(brand), Encoding.UTF8,
+                                    "application/json")))
+                        {
+                            if (response.StatusCode == HttpStatusCode.OK)
+                            {
+                                return RedirectToAction("Brands");
+                            }
+                        }
+                    }
+                }
+
+                ModelState.AddModelError(String.Empty, "Update failed");
+            }
+
+
+            return View(brand);
         }
 
         [HttpGet]

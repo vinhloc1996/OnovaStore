@@ -1,0 +1,116 @@
+﻿@using OnovaStore.Areas.Manage.Data
+@model OnovaStore.Areas.Manage.Models.Category.AddCategoryViewModel
+@{
+    ViewData["Title"] = "Add new Category";
+    Layout = "_Layout";
+}
+
+<div class="row" style="padding-top: 50px">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Add new Category</h3>
+            <form method="post" enctype="multipart/form-data"
+                  asp-controller="Manager" asp-action="AddCategory" asp-area="Manage">
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Category Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Name" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Category Name">
+                    </div>
+                    <span asp-validation-for="Name" class="form-control-feedback"></span>
+                </div>
+
+@*                <div class="form-group has-danger g-mb-30">*@
+@*                    <label class="g-mb-10">Contact Phone</label>*@
+@*                    <div class="g-pos-rel">*@
+@*                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">*@
+@*                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>*@
+@*                        </span>*@
+@*                        <input asp-for="ContactPhone" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Phone">*@
+@*                    </div>*@
+@*                    <span asp-validation-for="ContactPhone" class="form-control-feedback"></span>*@
+@*                </div>*@
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Select Parent Category</label>
+
+                    <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                        <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                            <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ParentCategoryID">
+                                <option value="0" selected>None</option>
+                                @{
+                                    if (ViewData["ListCategories"] != null)
+                                    {
+                                        var list = (List<GetCategoriesDTO>)ViewData["ListCategories"];
+                                        foreach (var category in list)
+                                        {
+                                            <option value="@category.CategoryId">
+                                                @category.CategoryName
+                                            </option>
+                                        }
+                                    }
+                                    
+                                }
+                            </select>
+                        </div>
+
+                        <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                            <i class="hs-admin-angle-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-danger g-mb-30 ">
+                    <label class="g-mb-10">Category Image</label>
+
+                    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
+                        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
+
+                        <div class="input-group-btn">
+                            <button id="selectImage" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                            <input type="file" asp-for="CategoryImage" accept="image/*">
+                        </div>
+                    </div>
+                    <span asp-validation-for="CategoryImage" class="form-control-feedback"></span>
+                </div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("OverLength", new {@class = "form-control-feedback"})</div>
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
+
+<script type="text/javascript">
+    document.getElementById('CategoryImage').addEventListener('change', handleFileSelect, false);
+
+    function handleFileSelect(evt) {
+        var input = document.getElementById('CategoryImage');
+        var output = document.getElementById('fileName');
+
+        for (var i = 0; i < input.files.length; ++i) {
+            output.value += input.files.item(i).name + " ";
+        }
+    }
+
+    document.getElementById('fileName').addEventListener('click',
+        function(event) {
+            document.getElementById('CategoryImage').click();
+        },
+        false);;
+</script>
+
+@section Styles {
+    <style type="text/css">
+        ul { list-style-type: none; }
+
+        #fileName { cursor: pointer; }
+    </style>
+}
