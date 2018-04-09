@@ -41,23 +41,23 @@ namespace OnovaStore.Controllers
         }
     
         //test role function
-        [Authorize(Roles = "Administrator, CustomerSupport")]
-        [HttpGet]
-        public async Task<IActionResult> Success()
-        {
-            using (var client = restClient.CreateClient(User))
-            {
-                using (var response = await client.GetAsync("/api/brand"))
-                {
-
-                    dynamic result = response.StatusCode == HttpStatusCode.OK ? await response.Content.ReadAsStringAsync() : String.Empty;
-
-                    var list = JsonConvert.DeserializeObject<List<Brand>>(result);
-
-                    return View(list);
-                }
-            }
-            
-        }
+//        [Authorize(Roles = "Administrator, CustomerSupport")]
+//        [HttpGet]
+//        public async Task<IActionResult> Success()
+//        {
+//            using (var client = restClient.CreateClient(User))
+//            {
+//                using (var response = await client.GetAsync("/api/brand"))
+//                {
+//
+//                    dynamic result = response.StatusCode == HttpStatusCode.OK ? await response.Content.ReadAsStringAsync() : String.Empty;
+//
+//                    var list = JsonConvert.DeserializeObject<List<>>(result);
+//
+//                    return View(list);
+//                }
+//            }
+//            
+//        }
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OnovaStore.Areas.Manage.Models.Brand
 {
-    public class Brand
+    public class EditBrandViewModel
     {
         [Required]
         [HiddenInput]

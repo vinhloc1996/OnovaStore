@@ -7,14 +7,13 @@ namespace OnovaStore.Areas.Manage.Models.Category
     public class AddCategoryViewModel
     {
         [Required]
-        [DisplayName("Brand Name")]
+        [DisplayName("Category Name")]
         public string Name { get; set; }
         [DisplayName("Parent Category")]
         public int? ParentCategoryID { get; set; }
         [Required]
         [DataType(DataType.Upload)]
-        [DisplayName("Brand Image")]
+        [DisplayName("Category Image")]
         public IFormFile CategoryImage { get; set; }
-        public string Slug { get; set; }
     }
 }

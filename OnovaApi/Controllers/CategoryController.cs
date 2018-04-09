@@ -141,17 +141,12 @@ namespace OnovaApi.Controllers
         }
 
         // PUT: api/Category/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory([FromRoute] int id, [FromBody] Category category)
+        [HttpPut]
+        public async Task<IActionResult> PutCategory([FromBody] Category category)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
-            }
-
-            if (id != category.CategoryId)
-            {
-                return BadRequest();
             }
 
             _context.Entry(category).State = EntityState.Modified;
@@ -162,17 +157,10 @@ namespace OnovaApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!CategoryExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Category

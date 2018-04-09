@@ -315,7 +315,7 @@ namespace OnovaStore.Areas.Manage.Controllers
         [HttpGet]
         public async Task<IActionResult> EditBrand([FromRoute] int id)
         {
-            var brand = new Brand();
+            var brand = new EditBrandViewModel();
 
             using (var client = _restClient.CreateClient(User))
             {
@@ -324,12 +324,12 @@ namespace OnovaStore.Areas.Manage.Controllers
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        brand = JsonConvert.DeserializeObject<Brand>(
+                        brand = JsonConvert.DeserializeObject<EditBrandViewModel>(
                             await response.Content.ReadAsStringAsync());
                     }
                     else
                     {
-                        return View("Brands");
+                        return RedirectToAction("Brands");
                     }
                 }
             }
@@ -338,17 +338,17 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditBrand([FromRoute] int id, Brand brand)
+        public async Task<IActionResult> EditBrand([FromRoute] int id, EditBrandViewModel editBrandViewModel)
         {
             if (ModelState.IsValid)
             {
-                if (id == brand.BrandId)
+                if (id == editBrandViewModel.BrandId)
                 {
                     using (var client = _restClient.CreateClient(User))
                     {
                         using (
                             var response = await client.PutAsync("/api/brand",
-                                new StringContent(JsonConvert.SerializeObject(brand), Encoding.UTF8,
+                                new StringContent(JsonConvert.SerializeObject(editBrandViewModel), Encoding.UTF8,
                                     "application/json")))
                         {
                             if (response.StatusCode == HttpStatusCode.OK)
@@ -363,7 +363,7 @@ namespace OnovaStore.Areas.Manage.Controllers
             }
 
 
-            return View(brand);
+            return View(editBrandViewModel);
         }
 
         [HttpGet]
@@ -511,21 +511,42 @@ namespace OnovaStore.Areas.Manage.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCategory([FromRoute] int id)
         {
-            var brand = new Brand();
+            var brand = new EditCategoryViewModel();
 
             using (var client = _restClient.CreateClient(User))
             {
                 using (
-                    var response = await client.GetAsync("/api/brand/" + id))
+                    var response = await client.GetAsync("/api/category/GetCategories"))
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        brand = JsonConvert.DeserializeObject<Brand>(
+                        var list = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                            await response.Content.ReadAsStringAsync());
+
+                        if (list.Count > 0)
+                        {
+                            var self = list.Single(c => c.CategoryId == id);
+                            list.Remove(self);
+                        }
+
+                        ViewData["ListCategories"] = list;
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/" + id))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        brand = JsonConvert.DeserializeObject<EditCategoryViewModel>(
                             await response.Content.ReadAsStringAsync());
                     }
                     else
                     {
-                        return View("Brands");
+                        return RedirectToAction("Categories");
                     }
                 }
             }
@@ -534,22 +555,22 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditCategory([FromRoute] int id, Category category)
+        public async Task<IActionResult> EditCategory([FromRoute] int id, EditCategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                if (id == brand.BrandId)
+                if (id == category.CategoryId)
                 {
                     using (var client = _restClient.CreateClient(User))
                     {
                         using (
-                            var response = await client.PutAsync("/api/brand",
-                                new StringContent(JsonConvert.SerializeObject(brand), Encoding.UTF8,
+                            var response = await client.PutAsync("/api/category",
+                                new StringContent(JsonConvert.SerializeObject(category), Encoding.UTF8,
                                     "application/json")))
                         {
                             if (response.StatusCode == HttpStatusCode.OK)
                             {
-                                return RedirectToAction("Brands");
+                                return RedirectToAction("Categories");
                             }
                         }
                     }
@@ -559,7 +580,7 @@ namespace OnovaStore.Areas.Manage.Controllers
             }
 
 
-            return View(brand);
+            return View(category);
         }
 
         [HttpGet]

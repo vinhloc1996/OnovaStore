@@ -99,6 +99,7 @@
                 <tbody>
                 @if (Model.Count > 0)
                 {
+                    var i = 0;
                     foreach (var category in Model)
                     {
                         <tr>
@@ -107,10 +108,10 @@
                             <td>@category.TotalProduct</td>
                             <td class="text-right">
                                 <div class="g-pos-rel g-top-3 d-inline-block">
-                                    <a id="dropDown1Invoker" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="dropDown1" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="#dropDown1">
+                                    <a id="@("dropDown"+i+"Invoker")" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="@("dropDown" + @i)" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="@("#dropDown" + @i)">
                                         <i class="hs-admin-more-alt"></i>
                                     </a>
-                                    <div id="dropDown1" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="dropDown1Invoker">
+                                    <div id="@("dropDown" + @i)" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="@("dropDown"+i+"Invoker")">
                                         <ul class="list-unstyled g-nowrap mb-0">
                                             <li>
                                                 <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" asp-action="EditCategory" asp-route-id="@category.CategoryId">
@@ -123,6 +124,8 @@
                                 </div>
                             </td>
                         </tr>
+
+                        i++;
                     }
                 }
                 </tbody>
