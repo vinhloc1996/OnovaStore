@@ -129,6 +129,8 @@ namespace OnovaApi.Data
             {
                 entity.Property(e => e.ContactEmail).IsUnicode(false);
 
+                entity.Property(e => e.TotalProduct).HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.ContactPhone).IsUnicode(false);
 
                 entity.Property(e => e.ContactTitle).IsUnicode(false);

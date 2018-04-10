@@ -62,7 +62,7 @@
                     <label class="g-mb-10">Hidden</label>
                     <div class="g-pos-rel">
                         <label class="form-check-inline u-check g-mr-20 mx-0 mb-0">
-                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" name="IsHide" id="IsHide" @(Model.IsHide == true ? "checked" : "") type="checkbox" value="@Model.IsHide">
+                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" onchange="changeCheckboxValue();"  @(Model.IsHide == true ? "checked" : "") type="checkbox" id="IsHide" name="IsHide" value="@Model.IsHide">
 
                             <span class="u-check-icon-radio-v7">
                                 <i class="fa" data-check-icon=""></i>
@@ -85,3 +85,16 @@
     <div class="col-md-3">
     </div>
 </div>
+
+<script type="text/javascript">
+
+    function changeCheckboxValue() {
+        var ckb = document.getElementById("IsHide");
+
+        if (ckb.checked) {
+            ckb.value = true;
+        } else {
+            ckb.value = false;
+        }
+    }
+</script>

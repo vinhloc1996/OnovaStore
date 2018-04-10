@@ -153,7 +153,7 @@
                 @for (int i = 1; i <= Model.TotalPages; i++)
                 {
                     <li class="list-inline-item g-hidden-sm-down">
-                        <a asp-action="Categories" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15 active">
+                        <a asp-action="Categories" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15 @(i == Model.PageIndex ? "active" : "")">
                             @i
                         </a>
                     </li>

@@ -33,7 +33,6 @@ namespace OnovaApi.Controllers
         public async Task<IEnumerable<GetBrandForStaff>> GetBrandsForStaff([FromQuery] string sortOrder, [FromQuery] string searchString)
         {
             string sortQuery = "";
-            string groupByQuery = " GROUP BY b.BrandID, b.Name, b.ContactEmail, sale.TotalSale ";
             string whereQuery = string.IsNullOrEmpty(searchString) ? "" : " WHERE LOWER(b.Name) LIKE @searchString";
             
             sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
@@ -51,25 +50,9 @@ namespace OnovaApi.Controllers
                     break;
                 case "totalproduct":
                     sortQuery = "ORDER BY TotalProduct";
-                    groupByQuery += ", TotalProduct";
                     break;
                 case "totalproduct_desc":
                     sortQuery = "ORDER BY TotalProduct DESC";
-                    groupByQuery += ", TotalProduct";
-                    break;
-                case "totalsale":
-                    sortQuery = "ORDER BY sale.TotalSale";
-                    break;
-                case "totalsale_desc":
-                    sortQuery = "ORDER BY sale.TotalSale DESC";
-                    break;
-                case "rate":
-                    sortQuery = "ORDER BY Rate";
-                    groupByQuery += ", Rate";
-                    break;
-                case "rate_desc":
-                    sortQuery = "ORDER BY Rate DESC";
-                    groupByQuery += ", Rate";
                     break;
                 default:
                     sortQuery = "ORDER BY b.BrandID";
@@ -83,14 +66,9 @@ namespace OnovaApi.Controllers
                 await conn.OpenAsync();
                 using (var command = conn.CreateCommand())
                 {
-                    string query = "SELECT b.BrandID, b.Name, b.ContactEmail, " +
-                                   "COUNT(p.ProductID) AS TotalProduct, AVG(p.Rating) AS Rate, sale.TotalSale " +
-                                   "FROM Brand b JOIN Product p ON b.BrandID = p.BrandID JOIN (" +
-                                   "SELECT b.BrandID, SUM(od.Price) AS TotalSale " +
-                                   "FROM OrderDetail od JOIN Product p ON od.ProductID = p.ProductID " +
-                                   "JOIN Brand b ON p.BrandID = b.BrandID GROUP BY b.BrandID" +
-                                   ") sale ON b.BrandID = sale.BrandID " +
-                                   whereQuery + groupByQuery + " " + sortQuery + " ";
+                    string query = "SELECT b.BrandID, b.Name, b.ContactEmail, b.TotalProduct " +
+                                   "FROM Brand b " +
+                                   whereQuery + " " + sortQuery + " ";
                     
                     command.CommandText = query;
 
@@ -110,9 +88,7 @@ namespace OnovaApi.Controllers
                                 BrandId = reader.GetInt32(0),
                                 BrandName = reader.GetString(1),
                                 ContactEmail = reader.GetString(2),
-                                TotalProducts = reader.GetInt32(3),
-                                Rate = Math.Round(reader.GetDouble(4), 1),
-                                TotalSales = Math.Round(reader.GetDouble(5), 3)
+                                TotalProducts = reader.GetInt32(3)
                             };
 
                             brands.Add(row);

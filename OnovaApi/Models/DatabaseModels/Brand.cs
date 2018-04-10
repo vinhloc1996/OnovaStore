@@ -22,6 +22,7 @@ namespace OnovaApi.Models.DatabaseModels
         public string ContactName { get; set; }
         [StringLength(20)]
         public string ContactTitle { get; set; }
+        public int TotalProduct { get; set; }
         [StringLength(20)]
         public string ContactPhone { get; set; }
         public bool? IsHide { get; set; }

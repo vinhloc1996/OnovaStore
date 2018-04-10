@@ -11,9 +11,10 @@ using System;
 namespace OnovaApi.Migrations
 {
     [DbContext(typeof(OnovaContext))]
-    partial class OnovaContextModelSnapshot : ModelSnapshot
+    [Migration("20180410051746_UpdateRow")]
+    partial class UpdateRow
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

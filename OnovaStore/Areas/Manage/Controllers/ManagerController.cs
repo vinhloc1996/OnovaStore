@@ -121,11 +121,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                 "name",
                 "name_desc",
                 "totalproduct",
-                "totalproduct_desc",
-                "totalsale",
-                "totalsale_desc",
-                "rate",
-                "rate_desc"
+                "totalproduct_desc"
             };
 
             sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
@@ -149,103 +145,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                         brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(
                             await response.Content.ReadAsStringAsync());
 
-                        //init test value
-
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 1,
-//                                BrandName = "Loc",
-//                                TotalProducts = 22,
-//                                ContactEmail = "abc@a.sa",
-//                                TotalSales = 111.2,
-//                                Rate = 4.2
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 2,
-//                                BrandName = "qwe",
-//                                TotalProducts = 11,
-//                                ContactEmail = "aaaaawww",
-//                                TotalSales = 1000,
-//                                Rate = 1.2
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 3,
-//                                BrandName = "OWKSI KANDU",
-//                                TotalProducts = 67,
-//                                ContactEmail = "A1asdas",
-//                                TotalSales = 223,
-//                                Rate = 4.9
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 24,
-//                                BrandName = "Kaiiiii",
-//                                TotalProducts = 1,
-//                                ContactEmail = "getthja",
-//                                TotalSales = 453,
-//                                Rate = 5
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 22,
-//                                BrandName = "king",
-//                                TotalProducts = 11,
-//                                ContactEmail = "qweashhhwe",
-//                                TotalSales = 222,
-//                                Rate = 4
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 52,
-//                                BrandName = "AqwWWae",
-//                                TotalProducts = 121,
-//                                ContactEmail = "ASasd",
-//                                TotalSales = 2,
-//                                Rate = 3.2
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 32,
-//                                BrandName = "tttyy",
-//                                TotalProducts = 2,
-//                                ContactEmail = "hjr",
-//                                TotalSales = 56,
-//                                Rate = 3
-//                            }
-//                        );
-//
-//                        brands.Add(
-//                            new GetBrandForStaff
-//                            {
-//                                BrandId = 928,
-//                                BrandName = "wwwww",
-//                                TotalProducts = 222,
-//                                ContactEmail = "aaaxxxccccc",
-//                                TotalSales = 11,
-//                                Rate = 2
-//                            }
-//                        );
+                        
                     }
                 }
             }
@@ -511,7 +411,7 @@ namespace OnovaStore.Areas.Manage.Controllers
         [HttpGet]
         public async Task<IActionResult> EditCategory([FromRoute] int id)
         {
-            var brand = new EditCategoryViewModel();
+            var category = new EditCategoryViewModel();
 
             using (var client = _restClient.CreateClient(User))
             {
@@ -541,8 +441,10 @@ namespace OnovaStore.Areas.Manage.Controllers
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        brand = JsonConvert.DeserializeObject<EditCategoryViewModel>(
+                        category = JsonConvert.DeserializeObject<EditCategoryViewModel>(
                             await response.Content.ReadAsStringAsync());
+
+                        category.IsHide = category.IsHide == true;
                     }
                     else
                     {
@@ -551,7 +453,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                 }
             }
 
-            return View(brand);
+            return View(category);
         }
 
         [HttpPost]
