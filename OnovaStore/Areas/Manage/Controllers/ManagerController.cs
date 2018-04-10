@@ -19,6 +19,7 @@ using OnovaStore.Areas.Manage.Data;
 using OnovaStore.Areas.Manage.Models.Brand;
 using OnovaStore.Areas.Manage.Models.Category;
 using OnovaStore.Areas.Manage.Models.Image;
+using OnovaStore.Areas.Manage.Models.Promotion;
 using OnovaStore.Helpers;
 
 namespace OnovaStore.Areas.Manage.Controllers
@@ -101,7 +102,8 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Brands(string sortOrder, string currentFilter, string searchString, int? page = 1)
+        public async Task<IActionResult> Brands(string sortOrder, string currentFilter, string searchString,
+            int? page = 1)
         {
             var brands = new List<GetBrandForStaff>();
 
@@ -144,8 +146,6 @@ namespace OnovaStore.Areas.Manage.Controllers
                     {
                         brands = JsonConvert.DeserializeObject<List<GetBrandForStaff>>(
                             await response.Content.ReadAsStringAsync());
-
-                        
                     }
                 }
             }
@@ -153,7 +153,7 @@ namespace OnovaStore.Areas.Manage.Controllers
             int pageSize = 5;
             ViewData["LengthEntry"] = brands.Count;
             ViewData["CurrentEntry"] = pageSize * page;
-            
+
             return View(PaginatedList<GetBrandForStaff>.CreateAsync(brands, page ?? 1, pageSize));
         }
 
@@ -267,7 +267,8 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Categories(string sortOrder, string currentFilter, string searchString, int? page = 1)
+        public async Task<IActionResult> Categories(string sortOrder, string currentFilter, string searchString,
+            int? page = 1)
         {
             var categories = new List<GetCategoryForStaff>();
 
@@ -380,7 +381,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                 {
                     model.ParentCategoryID = null;
                 }
-                
+
 
                 var category = new AddCategoryDTO()
                 {
@@ -486,21 +487,195 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Promotions()
+        public async Task<IActionResult> Promotions(string sortOrder, string currentFilter, string searchString,
+            int? page = 1)
         {
-            return View();
+            var promotions = new List<GetPromotionForStaff>();
+
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                page = 1;
+            }
+
+            var sortQuery = new List<string>
+            {
+                "id",
+                "id_desc",
+                "code",
+                "code_desc",
+                "targetapply",
+                "targetapply_desc",
+                "discount",
+                "discount_desc",
+                "status",
+                "status_desc"
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "id"
+                : sortOrder.Trim().ToLower();
+
+            var queryString = nameof(sortOrder) + "=" + sortOrder + (!string.IsNullOrEmpty(searchString)
+                                  ? "&" + nameof(searchString) + "=" + searchString
+                                  : "");
+
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["CurrentFilter"] = searchString;
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/promotion/GetPromotionsForStaff?" + queryString))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        promotions = JsonConvert.DeserializeObject<List<GetPromotionForStaff>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            int pageSize = 5;
+            ViewData["LengthEntry"] = promotions.Count;
+            ViewData["CurrentEntry"] = pageSize * page;
+
+            return View(PaginatedList<GetPromotionForStaff>.CreateAsync(promotions, page ?? 1, pageSize));
         }
 
         [HttpGet]
         public async Task<IActionResult> AddPromotion()
         {
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/GetCategories"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/brand/GetBrands"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPromotion(object model)
+        public async Task<IActionResult> AddPromotion(AddPromotionViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                if (model.StartDate.Date > model.EndDate.Date)
+                {
+                    ModelState.AddModelError("StartGreaterEnd", "Start date must be smaller or equal to end date.");
+                    return View(model);
+                }
+
+                if (model.PercentOff > 1 || model.PercentOff <= 0)
+                {
+                    ModelState.AddModelError("OverPercent",
+                        "Percent discount must be greater than 0 and smaller than 1.");
+                    return View(model);
+                }
+
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.PostAsync("/api/promotion",
+                            new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
+                                "application/json")))
+                    {
+                        if (response.StatusCode == HttpStatusCode.Created)
+                        {
+                            return RedirectToAction("Promotions");
+                        }
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditPromotion([FromRoute] int id)
+        {
+            var promotion = new EditPromotionViewModel();
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/promotion/" + id))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        promotion = JsonConvert.DeserializeObject<EditPromotionViewModel>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        return RedirectToAction("Promotions");
+                    }
+                }
+            }
+
+            return View(promotion);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditPromotion([FromRoute] int id, EditPromotionViewModel promotion)
+        {
+            if (ModelState.IsValid)
+            {
+                if (promotion.StartDate.Date > promotion.EndDate.Date)
+                {
+                    ModelState.AddModelError("StartGreaterEnd", "Start date must be smaller or equal to end date.");
+                    return View(promotion);
+                }
+
+                if (promotion.PercentOff > 1 || promotion.PercentOff <= 0)
+                {
+                    ModelState.AddModelError("OverPercent",
+                        "Percent discount must be greater than 0 and smaller than 1.");
+                    return View(promotion);
+                }
+
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.PutAsync("/api/promotion",
+                            new StringContent(JsonConvert.SerializeObject(promotion), Encoding.UTF8,
+                                "application/json")))
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            return RedirectToAction("Promotions");
+                        }
+                    }
+                }
+
+                ModelState.AddModelError(String.Empty, "Update failed");
+            }
+
+
+            return View(promotion);
         }
 
         private async Task<List<string>> UploadImages(List<IFormFile> images)

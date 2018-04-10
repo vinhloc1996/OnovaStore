@@ -61,7 +61,7 @@
           optIsInline = Boolean($this.data('rp-is-inline')),
           optType = $this.data('rp-type'),
           optDateFormat = $this.data('rp-date-format'),
-          optDefaultDate = JSON.parse(el.getAttribute('data-rp-default-date'));
+          optDefaultDate = $this.data('data-rp-default-date');
 
         $this.flatpickr({
           inline: optIsInline, // boolean

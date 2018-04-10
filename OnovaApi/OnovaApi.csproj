@@ -27,6 +27,8 @@
     <Compile Remove="Migrations\20180406160318_AddDefaultValue.Designer.cs" />
     <Compile Remove="Migrations\20180406160402_AddDefaultValue.cs" />
     <Compile Remove="Migrations\20180406160402_AddDefaultValue.Designer.cs" />
+    <Compile Remove="Migrations\20180410164827_RemoveRequiredAttribute.cs" />
+    <Compile Remove="Migrations\20180410164827_RemoveRequiredAttribute.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

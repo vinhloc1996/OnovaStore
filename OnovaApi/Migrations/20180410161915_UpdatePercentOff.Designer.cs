@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Storage.Internal;
 using OnovaApi.Data;
 using System;
 
 namespace OnovaApi.Migrations
 {
     [DbContext(typeof(OnovaContext))]
-    partial class OnovaContextModelSnapshot : ModelSnapshot
+    [Migration("20180410161915_UpdatePercentOff")]
+    partial class UpdatePercentOff
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

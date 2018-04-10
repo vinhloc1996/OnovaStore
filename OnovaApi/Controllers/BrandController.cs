@@ -29,6 +29,22 @@ namespace OnovaApi.Controllers
         }
 
         [HttpGet]
+        public IEnumerable<Brand> GetBrand()
+        {
+            return _context.Brand;
+        }
+
+        [HttpGet]
+        [Route("GetBrands")]
+        public IEnumerable<GetBrandsDTO> GetBrands()
+        {
+            var brands =
+                _context.Brand.Select(x => new GetBrandsDTO { BrandId = x.BrandId, BrandName = x.Name });
+
+            return brands;
+        }
+
+        [HttpGet]
         [Route("GetBrandsForStaff")]
         public async Task<IEnumerable<GetBrandForStaff>> GetBrandsForStaff([FromQuery] string sortOrder, [FromQuery] string searchString)
         {

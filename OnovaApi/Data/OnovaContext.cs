@@ -558,6 +558,8 @@ namespace OnovaApi.Data
 
                 entity.Property(e => e.LastUpdateDate).IsRowVersion();
 
+                entity.Property(e => e.PercentOff).HasColumnType("decimal(18,2)");
+
                 entity.Property(e => e.PromotionCode).IsUnicode(false);
 
                 entity.HasOne(d => d.PromotionImageNavigation)

@@ -1,0 +1,114 @@
+﻿@model OnovaStore.Areas.Manage.Models.Promotion.EditPromotionViewModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Edit Promotion";
+}
+
+<div class="row" style="padding-top: 50px">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Update promotion</h3>
+            <form method="post"
+                  asp-controller="Manager" asp-action="EditPromotion" asp-area="Manage">
+
+                <input asp-for="PromotionId" />
+                <input asp-for="TargetApply" />
+                <input asp-for="LastUpdateDate" />
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Promotion Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="PromotionName" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Promotion Name">
+                    </div>
+                    <span asp-validation-for="PromotionName" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Promotion Code</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="PromotionCode" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Promotion Code">
+                    </div>
+                    <span asp-validation-for="PromotionCode" class="form-control-feedback"></span>
+                    <div class="form-group has-danger text-center">@Html.ValidationMessage("CodeExisted", new { @class = "form-control-feedback" })</div>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10" for="inputGroup-1_1">Promotion Description</label>
+                    <textarea id="inputGroup-1_1" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="3" placeholder="Promotion Description" asp-for="PromotionDescription"></textarea>
+                    @*                    <span asp-validation-for="PromotionDescription" class="form-control-feedback"></span>*@
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Promotion Status</label>
+                    <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                        <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                            <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="PromotionStatus">
+                                <option value="Available" selected="@(Model.PromotionStatus == "Available")">Available</option>
+                                <option value="Future" selected="@(Model.PromotionStatus == "Future")">Future</option>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                            <i class="hs-admin-angle-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Discount</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="PercentOff" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" placeholder="Promotion Name">
+                    </div>
+                    <span asp-validation-for="PercentOff" class="form-control-feedback"></span>
+                    <div class="form-group has-danger text-center">@Html.ValidationMessage("OverPercent", new { @class = "form-control-feedback" })</div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 order-md-1">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">Start Date</label>
+                            <div id="datepickerWrapper1" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select Start Date" data-rp-wrapper="#datepickerWrapper1" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.StartDate" name="StartDate">
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 order-md-2">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">End Date</label>
+                            <div id="datepickerWrapper2" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select End Date" data-rp-wrapper="#datepickerWrapper2" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.EndDate" name="EndDate">
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                            <div class="form-group has-danger text-center">@Html.ValidationMessage("StartGreaterEnd", new { @class = "form-control-feedback" })</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div asp-validation-summary="All"></div>
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>
