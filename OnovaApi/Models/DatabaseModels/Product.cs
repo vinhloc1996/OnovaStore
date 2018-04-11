@@ -12,15 +12,9 @@ namespace OnovaApi.Models.DatabaseModels
             AnonymousCustomerCartDetail = new HashSet<AnonymousCustomerCartDetail>();
             CustomerCartDetail = new HashSet<CustomerCartDetail>();
             CustomerRecentView = new HashSet<CustomerRecentView>();
-            ExcludeProductPromotionBrand = new HashSet<ExcludeProductPromotionBrand>();
-            ExcludeProductPromotionCategory = new HashSet<ExcludeProductPromotionCategory>();
-            InverseParentProduct = new HashSet<Product>();
             OrderDetail = new HashSet<OrderDetail>();
             ProductImage = new HashSet<ProductImage>();
             ProductNotification = new HashSet<ProductNotification>();
-            ProductOptionGroup = new HashSet<ProductOptionGroup>();
-            ProductSprcificationValue = new HashSet<ProductSprcificationValue>();
-            PromotionGroupProduct = new HashSet<PromotionGroupProduct>();
             Review = new HashSet<Review>();
             SaveForLater = new HashSet<SaveForLater>();
             WishList = new HashSet<WishList>();
@@ -57,8 +51,6 @@ namespace OnovaApi.Models.DatabaseModels
         public int? WishCounting { get; set; }
         [Column("ProductStatusID")]
         public int? ProductStatusId { get; set; }
-        [Column("ParentProductID")]
-        public int? ParentProductId { get; set; }
 
         [ForeignKey("BrandId")]
         [InverseProperty("Product")]
@@ -66,9 +58,7 @@ namespace OnovaApi.Models.DatabaseModels
         [ForeignKey("CategoryId")]
         [InverseProperty("Product")]
         public Category Category { get; set; }
-        [ForeignKey("ParentProductId")]
-        [InverseProperty("InverseParentProduct")]
-        public Product ParentProduct { get; set; }
+        
         [ForeignKey("ProductStatusId")]
         [InverseProperty("Product")]
         public ProductStatus ProductStatus { get; set; }
@@ -76,31 +66,17 @@ namespace OnovaApi.Models.DatabaseModels
         [InverseProperty("Product")]
         public GeneralImage ProductThumbImageNavigation { get; set; }
         [InverseProperty("Product")]
-        public ProductPriceOff ProductPriceOff { get; set; }
-        [InverseProperty("Product")]
         public ICollection<AnonymousCustomerCartDetail> AnonymousCustomerCartDetail { get; set; }
         [InverseProperty("Product")]
         public ICollection<CustomerCartDetail> CustomerCartDetail { get; set; }
         [InverseProperty("Product")]
         public ICollection<CustomerRecentView> CustomerRecentView { get; set; }
         [InverseProperty("Product")]
-        public ICollection<ExcludeProductPromotionBrand> ExcludeProductPromotionBrand { get; set; }
-        [InverseProperty("Product")]
-        public ICollection<ExcludeProductPromotionCategory> ExcludeProductPromotionCategory { get; set; }
-        [InverseProperty("ParentProduct")]
-        public ICollection<Product> InverseParentProduct { get; set; }
-        [InverseProperty("Product")]
         public ICollection<OrderDetail> OrderDetail { get; set; }
         [InverseProperty("Product")]
         public ICollection<ProductImage> ProductImage { get; set; }
         [InverseProperty("Product")]
         public ICollection<ProductNotification> ProductNotification { get; set; }
-        [InverseProperty("Product")]
-        public ICollection<ProductOptionGroup> ProductOptionGroup { get; set; }
-        [InverseProperty("Product")]
-        public ICollection<ProductSprcificationValue> ProductSprcificationValue { get; set; }
-        [InverseProperty("Product")]
-        public ICollection<PromotionGroupProduct> PromotionGroupProduct { get; set; }
         [InverseProperty("Product")]
         public ICollection<Review> Review { get; set; }
         [InverseProperty("Product")]

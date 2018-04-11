@@ -15,7 +15,6 @@ namespace OnovaApi.Models.DatabaseModels
             CustomerCartDetail = new HashSet<CustomerCartDetail>();
             Order = new HashSet<Order>();
             OrderDetail = new HashSet<OrderDetail>();
-            PromotionGroupProduct = new HashSet<PromotionGroupProduct>();
         }
 
         [Column("PromotionID")]
@@ -63,7 +62,5 @@ namespace OnovaApi.Models.DatabaseModels
         public ICollection<Order> Order { get; set; }
         [InverseProperty("Promotion")]
         public ICollection<OrderDetail> OrderDetail { get; set; }
-        [InverseProperty("Promotion")]
-        public ICollection<PromotionGroupProduct> PromotionGroupProduct { get; set; }
     }
 }

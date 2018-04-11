@@ -9,7 +9,6 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public Brand()
         {
-            ExcludeProductPromotionBrand = new HashSet<ExcludeProductPromotionBrand>();
             Product = new HashSet<Product>();
             PromotionBrand = new HashSet<PromotionBrand>();
         }
@@ -37,8 +36,6 @@ namespace OnovaApi.Models.DatabaseModels
         [ForeignKey("BrandImage")]
         [InverseProperty("Brand")]
         public GeneralImage BrandImageNavigation { get; set; }
-        [InverseProperty("Brand")]
-        public ICollection<ExcludeProductPromotionBrand> ExcludeProductPromotionBrand { get; set; }
         [InverseProperty("Brand")]
         public ICollection<Product> Product { get; set; }
         [InverseProperty("Brand")]

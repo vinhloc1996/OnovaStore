@@ -9,7 +9,6 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public Category()
         {
-            ExcludeProductPromotionCategory = new HashSet<ExcludeProductPromotionCategory>();
             InverseParentCategory = new HashSet<Category>();
             Product = new HashSet<Product>();
             PromotionCategory = new HashSet<PromotionCategory>();
@@ -34,8 +33,6 @@ namespace OnovaApi.Models.DatabaseModels
         [ForeignKey("ParentCategoryId")]
         [InverseProperty("InverseParentCategory")]
         public Category ParentCategory { get; set; }
-        [InverseProperty("Category")]
-        public ICollection<ExcludeProductPromotionCategory> ExcludeProductPromotionCategory { get; set; }
         [InverseProperty("ParentCategory")]
         public ICollection<Category> InverseParentCategory { get; set; }
         [InverseProperty("Category")]

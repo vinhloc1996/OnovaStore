@@ -9,7 +9,6 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public AnonymousCustomer()
         {
-            Customer = new HashSet<Customer>();
         }
 
         [Column("AnonymousCustomerID")]
@@ -25,7 +24,5 @@ namespace OnovaApi.Models.DatabaseModels
 
         [InverseProperty("AnonymousCustomerCartNavigation")]
         public AnonymousCustomerCart AnonymousCustomerCart { get; set; }
-        [InverseProperty("AnonymouseCustomer")]
-        public ICollection<Customer> Customer { get; set; }
     }
 }

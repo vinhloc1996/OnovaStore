@@ -16,39 +16,24 @@ namespace OnovaApi.Data
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<CustomerCart> CustomerCart { get; set; }
         public virtual DbSet<CustomerCartDetail> CustomerCartDetail { get; set; }
-        public virtual DbSet<CustomerNotification> CustomerNotification { get; set; }
         public virtual DbSet<CustomerPurchaseInfo> CustomerPurchaseInfo { get; set; }
         public virtual DbSet<CustomerRecentView> CustomerRecentView { get; set; }
-        public virtual DbSet<ExcludeProductPromotionBrand> ExcludeProductPromotionBrand { get; set; }
-        public virtual DbSet<ExcludeProductPromotionCategory> ExcludeProductPromotionCategory { get; set; }
         public virtual DbSet<GeneralImage> GeneralImage { get; set; }
-        public virtual DbSet<Notification> Notification { get; set; }
-        public virtual DbSet<Option> Option { get; set; }
-        public virtual DbSet<OptionDetail> OptionDetail { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<OrderDetail> OrderDetail { get; set; }
         public virtual DbSet<OrderStatus> OrderStatus { get; set; }
         public virtual DbSet<Product> Product { get; set; }
         public virtual DbSet<ProductImage> ProductImage { get; set; }
         public virtual DbSet<ProductNotification> ProductNotification { get; set; }
-        public virtual DbSet<ProductOptionGroup> ProductOptionGroup { get; set; }
-        public virtual DbSet<ProductPriceOff> ProductPriceOff { get; set; }
-        public virtual DbSet<ProductSpecification> ProductSpecification { get; set; }
-        public virtual DbSet<ProductSprcificationValue> ProductSprcificationValue { get; set; }
         public virtual DbSet<ProductStatus> ProductStatus { get; set; }
         public virtual DbSet<Promotion> Promotion { get; set; }
         public virtual DbSet<PromotionBrand> PromotionBrand { get; set; }
         public virtual DbSet<PromotionCategory> PromotionCategory { get; set; }
-        public virtual DbSet<PromotionGroupProduct> PromotionGroupProduct { get; set; }
         public virtual DbSet<Review> Review { get; set; }
         public virtual DbSet<ReviewConfirm> ReviewConfirm { get; set; }
         public virtual DbSet<SaveForLater> SaveForLater { get; set; }
         public virtual DbSet<ShippingInfo> ShippingInfo { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
-        public virtual DbSet<StaffNotification> StaffNotification { get; set; }
-        public virtual DbSet<Story> Story { get; set; }
-        public virtual DbSet<Subscriber> Subscriber { get; set; }
-        public virtual DbSet<SubscribeStory> SubscribeStory { get; set; }
         public virtual DbSet<UsefulReview> UsefulReview { get; set; }
         public virtual DbSet<UserStatus> UserStatus { get; set; }
         public virtual DbSet<WishList> WishList { get; set; }
@@ -164,11 +149,6 @@ namespace OnovaApi.Data
             {
                 entity.Property(e => e.CustomerId).ValueGeneratedNever();
 
-                entity.HasOne(d => d.AnonymouseCustomer)
-                    .WithMany(p => p.Customer)
-                    .HasForeignKey(d => d.AnonymouseCustomerId)
-                    .HasConstraintName("FK_Customer_AnonymousCustomerID");
-
                 entity.HasOne(d => d.ApplicationUser)
                     .WithOne(p => p.Customer)
                     .HasForeignKey<Customer>(d => d.CustomerId)
@@ -235,25 +215,6 @@ namespace OnovaApi.Data
                     .HasConstraintName("FK_CustomerCartDetail_PromotionID");
             });
 
-            modelBuilder.Entity<CustomerNotification>(entity =>
-            {
-                entity.HasKey(e => new { e.CustomerId, e.NotificationId });
-
-                entity.Property(e => e.LastUpdate).IsRowVersion();
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerNotification)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerNotification_CustomerID");
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.CustomerNotification)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerNotification_NotificationID");
-            });
-
             modelBuilder.Entity<CustomerPurchaseInfo>(entity =>
             {
                 entity.Property(e => e.CustomerId).ValueGeneratedNever();
@@ -288,66 +249,12 @@ namespace OnovaApi.Data
                     .HasConstraintName("FK_CustomerRecentView_ProductID");
             });
 
-            modelBuilder.Entity<ExcludeProductPromotionBrand>(entity =>
-            {
-                entity.HasKey(e => new { e.PromotionId, e.BrandId, e.ProductId });
-
-                entity.HasOne(d => d.Brand)
-                    .WithMany(p => p.ExcludeProductPromotionBrand)
-                    .HasForeignKey(d => d.BrandId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionBrand_BrandID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ExcludeProductPromotionBrand)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionBrand_ProductID");
-
-                entity.HasOne(d => d.Promotion)
-                    .WithMany(p => p.ExcludeProductPromotionBrand)
-                    .HasForeignKey(d => d.PromotionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionBrand_PromotionID");
-            });
-
-            modelBuilder.Entity<ExcludeProductPromotionCategory>(entity =>
-            {
-                entity.HasKey(e => new { e.PromotionId, e.CategoryId, e.ProductId });
-
-                entity.HasOne(d => d.Category)
-                    .WithMany(p => p.ExcludeProductPromotionCategory)
-                    .HasForeignKey(d => d.CategoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionCategory_CategoryID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ExcludeProductPromotionCategory)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionCategory_ProductID");
-
-                entity.HasOne(d => d.Promotion)
-                    .WithMany(p => p.ExcludeProductPromotionCategory)
-                    .HasForeignKey(d => d.PromotionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ExcludeProductPromotionCategory_PromotionID");
-            });
-
             modelBuilder.Entity<GeneralImage>(entity =>
             {
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.GeneralImage)
                     .HasForeignKey(d => d.StaffId)
                     .HasConstraintName("FK_GeneralImage_StaffID");
-            });
-
-            modelBuilder.Entity<OptionDetail>(entity =>
-            {
-                entity.HasOne(d => d.Option)
-                    .WithMany(p => p.OptionDetail)
-                    .HasForeignKey(d => d.OptionId)
-                    .HasConstraintName("FK_OptionDetail_OptionID");
             });
 
             modelBuilder.Entity<Order>(entity =>
@@ -440,11 +347,6 @@ namespace OnovaApi.Data
                     .HasForeignKey(d => d.CategoryId)
                     .HasConstraintName("FK_Product_CategoryID");
 
-                entity.HasOne(d => d.ParentProduct)
-                    .WithMany(p => p.InverseParentProduct)
-                    .HasForeignKey(d => d.ParentProductId)
-                    .HasConstraintName("FK_Product_ProductID");
-
                 entity.HasOne(d => d.ProductStatus)
                     .WithMany(p => p.Product)
                     .HasForeignKey(d => d.ProductStatusId)
@@ -484,57 +386,6 @@ namespace OnovaApi.Data
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_ProductNotification_ProductID");
-            });
-
-            modelBuilder.Entity<ProductOptionGroup>(entity =>
-            {
-                entity.HasKey(e => new { e.ProductId, e.OptionId, e.OptionDetailId });
-
-                entity.HasOne(d => d.OptionDetail)
-                    .WithMany(p => p.ProductOptionGroup)
-                    .HasForeignKey(d => d.OptionDetailId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductOptionGroup_OptionDetailID");
-
-                entity.HasOne(d => d.Option)
-                    .WithMany(p => p.ProductOptionGroup)
-                    .HasForeignKey(d => d.OptionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductOptionGroup_OptionID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductOptionGroup)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductOptionGroup_ProductID");
-            });
-
-            modelBuilder.Entity<ProductPriceOff>(entity =>
-            {
-                entity.Property(e => e.ProductId).ValueGeneratedNever();
-
-                entity.HasOne(d => d.Product)
-                    .WithOne(p => p.ProductPriceOff)
-                    .HasForeignKey<ProductPriceOff>(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductPriceOff_ProductID");
-            });
-
-            modelBuilder.Entity<ProductSprcificationValue>(entity =>
-            {
-                entity.HasKey(e => new { e.ProductId, e.ProductSpecificationId });
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.ProductSprcificationValue)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductSprcificationValue_ProductID");
-
-                entity.HasOne(d => d.ProductSpecification)
-                    .WithMany(p => p.ProductSprcificationValue)
-                    .HasForeignKey(d => d.ProductSpecificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ProductSprcificationValue_ProductSpecificationID");
             });
 
             modelBuilder.Entity<ProductStatus>(entity =>
@@ -598,23 +449,6 @@ namespace OnovaApi.Data
                     .HasForeignKey<PromotionCategory>(d => d.PromotionId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_PromotionCategory_PromotionID");
-            });
-
-            modelBuilder.Entity<PromotionGroupProduct>(entity =>
-            {
-                entity.HasKey(e => new { e.PromotionId, e.ProductId });
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.PromotionGroupProduct)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PromotionGroupProduct_ProductID");
-
-                entity.HasOne(d => d.Promotion)
-                    .WithMany(p => p.PromotionGroupProduct)
-                    .HasForeignKey(d => d.PromotionId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_PromotionGroupProduct_PromotionID");
             });
 
             modelBuilder.Entity<Review>(entity =>
@@ -707,62 +541,6 @@ namespace OnovaApi.Data
                     .WithMany(p => p.Staff)
                     .HasForeignKey(d => d.UserStatusId)
                     .HasConstraintName("FK_Staff_UserStatusID");
-            });
-
-            modelBuilder.Entity<StaffNotification>(entity =>
-            {
-                entity.HasKey(e => new { e.StaffId, e.NotificationId });
-
-                entity.Property(e => e.LastUpdate).IsRowVersion();
-
-                entity.HasOne(d => d.Notification)
-                    .WithMany(p => p.StaffNotification)
-                    .HasForeignKey(d => d.NotificationId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StaffNotification_NotificationID");
-
-                entity.HasOne(d => d.Staff)
-                    .WithMany(p => p.StaffNotification)
-                    .HasForeignKey(d => d.StaffId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_StaffNotification_StaffID");
-            });
-
-            modelBuilder.Entity<Story>(entity =>
-            {
-                entity.Property(e => e.LastUpdateDate).IsRowVersion();
-            });
-
-            modelBuilder.Entity<Subscriber>(entity =>
-            {
-                entity.Property(e => e.SubscribeEmail)
-                    .IsUnicode(false)
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.LastUpdateDate).IsRowVersion();
-
-                entity.Property(e => e.UnsubscribeToken)
-                    .IsUnicode(false)
-                    .HasDefaultValueSql("('')");
-            });
-
-            modelBuilder.Entity<SubscribeStory>(entity =>
-            {
-                entity.HasKey(e => new { e.SubscribeEmail, e.StoryId });
-
-                entity.Property(e => e.SubscribeEmail).IsUnicode(false);
-
-                entity.HasOne(d => d.Story)
-                    .WithMany(p => p.SubscribeStory)
-                    .HasForeignKey(d => d.StoryId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SubscribeStory_StoryID");
-
-                entity.HasOne(d => d.SubscribeEmailNavigation)
-                    .WithMany(p => p.SubscribeStory)
-                    .HasForeignKey(d => d.SubscribeEmail)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SubscribeStory_SubcriberEmail");
             });
 
             modelBuilder.Entity<UsefulReview>(entity =>

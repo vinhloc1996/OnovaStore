@@ -10,7 +10,6 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public Customer()
         {
-            CustomerNotification = new HashSet<CustomerNotification>();
             CustomerRecentView = new HashSet<CustomerRecentView>();
             Review = new HashSet<Review>();
             SaveForLater = new HashSet<SaveForLater>();
@@ -25,15 +24,9 @@ namespace OnovaApi.Models.DatabaseModels
         public int? UserStatusId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime JoinDate { get; set; }
-        [Column("AnonymouseCustomerID")]
-        [StringLength(450)]
-        public string AnonymouseCustomerId { get; set; }
         [Column("FacebookID")]
         public string FacebookId { get; set; }
 
-        [ForeignKey("AnonymouseCustomerId")]
-        [InverseProperty("Customer")]
-        public AnonymousCustomer AnonymouseCustomer { get; set; }
         [ForeignKey("CustomerId")]
         [InverseProperty("Customer")]
         public ApplicationUser ApplicationUser { get; set; }
@@ -44,8 +37,6 @@ namespace OnovaApi.Models.DatabaseModels
         public CustomerCart CustomerCart { get; set; }
         [InverseProperty("Customer")]
         public CustomerPurchaseInfo CustomerPurchaseInfo { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<CustomerNotification> CustomerNotification { get; set; }
         [InverseProperty("Customer")]
         public ICollection<CustomerRecentView> CustomerRecentView { get; set; }
         [InverseProperty("Customer")]

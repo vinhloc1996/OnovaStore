@@ -217,7 +217,7 @@ CREATE TABLE ProductSpecification
 	ProductSpecificationName NVARCHAR(100) NOT NULL
 )
 GO
-CREATE TABLE ProductSprcificationValue
+CREATE TABLE ProductSpecificationValue
 (
 	ProductID INT CONSTRAINT FK_ProductSprcificationValue_ProductID REFERENCES Product(ProductID),
 	ProductSpecificationID INT CONSTRAINT FK_ProductSprcificationValue_ProductSpecificationID REFERENCES ProductSpecification(ProductSpecificationID),
