@@ -19,6 +19,7 @@ using OnovaStore.Areas.Manage.Data;
 using OnovaStore.Areas.Manage.Models.Brand;
 using OnovaStore.Areas.Manage.Models.Category;
 using OnovaStore.Areas.Manage.Models.Image;
+using OnovaStore.Areas.Manage.Models.Product;
 using OnovaStore.Areas.Manage.Models.Promotion;
 using OnovaStore.Helpers;
 
@@ -150,13 +151,199 @@ namespace OnovaStore.Areas.Manage.Controllers
         [HttpGet]
         public async Task<IActionResult> AddProduct()
         {
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/GetCategories"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/brand/GetBrands"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["StatusSelection"] = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddProduct(object model)
+        public async Task<IActionResult> AddProduct(AddProductViewModel model)
         {
-            return View();
+            if (ModelState.IsValid)
+            {
+                var sizeThumbnail = model.ThumbImage.Length;
+                var sizeImages = model.ProductImages.Sum(x => x.Length);
+
+                if (sizeThumbnail > 2097152)
+                {
+                    ModelState.AddModelError("ThumbnailOverLength", "Thumbnail image size is not greater than 2MB");
+                    return View(model);
+                }
+
+                if (sizeImages > 5242880)
+                {
+                    ModelState.AddModelError("ImagesOverLength", "Product images size is not greater than 5MB");
+                    return View(model);
+                }
+
+                var thumbImage = await UploadImages(new List<IFormFile>
+                {
+                    model.ThumbImage
+                });
+
+                var productImages = await UploadImages(model.ProductImages);
+
+                var productDto = new AddProductDTO
+                {
+                    Name = model.Name,
+                    CategoryId = model.CategoryId,
+                    BrandId = model.BrandId,
+                    ProductStatusId = model.ProductStatusId,
+                    DisplayPrice = model.DisplayPrice,
+                    MaximumQuantity = model.MaximumQuantity,
+                    ProductImageIds = productImages,
+                    Quantity = model.Quantity,
+                    RealPrice = model.RealPrice,
+                    ProductLongDesc = model.ProductLongDesc,
+                    ProductShortDesc = model.ProductShortDesc,
+                    ThumbImageId = thumbImage[0],
+                    Weight = model.Weight,
+                    Slug = model.Name.URLFriendly()
+                };
+
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.PostAsync("/api/product",
+                            new StringContent(JsonConvert.SerializeObject(productDto), Encoding.UTF8,
+                                "application/json")))
+                    {
+                        if (response.StatusCode == HttpStatusCode.Created)
+                        {
+                            return RedirectToAction("Products");
+                        }
+                    }
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> EditProduct([FromRoute] int id)
+        {
+            var product = new EditProductViewModel();
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/product/" + id))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        product = JsonConvert.DeserializeObject<EditProductViewModel>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                    else
+                    {
+                        return RedirectToAction("Products");
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/category/GetCategories"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/brand/GetBrands"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        ViewData["StatusSelection"] = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            return View(product);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditProduct([FromRoute] int id, EditProductViewModel product)
+        {
+            if (ModelState.IsValid)
+            {
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (
+                        var response = await client.PutAsync("/api/product",
+                            new StringContent(JsonConvert.SerializeObject(product), Encoding.UTF8,
+                                "application/json")))
+                    {
+                        if (response.StatusCode == HttpStatusCode.OK)
+                        {
+                            return RedirectToAction("Products");
+                        }
+                    }
+                }
+
+                ModelState.AddModelError(String.Empty, "Update failed");
+            }
+
+
+            return View(product);
         }
 
         [HttpGet]

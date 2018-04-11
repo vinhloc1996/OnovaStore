@@ -1,0 +1,185 @@
+﻿@using OnovaStore.Areas.Manage.Data
+@model OnovaStore.Areas.Manage.Models.Product.EditProductViewModel
+@{
+    Layout = "_Layout";
+    ViewBag.Title = "Edit Product";
+}
+
+<div class="row" style="padding-top: 50px">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Update product</h3>
+            <form method="post"
+                  asp-controller="Manager" asp-action="EditProduct" asp-area="Manage">
+
+                <input asp-for="ProductId" />
+                <input asp-for="Slug" />
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Name" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Product Name">
+                    </div>
+                    <span asp-validation-for="Name" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10" for="ProductShortDesc">Product Short Description</label>
+                    <textarea id="ProductShortDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="2" placeholder="Product Short Description" asp-for="ProductShortDesc"></textarea>
+                    <span asp-validation-for="ProductShortDesc" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10" for="ProductLongDesc">Product Long Description</label>
+                    <textarea id="ProductLongDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="3" placeholder="Product Long Description" asp-for="ProductLongDesc"></textarea>
+                    <span asp-validation-for="ProductLongDesc" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Status</label>
+                    <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                        <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                            <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ProductStatusId">
+                                @{
+                        var statuses = (List<GetProductStatusDTO>)ViewData["StatusSelection"];
+
+                        if (statuses != null)
+                        {
+                            foreach (var status in statuses)
+                            {
+                                <option value="@status.StatusId" selected="@(status.StatusId == Model.ProductStatusId)">@status.StatusName</option>
+                }
+            }
+                                }
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                            <i class="hs-admin-angle-down"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Maximum Quantity In A Order</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="MaximumQuantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Maximum Quantity">
+                    </div>
+                    <span asp-validation-for="MaximumQuantity" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Quantity</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="CurrentQuantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Quantity">
+                    </div>
+                    <span asp-validation-for="CurrentQuantity" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Base Price</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="RealPrice" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Base Price">
+                    </div>
+                    <span asp-validation-for="RealPrice" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Saling Price</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="DisplayPrice" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Saling Price">
+                    </div>
+                    <span asp-validation-for="DisplayPrice" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Weight</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Weight" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Weight">
+                    </div>
+                    <span asp-validation-for="Weight" class="form-control-feedback"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 order-md-1 disable-div" id="CategorySelection">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">Category Name</label>
+                            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                                    <select id="CategoryId" name="CategoryId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Category Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
+                                        @{
+                                var categories = (List<GetCategoriesDTO>)ViewData["CategorySelection"];
+
+                                if (categories != null)
+                                {
+                                    foreach (var category in categories)
+                                    {
+                                        <option value="@category.CategoryId" data-tokens="@category.CategoryName" selected="@(category.CategoryId == Model.CategoryId)">@category.CategoryName</option>
+                        }
+                    }
+                                        }
+                                    </select>
+                                </div>
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 order-md-2 disable-div" id="BrandSelection">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">Brand Name</label>
+                            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                                    <select id="BrandId" name="BrandId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Brand Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
+                                        @{
+                                var brands = (List<GetBrandsDTO>)ViewData["BrandSelection"];
+
+                                if (brands != null)
+                                {
+                                    foreach (var brand in brands)
+                                    {
+                                        <option value="@brand.BrandId" data-tokens="@brand.BrandName" selected="@(brand.BrandId == Model.BrandId)">@brand.BrandName</option>
+                        }
+                    }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div asp-validation-summary="All"></div>
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-3">
+    </div>
+</div>

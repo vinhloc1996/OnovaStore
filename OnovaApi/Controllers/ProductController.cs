@@ -162,20 +162,32 @@ namespace OnovaApi.Controllers
         }
 
         // PUT: api/Product/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutProduct([FromRoute] int id, [FromBody] Product product)
+        [HttpPut]
+        public async Task<IActionResult> PutProduct([FromBody] Product product)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != product.ProductId)
+            var oldProduct = await _context.Product.FindAsync(product.ProductId);
+
+            if (oldProduct != null)
             {
-                return BadRequest();
+                oldProduct.BrandId = product.BrandId;
+                oldProduct.CategoryId = product.CategoryId;
+                oldProduct.Name = product.Name;
+                oldProduct.ProductStatusId = product.ProductStatusId;
+                oldProduct.ProductLongDesc = product.ProductLongDesc;
+                oldProduct.ProductShortDesc = product.ProductShortDesc;
+                oldProduct.MaximumQuantity = product.MaximumQuantity;
+                oldProduct.DisplayPrice = product.DisplayPrice;
+                oldProduct.CurrentQuantity = product.CurrentQuantity;
+                oldProduct.RealPrice = product.RealPrice;
+                oldProduct.Weight = product.Weight;
             }
 
-            _context.Entry(product).State = EntityState.Modified;
+            _context.Entry(oldProduct).State = EntityState.Modified;
 
             try
             {
@@ -183,32 +195,67 @@ namespace OnovaApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ProductExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return NoContent();
+            return Ok();
         }
 
         // POST: api/Product
         [HttpPost]
-        public async Task<IActionResult> PostProduct([FromBody] Product product)
+        public async Task<IActionResult> PostProduct([FromBody] AddProductDTO model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            var product = new Product
+            {
+                Name = model.Name,
+                IsHide = false,
+                AddDate = model.AddDate,
+                CategoryId = model.CategoryId,
+                BrandId = model.BrandId,
+                ProductStatusId = model.ProductStatusId,
+                DisplayPrice = model.DisplayPrice,
+                MaximumQuantity = model.MaximumQuantity,
+                ProductThumbImage = model.ThumbImageId,
+                CurrentQuantity = model.Quantity,
+                RealPrice = model.RealPrice,
+                ProductLongDesc = model.ProductLongDesc,
+                ProductShortDesc = model.ProductShortDesc,
+                Weight = model.Weight,
+                Slug = model.Slug
+            };
             _context.Product.Add(product);
-            await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetProduct", new { id = product.ProductId }, product);
+            if (await _context.SaveChangesAsync() > 0)
+            {
+                product.Slug = "/p" + product.ProductId + "/" + product.Slug;
+                _context.Entry(product).State = EntityState.Modified;
+
+                var productImages = new List<ProductImage>();
+
+                foreach (var imageId in model.ProductImageIds)
+                {
+                    productImages.Add(new ProductImage
+                    {
+                        GeneralImageId = imageId,
+                        ProductId = product.ProductId
+                    });
+                }
+
+                _context.ProductImage.AddRange(productImages);
+
+                if (await _context.SaveChangesAsync() > 0)
+                {
+                    return StatusCode(201);
+                }
+            }
+            
+
+            return StatusCode(424);
         }
 
         // DELETE: api/Product/5

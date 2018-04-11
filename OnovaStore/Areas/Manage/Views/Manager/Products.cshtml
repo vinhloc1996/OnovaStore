@@ -166,55 +166,55 @@
                 var i = 0;
                 foreach (var product in Model)
                 {
-                <tr>
-                    <td>@product.ProductId</td>
-                    <td>@product.Name</td>
-                    <td>
-                        @switch (product.ProductStatus)
-        {
-            case "Available":
-                cssRendered = AvailableCss;
-                break;
+                    <tr>
+                        <td>@product.ProductId</td>
+                        <td>@product.Name</td>
+                        <td>
+                            @switch (product.ProductStatus)
+                            {
+                                case "Available":
+                                    cssRendered = AvailableCss;
+                                    break;
 
-            case "Sold Out":
-                cssRendered = ExpiredCss;
-                break;
+                                case "Sold Out":
+                                    cssRendered = ExpiredCss;
+                                    break;
 
-            case "Open Reserve":
-                cssRendered = FutureCss;
-                break;
+                                case "Open Reserve":
+                                    cssRendered = FutureCss;
+                                    break;
 
-            case "Stop Selling":
-                cssRendered = DefaultCss;
-                break;
-        }
-                        <span class="u-tags-v1 text-center g-width-110 g-brd-around @cssRendered g-font-weight-400 g-color-white g-rounded-50 g-py-4 g-px-15">
-                            @product.ProductStatus
-                        </span>
-                    </td>
-                    <td>@product.Sales</td>
-                    <td>@product.NumberOrder</td>
-                    <td>@product.Rating</td>
-                    <td>@product.WishCounting</td>
+                                case "Stop Selling":
+                                    cssRendered = DefaultCss;
+                                    break;
+                            }
+                            <span class="u-tags-v1 text-center g-width-110 g-brd-around @cssRendered g-font-weight-400 g-color-white g-rounded-50 g-py-4 g-px-15">
+                                @product.ProductStatus
+                            </span>
+                        </td>
+                        <td>@product.Sales</td>
+                        <td>@product.NumberOrder</td>
+                        <td>@product.Rating</td>
+                        <td>@product.WishCounting</td>
 
-                    <td class="text-right">
-                        <div class="g-pos-rel g-top-3 d-inline-block">
-                            <a id="@("dropDown" + i + "Invoker")" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="@("dropDown" + @i)" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="@("#dropDown" + @i)">
-                                <i class="hs-admin-more-alt"></i>
-                            </a>
-                            <div id="@("dropDown" + @i)" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="@("dropDown" + i + "Invoker")">
-                                <ul class="list-unstyled g-nowrap mb-0">
-                                    <li>
-                                        <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" asp-action="EditProduct" asp-route-id="@product.ProductId">
-                                            <i class="hs-admin-pencil g-font-size-18 g-color-gray-light-v6 g-mr-10 g-mr-15--md"></i>
-                                            Edit
-                                        </a>
-                                    </li>
-                                </ul>
+                        <td class="text-right">
+                            <div class="g-pos-rel g-top-3 d-inline-block">
+                                <a id="@("dropDown" + i + "Invoker")" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="@("dropDown" + @i)" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="@("#dropDown" + @i)">
+                                    <i class="hs-admin-more-alt"></i>
+                                </a>
+                                <div id="@("dropDown" + @i)" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="@("dropDown" + i + "Invoker")">
+                                    <ul class="list-unstyled g-nowrap mb-0">
+                                        <li>
+                                            <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" asp-action="EditProduct" asp-route-id="@product.ProductId">
+                                                <i class="hs-admin-pencil g-font-size-18 g-color-gray-light-v6 g-mr-10 g-mr-15--md"></i>
+                                                Edit
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                     i++;
                 }
             }
