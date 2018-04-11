@@ -78,7 +78,7 @@
                         <div class="form-group has-danger g-mb-30">
                             <label class="g-mb-10">Start Date</label>
                             <div id="datepickerWrapper1" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
-                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select Start Date" data-rp-wrapper="#datepickerWrapper1" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.StartDate" name="StartDate">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select Start Date" data-rp-wrapper="#datepickerWrapper1" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.StartDate.ToString("dd/MM/yyyy")" name="StartDate">
                                 <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
                                     <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
                                     <i class="hs-admin-angle-down"></i>
@@ -91,7 +91,7 @@
                         <div class="form-group has-danger g-mb-30">
                             <label class="g-mb-10">End Date</label>
                             <div id="datepickerWrapper2" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
-                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select End Date" data-rp-wrapper="#datepickerWrapper2" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.EndDate" name="EndDate">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select End Date" data-rp-wrapper="#datepickerWrapper2" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" value="@Model.EndDate.ToString("dd/MM/yyyy")" name="EndDate">
                                 <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
                                     <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
                                     <i class="hs-admin-angle-down"></i>

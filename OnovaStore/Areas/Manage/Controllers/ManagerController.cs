@@ -84,9 +84,67 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public IActionResult Products()
+        public async Task<IActionResult> Products(string sortOrder, string currentFilter, string searchString,
+            int? page = 1)
         {
-            return View();
+            var products = new List<GetProductForStaff>();
+
+            if (searchString == null)
+            {
+                searchString = currentFilter;
+            }
+            else
+            {
+                page = 1;
+            }
+
+            var sortQuery = new List<string>
+            {
+                "id",
+                "id_desc",
+                "name",
+                "name_desc",
+                "sales",
+                "sales_desc",
+                "status",
+                "status_desc",
+                "numberorder",
+                "numberorder_desc",
+                "rating",
+                "rating_desc",
+                "wishcounting",
+                "wishcounting_desc",
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "id"
+                : sortOrder.Trim().ToLower();
+
+            var queryString = nameof(sortOrder) + "=" + sortOrder + (!string.IsNullOrEmpty(searchString)
+                                  ? "&" + nameof(searchString) + "=" + searchString
+                                  : "");
+
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["CurrentFilter"] = searchString;
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/product/GetProductsForStaff?" + queryString))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        products = JsonConvert.DeserializeObject<List<GetProductForStaff>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            int pageSize = 5;
+            ViewData["LengthEntry"] = products.Count;
+            ViewData["CurrentEntry"] = pageSize * page;
+
+            return View(PaginatedList<GetProductForStaff>.CreateAsync(products, page ?? 1, pageSize));
         }
 
         [HttpGet]

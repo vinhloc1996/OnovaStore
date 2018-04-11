@@ -142,7 +142,7 @@ namespace OnovaApi
             app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseAuthentication();
             //Run only in first-run
-            Seed.SeedData(userManager, roleManager, dbContext).Wait();
+//            Seed.SeedData(userManager, roleManager, dbContext).Wait();
             app.UseMvc();
         }
     }

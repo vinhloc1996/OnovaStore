@@ -26,12 +26,12 @@
                         <span class="media-body align-self-center">Reviews</span>
                     </a>
 
-                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "support" && viewName == "listquestion" ? "active" : "")" href="@Url.Action("Questions", "Support", new {area = "Manage"})">
-                        <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">
-                            <i class="hs-admin-help-alt"></i>
-                        </span>
-                        <span class="media-body align-self-center">Questions</span>
-                    </a>
+@*                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "support" && viewName == "listquestion" ? "active" : "")" href="@Url.Action("Questions", "Support", new {area = "Manage"})">*@
+@*                        <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">*@
+@*                            <i class="hs-admin-help-alt"></i>*@
+@*                        </span>*@
+@*                        <span class="media-body align-self-center">Questions</span>*@
+@*                    </a>*@
 
 
 //Temporary not implement
@@ -85,6 +85,13 @@
                             <i class="hs-admin-gift"></i>
                         </span>
                         <span class="media-body align-self-center">Promotions</span>
+                    </a>
+                    
+                    <a class="media u-side-nav--top-level-menu-link u-side-nav--hide-on-hidden g-px-15 g-py-12 @(pageName == "manager" && viewName == "orders" ? "active" : "")" href="@Url.Action("Orders", "Manager", new {area = "Manage"})">
+                        <span class="d-flex align-self-center g-pos-rel g-font-size-18 g-mr-18">
+                            <i class="hs-admin-shopping-cart-full"></i>
+                        </span>
+                        <span class="media-body align-self-center">Orders</span>
                     </a>
                 }
             </li>
