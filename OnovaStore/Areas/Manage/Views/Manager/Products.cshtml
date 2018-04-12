@@ -14,19 +14,6 @@
         <h3 class="g-font-weight-400 g-font-size-16 g-color-black mb-0">Products</h3>
     </div>
     <div class="media d-md-flex align-items-center ml-auto">
-        <div class="d-flex align-items-center" style="visibility: hidden">
-            <span class="g-hidden-sm-down g-color-gray-dark-v6 g-mr-12">Show:</span>
-            <div class="u-select--v1 g-pr-20">
-                <select id="datatableEntries1" class="js-select u-select--v1-select w-100">
-                    <option data-content='<span class="d-flex align-items-center g-line-height-1_2 g-color-black">5 Entries</span>' value="5">5 Entries</option>
-                    <option data-content='<span class="d-flex align-items-center g-line-height-1_2 g-color-black">10 Entries</span>' value="10">10 Entries</option>
-                    <option data-content='<span class="d-flex align-items-center g-line-height-1_2 g-color-black">15 Entries</span>' value="15">15 Entries</option>
-                    <option data-content='<span class="d-flex align-items-center g-line-height-1_2 g-color-black">20 Entries</span>' value="20">20 Entries</option>
-                    <option data-content='<span class="d-flex align-items-center g-line-height-1_2 g-color-black">25 Entries</span>' value="25">25 Entries</option>
-                </select>
-                <i class="hs-admin-angle-down g-absolute-centered--y g-right-0 g-color-gray-light-v6"></i>
-            </div>
-        </div>
         <form asp-action="Products" method="get">
             <div class="d-flex g-ml-15 g-ml-55--md">
                 <div class="input-group g-pos-rel g-width-320--md">
@@ -41,10 +28,7 @@
 </div>
 <div class="g-mb-40">
     <div class="table-responsive">
-        <table class="js-datatable table u-table--v3 u-editable-table--v1 g-color-black" data-dt-info="#datatableInfo1" data-dt-search="#datatableSearch1" data-dt-entries="#datatableEntries1" data-dt-pagination="datatablePagination1" data-dt-page-length="5" data-dt-is-responsive="false"
-               data-dt-pagination-classes="list-inline text-right mb-0" data-dt-pagination-items-classes="list-inline-item g-hidden-sm-down" data-dt-pagination-links-classes="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15"
-               data-dt-pagination-next-classes="list-inline-item" data-dt-pagination-next-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-next-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-right"></i></span><span class="sr-only">Next</span>'
-               data-dt-pagination-prev-classes="list-inline-item" data-dt-pagination-prev-link-classes="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12" data-dt-pagination-prev-link-markup='<span class="g-line-height-1 g-valign-middle" aria-hidden="true"><i class="hs-admin-angle-left"></i></span><span class="sr-only">Prev</span>'>
+        <table class="table u-table--v3 u-editable-table--v1 g-color-black">
             <thead>
             <tr>
                 <th>

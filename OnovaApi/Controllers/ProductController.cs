@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using OnovaApi.Data;
 using OnovaApi.DTOs;
 using OnovaApi.Models.DatabaseModels;
+using OnovaApi.Services;
+using SendGrid.Helpers.Mail;
 
 namespace OnovaApi.Controllers
 {
@@ -18,10 +21,12 @@ namespace OnovaApi.Controllers
     public class ProductController : Controller
     {
         private readonly OnovaContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public ProductController(OnovaContext context)
+        public ProductController(OnovaContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         // GET: api/Product
@@ -165,12 +170,49 @@ namespace OnovaApi.Controllers
         [HttpPut]
         public async Task<IActionResult> PutProduct([FromBody] Product product)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+//            if (!ModelState.IsValid)
+//            {
+//                return BadRequest(ModelState);
+//            }
 
             var oldProduct = await _context.Product.FindAsync(product.ProductId);
+
+            if (oldProduct.ProductStatusId != product.ProductStatusId)
+            {
+                if (_context.ProductStatus.Find(oldProduct.ProductStatusId).StatusCode.ToLower() == "soldout")
+                {
+                    var newStatus = _context.ProductStatus.Find(product.ProductStatusId).StatusCode.ToLower();
+                    if (newStatus == "available" || newStatus == "openreserve")
+                    {
+                        if (oldProduct.CurrentQuantity < product.CurrentQuantity)
+                        {
+                            var productNotifyList = _context.ProductNotification.FromSql(
+                                $"SELECT * FROM ProductNotification WHERE ProductID = {oldProduct.ProductId} AND NotifyStatus = 0").AsNoTracking();
+
+                            if (productNotifyList.Any())
+                            {
+                                var listEmail = await productNotifyList.Select(x => new EmailAddress { Email = x.Email }).ToListAsync();
+
+                                var thumbImageUrl = _context.GeneralImage.Find(oldProduct.ProductThumbImage).ImageUrl;
+                                
+                                var result = await _emailSender.SendEmailProductAvailableAsync(new GetProductEmailDTO
+                                {
+                                    Name = oldProduct.Name,
+                                    Slug = oldProduct.Slug,
+                                    ThumbImageUrl = thumbImageUrl
+                                }, listEmail);
+
+                                if (result.StatusCode == HttpStatusCode.Accepted)
+                                {
+                                    await _context.ProductNotification
+                                        .Where(x => x.ProductId == oldProduct.ProductId)
+                                        .ForEachAsync(x => x.NotifyStatus = true);
+                                }
+                            }
+                        }    
+                    }
+                }
+            }
 
             if (oldProduct != null)
             {
