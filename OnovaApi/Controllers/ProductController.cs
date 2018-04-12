@@ -227,6 +227,7 @@ namespace OnovaApi.Controllers
                 oldProduct.CurrentQuantity = product.CurrentQuantity;
                 oldProduct.RealPrice = product.RealPrice;
                 oldProduct.Weight = product.Weight;
+                oldProduct.IsHide = product.IsHide;
             }
 
             _context.Entry(oldProduct).State = EntityState.Modified;

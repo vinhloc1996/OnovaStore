@@ -46,5 +46,7 @@ namespace OnovaStore.Areas.Manage.Models.Product
         [Required]
         [DisplayName("Category Name")]
         public int CategoryId { get; set; }
+        [DisplayName("Is Hidden")]
+        public bool? IsHide { get; set; }
     }
 }
