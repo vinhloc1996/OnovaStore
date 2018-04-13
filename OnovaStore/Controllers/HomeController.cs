@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OnovaStore.Models.Brand;
+using OnovaStore.Models.Category;
 
 namespace OnovaStore.Controllers
 {
@@ -20,7 +23,7 @@ namespace OnovaStore.Controllers
         private readonly IRestClient restClient;
 
         private readonly IClaimPrincipalManager _claimPrincipalManager;
-        
+
         public HomeController(IRestClient restClient, IClaimPrincipalManager claimPrincipalManager)
         {
             this.restClient = restClient;
@@ -34,12 +37,68 @@ namespace OnovaStore.Controllers
             var meetPolicy = await _claimPrincipalManager.HasPolicy("Staff Only");
             if (meetPolicy)
             {
-                return RedirectToAction("Index", "Home", new { area = "Manage" });
+                return RedirectToAction("Index", "Home", new {area = "Manage"});
             }
+
+            using (var client = restClient.CreateClient(User))
+            {
+                using (var response = await client.GetAsync("/api/category/GetCategoriesForHeader"))
+                {
+                    dynamic result = response.StatusCode == HttpStatusCode.OK
+                        ? await response.Content.ReadAsStringAsync()
+                        : null;
+
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        var list = JsonConvert.DeserializeObject<List<Category>>(result);
+
+                        ViewBag["HeaderCategories"] = list;
+                    }
+
+                    
+                }
+            }
+
+            using (var client = restClient.CreateClient(User))
+            {
+                using (var response = await client.GetAsync("/api/brand/GetBrandsForHeader"))
+                {
+                    dynamic result = response.StatusCode == HttpStatusCode.OK
+                        ? await response.Content.ReadAsStringAsync()
+                        : null;
+
+                    if (string.IsNullOrEmpty(result))
+                    {
+                        var list = JsonConvert.DeserializeObject<List<Brand>>(result);
+
+                        ViewBag["HeaderBrands"] = list;
+                    }
+                    
+                }
+            }
+
+            using (var client = restClient.CreateClient(User))
+            {
+                using (var response = await client.GetAsync("/api/category/GetCategoriesForIndexPage"))
+                {
+                    string result = response.StatusCode == HttpStatusCode.OK
+                        ? await response.Content.ReadAsStringAsync()
+                        : String.Empty;
+
+                    if (!string.IsNullOrEmpty(result))
+                    {
+                        var list = JsonConvert.DeserializeObject<List<Category>>(result);
+
+                        ViewBag["CategoryProducts"] = result;
+                    }
+                }
+            }
+
+            
 
             return View();
         }
-    
+
         //test role function
 //        [Authorize(Roles = "Administrator, CustomerSupport")]
 //        [HttpGet]

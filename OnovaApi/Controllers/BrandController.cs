@@ -34,6 +34,13 @@ namespace OnovaApi.Controllers
             return _context.Brand;
         }
 
+        [HttpGet("GetBrandsForHeader")]
+        [AllowAnonymous]
+        public IActionResult GetBrandsForHeader()
+        {
+            return Json(_context.Brand.Where(b => b.TotalProduct > 0 && b.IsHide == false).Select(b => new { Name = b.Name, Slug = b.Slug }));
+        }
+
         [HttpGet]
         [Route("GetBrands")]
         public IEnumerable<GetBrandsDTO> GetBrands()

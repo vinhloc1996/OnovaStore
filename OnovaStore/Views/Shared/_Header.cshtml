@@ -259,70 +259,20 @@
             <div class="col-sm-6 col-lg-4 g-mb-30 g-mb-0--md">
                 <!-- Links -->
                 <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Home Decor</span>
                     <ul class="list-unstyled">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Wall Decor</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Pillows &amp; Throws</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Window Treatments</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Mirrors</a></li>
+                        @{
+                            if (ViewBag["HeaderCategories"] != null)
+                            {
+                                var categories = ViewBag["HeaderCategories"];
+
+                                foreach (var category in categories)
+                                {
+                                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="@category.Slug">@category.Name</a></li>
+                                }
+                            }
+                        }
                     </ul>
                 </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Industrial Decor</span>
-                <ul class="list-unstyled">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Letter Block</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Glass Sconce</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Risa Storage Jar</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Model Plane</a></li>
-                </ul>
-                <!-- End Links -->
-            </div>
-            <div class="col-sm-6 col-lg-4 g-mb-30 g-mb-0--md">
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Kitchen &amp; Tabletop</span>
-                    <ul class="list-unstyled">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Coffee &amp; Tea</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Cooking &amp; Baking</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Cutlery &amp; Cutting</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Serving</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Food Storage</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <div class="mb-5 g-mb-0--lg">
-                    <!-- Links -->
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Office</span>
-                    <ul class="list-unstyled">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Writing Instruments</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Bookcases</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Filing Cabinets</a></li>
-                    </ul>
-                    <!-- End Links -->
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-4 g-mb-30 g-mb-0--md">
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Modern Lighting</span>
-                    <ul class="list-unstyled">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Bridgers 59" Floor Lamp</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Miltiades 27" Table Lamp</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Coastal Living Room Furniture</span>
-                <ul class="list-unstyled">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Washington Console Table</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Anfield Coffee Table</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Banbury 2 Drawer End Table</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Landsdowne 53" Tv Stand</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Sevan Swivel Barrel Chair</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Enfield Credenza</a></li>
-                </ul>
-                <!-- End Links -->
             </div>
         </div>
     </div>

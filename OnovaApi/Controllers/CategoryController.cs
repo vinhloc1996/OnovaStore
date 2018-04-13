@@ -27,6 +27,20 @@ namespace OnovaApi.Controllers
             _context = context;
         }
 
+        [HttpGet("GetCategoriesForIndexPage")]
+        [AllowAnonymous]
+        public IEnumerable<Category> GetCategoriesForIndexPage()
+        {
+            return _context.Category.Where(c => c.TotalProduct > 0 && c.IsHide == false).Include(c => c.Product.Where(p => p.ProductStatusId == 3 || p.ProductStatusId == 1)).AsNoTracking();
+        }
+
+        [HttpGet("GetCategoriesForHeader")]
+        [AllowAnonymous]
+        public IActionResult GetCategoriesForHeader()
+        {
+            return Json(_context.Category.Where(c => c.TotalProduct > 0 && c.IsHide == false && c.ParentCategoryId == null).ToList());
+        }
+
         [HttpGet]
         [Route("CheckCategoryExisted")]
         public async Task<IActionResult> CheckCategoryExisted([FromQuery] int id)

@@ -291,6 +291,16 @@ namespace OnovaApi.Controllers
 
                 _context.ProductImage.AddRange(productImages);
 
+                var brand = await _context.Brand.FindAsync(product.BrandId);
+                brand.TotalProduct++;
+
+                _context.Update(brand);
+
+                var category = await _context.Category.FindAsync(product.CategoryId);
+                category.TotalProduct++;
+
+                _context.Update(category);
+
                 if (await _context.SaveChangesAsync() > 0)
                 {
                     return StatusCode(201);
