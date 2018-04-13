@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <!-- Favicon -->
-@*    <link rel="shortcut icon" href="../favicon.ico">*@
+    @*    <link rel="shortcut icon" href="../favicon.ico">*@
     <!-- Google Fonts -->
     <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Roboto%3A300%2C400%2C500%2C700%7CPlayfair+Display%7CRaleway%7CSpectral%7CRubik">
     <!-- CSS Global Compulsory -->
@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="~/html/assets/vendor/hs-megamenu/src/hs.megamenu.css">
     <link rel="stylesheet" href="~/html/assets/vendor/malihu-scrollbar/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="~/html/assets/vendor/animate.css">
+    <link rel="stylesheet" href="~/html/assets/vendor/custombox/custombox.min.css">
     <!-- CSS Unify Theme -->
     <link rel="stylesheet" href="~/html/assets/css/styles.e-commerce.css">
     <!-- CSS Customization -->
@@ -45,6 +46,7 @@
     <script src="~/html/assets/vendor/hs-megamenu/src/hs.megamenu.js"></script>
     <script src="~/html/assets/vendor/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="~/html/assets/vendor/appear.js"></script>
+    <script src="~/html/assets/vendor/custombox/custombox.min.js"></script>
     <!-- JS Unify -->
     <script src="~/html/assets/js/hs.core.js"></script>
     <script src="~/html/assets/js/components/hs.header.js"></script>
@@ -55,6 +57,8 @@
     <script src="~/html/assets/js/components/hs.count-qty.js"></script>
     <script src="~/html/assets/js/components/hs.carousel.js"></script>
     <script src="~/html/assets/js/components/hs.go-to.js"></script>
+<script src="~/html/assets/js/components/hs.modal-window.js"></script>
+
     <!-- JS Customization -->
     <script src="~/html/assets/js/custom.js"></script>
     <!-- JS Plugins Init. -->
@@ -106,6 +110,8 @@
         // initialization of header
         $.HSCore.components.HSHeader.init($('#js-header'));
         $.HSCore.helpers.HSHamburgers.init('.hamburger');
+
+        $.HSCore.components.HSModalWindow.init('[data-modal-target]');
 
         // initialization of HSMegaMenu component
         $('.js-mega-menu').HSMegaMenu({

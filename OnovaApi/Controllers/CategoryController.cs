@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using OnovaApi.Data;
 using OnovaApi.DTOs;
@@ -21,6 +22,7 @@ namespace OnovaApi.Controllers
     public class CategoryController : Controller
     {
         private readonly OnovaContext _context;
+        private const string ImageUrl = "http://res.cloudinary.com/vinhloc1996/image/upload/";
 
         public CategoryController(OnovaContext context)
         {
@@ -29,16 +31,31 @@ namespace OnovaApi.Controllers
 
         [HttpGet("GetCategoriesForIndexPage")]
         [AllowAnonymous]
-        public IEnumerable<Category> GetCategoriesForIndexPage()
+        public IActionResult GetCategoriesForIndexPage()
         {
-            return _context.Category.Where(c => c.TotalProduct > 0 && c.IsHide == false).Include(c => c.Product.Where(p => p.ProductStatusId == 3 || p.ProductStatusId == 1)).AsNoTracking();
+            var debug = _context.Category.Where(c => c.TotalProduct > 0 && c.IsHide != true)
+                .Select(c => new
+                {
+                    c.CategoryId, c.Name, c.Slug, Product = c.Product.Select(p => new
+                    {
+                        p.Name, p.ProductId, p.Slug,
+                        ProductThumbImage = ImageUrl + p.ProductThumbImage, p.DisplayPrice
+                    })
+                })
+                .ToList();
+
+            return Json(debug);
         }
 
-        [HttpGet("GetCategoriesForHeader")]
+        [HttpGet]
+        [Route("GetCategoriesForHeader")]
         [AllowAnonymous]
         public IActionResult GetCategoriesForHeader()
         {
-            return Json(_context.Category.Where(c => c.TotalProduct > 0 && c.IsHide == false && c.ParentCategoryId == null).ToList());
+            var debug = _context.Category
+                .Where(c => c.TotalProduct > 0 && c.IsHide != true && c.ParentCategoryId == null).Select(c => new {c.CategoryId, c.Name, c.Slug}).ToList();
+            var json = Json(debug);
+            return json;
         }
 
         [HttpGet]

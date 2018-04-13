@@ -39,7 +39,7 @@ namespace OnovaStore.Controllers
             {
                 return RedirectToAction("Index", "Home", new {area = "Manage"});
             }
-
+            
             using (var client = restClient.CreateClient(User))
             {
                 using (var response = await client.GetAsync("/api/category/GetCategoriesForHeader"))
@@ -48,14 +48,11 @@ namespace OnovaStore.Controllers
                         ? await response.Content.ReadAsStringAsync()
                         : null;
 
-                    if (string.IsNullOrEmpty(result))
+                    if (result != null)
                     {
                         var list = JsonConvert.DeserializeObject<List<Category>>(result);
-
-                        ViewBag["HeaderCategories"] = list;
+                        ViewBag.HeaderCategories = list;
                     }
-
-                    
                 }
             }
 
@@ -67,13 +64,12 @@ namespace OnovaStore.Controllers
                         ? await response.Content.ReadAsStringAsync()
                         : null;
 
-                    if (string.IsNullOrEmpty(result))
+                    if (result != null)
                     {
                         var list = JsonConvert.DeserializeObject<List<Brand>>(result);
-
-                        ViewBag["HeaderBrands"] = list;
+                        ViewBag.HeaderBrands = list;
                     }
-                    
+
                 }
             }
 
@@ -81,20 +77,17 @@ namespace OnovaStore.Controllers
             {
                 using (var response = await client.GetAsync("/api/category/GetCategoriesForIndexPage"))
                 {
-                    string result = response.StatusCode == HttpStatusCode.OK
+                    dynamic result = response.StatusCode == HttpStatusCode.OK
                         ? await response.Content.ReadAsStringAsync()
-                        : String.Empty;
+                        : null;
 
-                    if (!string.IsNullOrEmpty(result))
+                    if (result != null)
                     {
                         var list = JsonConvert.DeserializeObject<List<Category>>(result);
-
-                        ViewBag["CategoryProducts"] = result;
+                        ViewBag.CategoryProducts = list;
                     }
                 }
             }
-
-            
 
             return View();
         }

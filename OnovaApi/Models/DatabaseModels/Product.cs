@@ -30,7 +30,7 @@ namespace OnovaApi.Models.DatabaseModels
         public double RealPrice { get; set; }
         public double DisplayPrice { get; set; }
         [Required]
-        [StringLength(255)]
+        [Column(TypeName = "ntext")]
         public string ProductShortDesc { get; set; }
         [Required]
         [Column(TypeName = "text")]

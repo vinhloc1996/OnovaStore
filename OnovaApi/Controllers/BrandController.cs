@@ -38,7 +38,10 @@ namespace OnovaApi.Controllers
         [AllowAnonymous]
         public IActionResult GetBrandsForHeader()
         {
-            return Json(_context.Brand.Where(b => b.TotalProduct > 0 && b.IsHide == false).Select(b => new { Name = b.Name, Slug = b.Slug }));
+            var debug = _context.Brand
+                .Where(c => c.TotalProduct > 0 && c.IsHide != true).Select(c => new { c.BrandId, c.Name, c.Slug }).ToList();
+            var json = Json(debug);
+            return json;
         }
 
         [HttpGet]

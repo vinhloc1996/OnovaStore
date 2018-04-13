@@ -1,4 +1,5 @@
-﻿<!-- Header -->
+﻿@using OnovaStore.Models.Category
+<!-- Header -->
 <header id="js-header" class="u-header u-header--static u-shadow-v19">
 <!-- Top Bar -->
 <div class="u-header__section g-brd-bottom g-brd-gray-light-v4 g-transition-0_3">
@@ -8,19 +9,29 @@
     <!-- Social Icons -->
     <ul class="list-inline g-py-14 mb-0" style="visibility: hidden;">
         <li class="list-inline-item">
-            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!"><i class="fa fa-facebook"></i></a>
+            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!">
+                <i class="fa fa-facebook"></i>
+            </a>
         </li>
         <li class="list-inline-item">
-            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!"><i class="fa fa-twitter"></i></a>
+            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!">
+                <i class="fa fa-twitter"></i>
+            </a>
         </li>
         <li class="list-inline-item">
-            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!"><i class="fa fa-tumblr"></i></a>
+            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!">
+                <i class="fa fa-tumblr"></i>
+            </a>
         </li>
         <li class="list-inline-item">
-            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!"><i class="fa fa-pinterest-p"></i></a>
+            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!">
+                <i class="fa fa-pinterest-p"></i>
+            </a>
         </li>
         <li class="list-inline-item">
-            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!"><i class="fa fa-google"></i></a>
+            <a class="g-color-black g-color-primary--hover g-pa-3" href="#!">
+                <i class="fa fa-google"></i>
+            </a>
         </li>
     </ul>
     <!-- End Social Icons -->
@@ -76,7 +87,7 @@
             </ul>
         </li>
         <!-- End Currency -->
-@*        <li class="list-inline-item g-color-gray-light-v3 g-mx-4">|</li>*@
+        @*        <li class="list-inline-item g-color-gray-light-v3 g-mx-4">|</li>*@
         <!-- Language -->
         <li class="list-inline-item g-mx-4" style="visibility: hidden;">
             <a id="languages-dropdown-invoker-2" class="g-color-text g-color-primary--hover g-font-weight-400 g-text-underline--none--hover" href="#!"
@@ -92,15 +103,15 @@
                 <svg xmlns="http://www.w3.org/2000/svg" height="11" width="27" viewBox="0 0 640 480">
                     <defs>
                         <clipPath id="a">
-                            <path fill-opacity=".67" d="M-85.333 0h682.67v512h-682.67z" />
+                            <path fill-opacity=".67" d="M-85.333 0h682.67v512h-682.67z"/>
                         </clipPath>
                     </defs>
                     <g clip-path="url(#a)" transform="translate(80) scale(.94)">
                         <g stroke-width="1pt">
-                            <path fill="#006" d="M-256 0H768.02v512.01H-256z" />
-                            <path d="M-256 0v57.244l909.535 454.768H768.02V454.77L-141.515 0H-256zM768.02 0v57.243L-141.515 512.01H-256v-57.243L653.535 0H768.02z" fill="#fff" />
-                            <path d="M170.675 0v512.01h170.67V0h-170.67zM-256 170.67v170.67H768.02V170.67H-256z" fill="#fff" />
-                            <path d="M-256 204.804v102.402H768.02V204.804H-256zM204.81 0v512.01h102.4V0h-102.4zM-256 512.01L85.34 341.34h76.324l-341.34 170.67H-256zM-256 0L85.34 170.67H9.016L-256 38.164V0zm606.356 170.67L691.696 0h76.324L426.68 170.67h-76.324zM768.02 512.01L426.68 341.34h76.324L768.02 473.848v38.162z" fill="#c00" />
+                            <path fill="#006" d="M-256 0H768.02v512.01H-256z"/>
+                            <path d="M-256 0v57.244l909.535 454.768H768.02V454.77L-141.515 0H-256zM768.02 0v57.243L-141.515 512.01H-256v-57.243L653.535 0H768.02z" fill="#fff"/>
+                            <path d="M170.675 0v512.01h170.67V0h-170.67zM-256 170.67v170.67H768.02V170.67H-256z" fill="#fff"/>
+                            <path d="M-256 204.804v102.402H768.02V204.804H-256zM204.81 0v512.01h102.4V0h-102.4zM-256 512.01L85.34 341.34h76.324l-341.34 170.67H-256zM-256 0L85.34 170.67H9.016L-256 38.164V0zm606.356 170.67L691.696 0h76.324L426.68 170.67h-76.324zM768.02 512.01L426.68 341.34h76.324L768.02 473.848v38.162z" fill="#c00"/>
                         </g>
                     </g>
                 </svg>
@@ -113,15 +124,15 @@
                         <svg class="mr-2 g-ml-minus-6" xmlns="http://www.w3.org/2000/svg" height="11" width="27" viewBox="0 0 640 480">
                             <defs>
                                 <clipPath id="a">
-                                    <path fill-opacity=".67" d="M-85.333 0h682.67v512h-682.67z" />
+                                    <path fill-opacity=".67" d="M-85.333 0h682.67v512h-682.67z"/>
                                 </clipPath>
                             </defs>
                             <g clip-path="url(#a)" transform="translate(80) scale(.94)">
                                 <g stroke-width="1pt">
-                                    <path fill="#006" d="M-256 0H768.02v512.01H-256z" />
-                                    <path d="M-256 0v57.244l909.535 454.768H768.02V454.77L-141.515 0H-256zM768.02 0v57.243L-141.515 512.01H-256v-57.243L653.535 0H768.02z" fill="#fff" />
-                                    <path d="M170.675 0v512.01h170.67V0h-170.67zM-256 170.67v170.67H768.02V170.67H-256z" fill="#fff" />
-                                    <path d="M-256 204.804v102.402H768.02V204.804H-256zM204.81 0v512.01h102.4V0h-102.4zM-256 512.01L85.34 341.34h76.324l-341.34 170.67H-256zM-256 0L85.34 170.67H9.016L-256 38.164V0zm606.356 170.67L691.696 0h76.324L426.68 170.67h-76.324zM768.02 512.01L426.68 341.34h76.324L768.02 473.848v38.162z" fill="#c00" />
+                                    <path fill="#006" d="M-256 0H768.02v512.01H-256z"/>
+                                    <path d="M-256 0v57.244l909.535 454.768H768.02V454.77L-141.515 0H-256zM768.02 0v57.243L-141.515 512.01H-256v-57.243L653.535 0H768.02z" fill="#fff"/>
+                                    <path d="M170.675 0v512.01h170.67V0h-170.67zM-256 170.67v170.67H768.02V170.67H-256z" fill="#fff"/>
+                                    <path d="M-256 204.804v102.402H768.02V204.804H-256zM204.81 0v512.01h102.4V0h-102.4zM-256 512.01L85.34 341.34h76.324l-341.34 170.67H-256zM-256 0L85.34 170.67H9.016L-256 38.164V0zm606.356 170.67L691.696 0h76.324L426.68 170.67h-76.324zM768.02 512.01L426.68 341.34h76.324L768.02 473.848v38.162z" fill="#c00"/>
                                 </g>
                             </g>
                         </svg>
@@ -132,9 +143,9 @@
                     <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-font-weight-400 g-py-5 g-px-20" href="#!">
                         <svg class="mr-2 g-ml-minus-6" xmlns="http://www.w3.org/2000/svg" height="11" width="27" viewBox="0 0 640 480">
                             <g stroke-width="1pt" fill-rule="evenodd">
-                                <path fill="#fff" d="M0 0h640v480H0z" />
-                                <path fill="#00267f" d="M0 0h213.33v480H0z" />
-                                <path fill="#f31830" d="M426.67 0H640v480H426.67z" />
+                                <path fill="#fff" d="M0 0h640v480H0z"/>
+                                <path fill="#00267f" d="M0 0h213.33v480H0z"/>
+                                <path fill="#f31830" d="M426.67 0H640v480H426.67z"/>
                             </g>
                         </svg>
                         Spanish
@@ -144,9 +155,9 @@
                     <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-font-weight-400 g-py-5 g-px-20" href="#!">
                         <svg class="mr-2 g-ml-minus-6" xmlns="http://www.w3.org/2000/svg" height="11" width="27" viewBox="0 0 640 480">
                             <g fill-rule="evenodd" stroke-width="1pt">
-                                <path fill="#fff" d="M0 0h640v480H0z" />
-                                <path fill="#0039a6" d="M0 160.003h640V480H0z" />
-                                <path fill="#d52b1e" d="M0 319.997h640V480H0z" />
+                                <path fill="#fff" d="M0 0h640v480H0z"/>
+                                <path fill="#0039a6" d="M0 160.003h640V480H0z"/>
+                                <path fill="#d52b1e" d="M0 319.997h640V480H0z"/>
                             </g>
                         </svg>
                         Russian
@@ -155,9 +166,9 @@
                 <li>
                     <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-font-weight-400 g-py-5 g-px-20" href="#!">
                         <svg class="mr-2 g-ml-minus-6" xmlns="http://www.w3.org/2000/svg" height="11" width="27" viewBox="0 0 640 480">
-                            <path fill="#ffce00" d="M0 320h640v160.002H0z" />
-                            <path d="M0 0h640v160H0z" />
-                            <path fill="#d00" d="M0 160h640v160H0z" />
+                            <path fill="#ffce00" d="M0 320h640v160.002H0z"/>
+                            <path d="M0 0h640v160H0z"/>
+                            <path fill="#d00" d="M0 160h640v160H0z"/>
                         </svg>
                         German
                     </a>
@@ -212,221 +223,117 @@
 </div>
 <!-- End Top Bar -->
 <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
-<nav class="js-mega-menu navbar navbar-expand-lg">
-<div class="container">
-<!-- Responsive Toggle Button -->
-<button class="navbar-toggler navbar-toggler-right btn g-line-height-1 g-brd-none g-pa-0 g-pos-abs g-top-3 g-right-0" type="button"
-        aria-label="Toggle navigation"
-        aria-expanded="false"
-        aria-controls="navBar"
-        data-toggle="collapse"
-        data-target="#navBar">
-    <span class="hamburger hamburger--slider g-pr-0">
-        <span class="hamburger-box">
-            <span class="hamburger-inner"></span>
-        </span>
-    </span>
-</button>
-<!-- End Responsive Toggle Button -->
-<!-- Logo -->
-<a class="navbar-brand" href="@Url.Action("Index", "Home")">
-    <img src="~/html/assets/img/logo/logo.jpg" style="width: 55px; height: 55px;" alt="Image Description">
-</a>
-<!-- End Logo -->
-<!-- Navigation -->
-<div id="navBar" class="collapse navbar-collapse align-items-center flex-sm-row g-pt-15 g-pt-0--lg">
-<ul class="navbar-nav ml-auto">
-<!-- Home - Submenu -->
-<li class="nav-item g-mx-10--lg g-mx-15--xl">
-    <a id="nav-link--home" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="@Url.Action("Index", "Home")">
-        Home
-    </a>
-</li>
-<!-- End Home - Submenu -->
-
-<!-- Categories - Mega Menu -->
-<li class="hs-has-mega-menu nav-item g-mx-10--lg g-mx-15--xl"
-    data-animation-in="fadeIn"
-    data-animation-out="fadeOut"
-    data-position="center">
-    <a id="mega-menu-label-3" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="#!" aria-haspopup="true" aria-expanded="false">
-        Categories
-        <i class="hs-icon hs-icon-arrow-bottom g-font-size-11 g-ml-7"></i>
-    </a>
-    <!-- Mega Menu -->
-    <div class="w-100 hs-mega-menu u-shadow-v11 g-text-transform-none g-brd-top g-brd-primary g-brd-top-2 g-bg-white g-pa-30 g-mt-17" aria-labelledby="mega-menu-label-3">
-        <div class="row">
-            <div class="col-sm-6 col-lg-4 g-mb-30 g-mb-0--md">
-                <!-- Links -->
-                <div class="mb-5">
-                    <ul class="list-unstyled">
-                        @{
-                            if (ViewBag["HeaderCategories"] != null)
-                            {
-                                var categories = ViewBag["HeaderCategories"];
-
-                                foreach (var category in categories)
-                                {
-                                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="@category.Slug">@category.Name</a></li>
-                                }
-                            }
-                        }
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Mega Menu -->
-</li>
-<!-- End Categories - Mega Menu -->
-<!-- Mega Menu Item -->
-<li class="hs-has-mega-menu nav-item g-mx-10--lg g-mx-15--xl"
-    data-animation-in="fadeIn"
-    data-animation-out="fadeOut"
-    data-position="right">
-    <a id="mega-menu-label-4" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="#!" aria-haspopup="true" aria-expanded="false">
-        Brand
-        <i class="hs-icon hs-icon-arrow-bottom g-font-size-11 g-ml-7"></i>
-    </a>
-    <!-- Mega Menu -->
-    <div class="w-100 hs-mega-menu u-shadow-v11 g-text-transform-none g-brd-top g-brd-primary g-brd-top-2 g-bg-white g-pa-30 g-mt-17" aria-labelledby="mega-menu-label-4">
-        <div class="row">
-            <div class="col-sm-6 col-md-3 g-mb-30 g-mb-0--sm">
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Clothes</span>
-                    <ul class="list-unstyled mb-0">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">New in</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Coats &amp; Jackets</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Jeans</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Dresses</a></li>
-                        <li>
-                            <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">
-                                Shorts
-                                <span class="u-label g-bg-primary rounded g-ml-10">New</span>
-                            </a>
-                        </li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Skirts</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">T-Shirts</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Shoes</span>
-                <ul class="list-unstyled">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Boots</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">FLats</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Heels</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Sandals</a></li>
-                </ul>
-                <!-- End Links -->
-            </div>
-            <div class="col-sm-6 col-md-3 g-mb-30 g-mb-0--sm">
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Accessories</span>
-                    <ul class="list-unstyled mb-0">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">All accessories</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Bags &amp; Purses</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Scarvs &amp; Hats</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Jewellery</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Fragrance &amp; Beauty</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Lingerie</span>
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">
-                                Linger
-                                <span class="u-label g-bg-primary rounded g-ml-10">New</span>
-                            </a>
-                        </li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Slippers</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Nightwear</span>
-                <ul class="list-unstyled mb-0">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Nightwear</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Socks</a></li>
-                </ul>
-                <!-- End Links -->
-            </div>
-            <div class="col-sm-6 col-md-3 g-mb-30 g-mb-0--sm">
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Mixed</span>
-                <ul class="list-unstyled mb-0">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">New in</a></li>
-                    <li>
-                        <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">
-                            Coats &amp; Jackets
-                            <span class="u-label g-bg-primary rounded g-ml-10">New</span>
+    <nav class="js-mega-menu navbar navbar-expand-lg">
+        <div class="container">
+            <!-- Responsive Toggle Button -->
+            <button class="navbar-toggler navbar-toggler-right btn g-line-height-1 g-brd-none g-pa-0 g-pos-abs g-top-3 g-right-0" type="button"
+                    aria-label="Toggle navigation"
+                    aria-expanded="false"
+                    aria-controls="navBar"
+                    data-toggle="collapse"
+                    data-target="#navBar">
+                <span class="hamburger hamburger--slider g-pr-0">
+                    <span class="hamburger-box">
+                        <span class="hamburger-inner"></span>
+                    </span>
+                </span>
+            </button>
+            <!-- End Responsive Toggle Button -->
+            <!-- Logo -->
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">
+                <img src="~/html/assets/img/logo/logo.jpg" style="width: 55px; height: 55px;" alt="Image Description">
+            </a>
+            <!-- End Logo -->
+            <!-- Navigation -->
+            <div id="navBar" class="collapse navbar-collapse align-items-center flex-sm-row g-pt-15 g-pt-0--lg">
+                <ul class="navbar-nav ml-auto">
+                    <!-- Home - Submenu -->
+                    <li class="nav-item g-mx-10--lg g-mx-15--xl">
+                        <a id="nav-link--home" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="@Url.Action("Index", "Home")">
+                            Home
                         </a>
                     </li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Jeans</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Dresses</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Shorts</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Skirts</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">T-shirts</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Boots</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Flats</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Heels</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Sandals</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Sports</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Socks</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Tights</a></li>
+                    <!-- End Home - Submenu -->
+
+                    <!-- Categories - Mega Menu -->
+                    <li class="hs-has-mega-menu nav-item g-mx-10--lg g-mx-15--xl"
+                        data-animation-in="fadeIn"
+                        data-animation-out="fadeOut"
+                        data-position="center">
+                        <a id="mega-menu-label-3" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="#!" aria-haspopup="true" aria-expanded="false">
+                            Categories
+                            <i class="hs-icon hs-icon-arrow-bottom g-font-size-11 g-ml-7"></i>
+                        </a>
+                        <!-- Mega Menu -->
+                        <div class="w-100 hs-mega-menu u-shadow-v11 g-text-transform-none g-brd-top g-brd-primary g-brd-top-2 g-bg-white g-pa-30 g-mt-17" aria-labelledby="mega-menu-label-3">
+                            <div class="row">
+                                <div class="col-sm-6 col-lg-4 g-mb-30 g-mb-0--md">
+                                    <!-- Links -->
+                                    <div class="mb-5">
+                                        <ul class="list-unstyled">
+                                            @{
+                                                if (ViewBag.HeaderCategories != null)
+                                                {
+                                                    var categories = (List<Category>) ViewBag.HeaderCategories;
+
+                                                    foreach (var category in categories)
+                                                    {
+                                                        <li>
+                                                            <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="@category.Slug">@category.Name</a>
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Mega Menu -->
+                    </li>
+                    <!-- End Categories - Mega Menu -->
+                    <!-- Mega Menu Item -->
+                    <li class="hs-has-mega-menu nav-item g-mx-10--lg g-mx-15--xl"
+                        data-animation-in="fadeIn"
+                        data-animation-out="fadeOut"
+                        data-position="right">
+                        <a id="mega-menu-label-4" class="nav-link text-uppercase g-color-primary--hover g-px-5 g-py-20" href="#!" aria-haspopup="true" aria-expanded="false">
+                            Brand
+                            <i class="hs-icon hs-icon-arrow-bottom g-font-size-11 g-ml-7"></i>
+                        </a>
+                        <!-- Mega Menu -->
+                        <div class="w-100 hs-mega-menu u-shadow-v11 g-text-transform-none g-brd-top g-brd-primary g-brd-top-2 g-bg-white g-pa-30 g-mt-17" aria-labelledby="mega-menu-label-4">
+                            <div class="row">
+                                <div class="col-sm-6 col-md-3 g-mb-30 g-mb-0--sm">
+                                    <!-- Links -->
+                                    <div class="mb-5">
+                                        <ul class="list-unstyled mb-0">
+                                            @{
+                                                if (ViewBag.HeaderBrands != null)
+                                                {
+                                                    var brands = ViewBag.HeaderBrands;
+
+                                                    foreach (var brand in brands)
+                                                    {
+                                                        <li>
+                                                            <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="@brand.Slug">@brand.Name</a>
+                                                        </li>
+                                                    }
+                                                }
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Mega Menu -->
+                    </li>
+                    <!-- End Mega Menu Item -->
                 </ul>
-                <!-- End Links -->
             </div>
-            <div class="col-sm-6 col-md-3 g-mb-30 g-mb-0--sm">
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Accessories</span>
-                    <ul class="list-unstyled mb-0">
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">All accessories</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Bags &amp; Purses</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Scarvs &amp; Hats</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Jewellery</a></li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Fragrance &amp; Beauty</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <div class="mb-5">
-                    <span class="d-block g-font-weight-500 text-uppercase mb-2">Lingerie</span>
-                    <ul class="list-unstyled mb-0">
-                        <li>
-                            <a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">
-                                Linger
-                                <span class="u-label g-bg-primary rounded g-ml-10">New</span>
-                            </a>
-                        </li>
-                        <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Slippers</a></li>
-                    </ul>
-                </div>
-                <!-- End Links -->
-                <!-- Links -->
-                <span class="d-block g-font-weight-500 text-uppercase mb-2">Nightwear</span>
-                <ul class="list-unstyled mb-0">
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Nightwear</a></li>
-                    <li><a class="d-block g-color-text g-color-primary--hover g-text-underline--none--hover g-py-5" href="#!">Socks</a></li>
-                </ul>
-                <!-- End Links -->
-            </div>
+            <!-- End Navigation -->
         </div>
-    </div>
-    <!-- End Mega Menu -->
-</li>
-<!-- End Mega Menu Item -->
-</ul>
-</div>
-<!-- End Navigation -->
-</div>
-</nav>
+    </nav>
 </div>
 </header>
 <!-- End Header -->

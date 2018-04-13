@@ -29,6 +29,8 @@
     <Compile Remove="Migrations\20180406160402_AddDefaultValue.Designer.cs" />
     <Compile Remove="Migrations\20180410164827_RemoveRequiredAttribute.cs" />
     <Compile Remove="Migrations\20180410164827_RemoveRequiredAttribute.Designer.cs" />
+    <Compile Remove="Migrations\20180413153119_ChangeProductTypeColumn.cs" />
+    <Compile Remove="Migrations\20180413153119_ChangeProductTypeColumn.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
