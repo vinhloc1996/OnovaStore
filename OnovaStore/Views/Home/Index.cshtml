@@ -13,7 +13,7 @@
     @{
         if (ViewBag.HeaderCategories != null)
         {
-            var categories = (List<Category>)ViewBag.CategoryProducts;
+            var categories = (List<Category>) ViewBag.CategoryProducts;
 
             foreach (var category in categories)
             {
@@ -23,8 +23,6 @@
                 <div class="row g-mx-minus-10 g-mb-50">
                     @foreach (var product in category.Product)
                     {
-
-
                         <div class="col-md-6 col-lg-4 g-px-10">
                             <!-- Article -->
                             <article class="media g-brd-around g-brd-gray-light-v4 g-bg-white rounded g-pa-10 g-mb-20">
@@ -44,7 +42,7 @@
                                         <span class="g-color-black g-line-height-1">@product.DisplayPrice</span>
                                         <ul class="list-inline g-color-gray-light-v2 g-font-size-14 g-line-height-1">
                                             <li class="list-inline-item align-middle g-brd-right g-brd-gray-light-v3 g-pr-10 g-mr-6">
-                                                <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover" href="@(isAuthenticated ? "" : "#addToCart")" @(isAuthenticated ? "" : @"data-modal-target=#addToCart data-modal-effect=fadein") onclick="addToCart(@product.ProductId); return false;" title="Add to Cart"
+                                                <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover" href="#" onclick="addToCart(@product.ProductId);return false;" title="Add to Cart"
                                                    data-toggle="tooltip"
                                                    data-placement="top">
                                                     <i class="icon-finance-100 u-line-icon-pro"></i>
@@ -64,7 +62,6 @@
                             </article>
                             <!-- End Article -->
                         </div>
-
                     }
                 </div>
                 <div class="text-center">
@@ -83,7 +80,9 @@
         <i class="hs-icon hs-icon-close"></i>
     </button>
     <h4 class="g-mb-20">Function require login</h4>
-    <p>You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function</p>
+    <p>
+        You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function
+    </p>
 </div>
 
 <div id="addToCart" class="text-left g-max-width-300 g-bg-white g-overflow-y-auto g-pa-20" style="display: none; width: 700px">
@@ -91,76 +90,87 @@
         <i class="hs-icon hs-icon-close"></i>
     </button>
     <h4 class="g-mb-20">Function require login</h4>
-    <p>You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function</p>
+    <p>
+        You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function
+    </p>
 </div>
 <script type="text/javascript">
+    var customerId = @isAuthenticated ? @claimManager.Id : checkCookie("AnonymousId") ? getCookie('AnonymousId') : "";
+
     function addToCart(id) {
         $.ajax({
-            url: 'http://localhost:58212' + '@Url.Action("AddToCart", "Cart")?id=' + id,
+            url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + customerId + '&productId=' + id + '&isAuthenticated=@isAuthenticated',
             type: "get",
             success: function(val) {
                 if (val) {
-                    var list = $.parseJSON(val);
+//                    var list = $.parseJSON(val);
                     var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
                     $('div').remove('.cart-detail');
 
-                    list.forEach(function (object) {
-                        if (object.productThumbImage == null) {
-                            object.productThumbImage = 'b5aamndnqugqynwxzmm6';
-                        }
-                        var element =
-                            '<div class="js-scrollbar g-height-200 cart-detail"> <div class="u-basket__product g-brd-none g-px-20"> <div class="row no-gutters g-pb-5"> <div class="col-4 pr-3"> <a class="u-basket__product-img" href="#!"> <img class="img-fluid" src="' + imgUrl + object.productThumbImage + '" alt="Image Description"> </a> </div> <div class="col-8"> <h6 class="g-font-weight-400 g-font-size-default"> <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' + object.slug + '">' + object.name + '</a> </h6> <small class="g-color-primary g-font-size-12">' + object.quantity + ' x $' + object.displayPrice + '</small> </div> </div> <button type="button" class="u-basket__product-remove">&times;</button> </div> </div>';
+                    if (val.productThumbImage == null) {
+                        val.productThumbImage = 'b5aamndnqugqynwxzmm6';
+                    }
+                    var element =
+                        '<div class="js-scrollbar g-height-200 cart-detail"> <div class="u-basket__product g-brd-none g-px-20"> <div class="row no-gutters g-pb-5"> <div class="col-4 pr-3"> <a class="u-basket__product-img" href="#!"> <img class="img-fluid" src="' +
+                            imgUrl +
+                            val.productThumbImage +
+                            '" alt="Image Description"> </a> </div> <div class="col-8"> <h6 class="g-font-weight-400 g-font-size-default"> <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
+                            val.slug +
+                            '">' +
+                            val.name +
+                            '</a> </h6> <small class="g-color-primary g-font-size-12">' +
+                            1 +
+                            ' x $' +
+                            val.displayPrice +
+                            '</small> </div> </div> <button type="button" class="u-basket__product-remove">&times;</button> </div> </div>';
 
-                        $(element).insertAfter('.g-brd-bottom.g-brd-gray-light-v4.g-pa-15.g-mb-10');
+                    $(element).insertAfter('.g-brd-bottom.g-brd-gray-light-v4.g-pa-15.g-mb-10');
 
-                        $('#totalPrice').text('$'+object.totalPrice);
-                    });
+                    $('#totalPrice').text('$' + val.totalPrice);
 
-                    $("#numberQuantity").text(list.length);
+
+                    $("#numberQuantity").text(val.length);
                 }
             }
         });
     }
 </script>
-@*
-        <script type="text/javascript">
-        var authenticated = @claimManager.IsAuthenticated;
-        var guid = "";
+<script type="text/javascript">
+    var authenticated = @claimManager.IsAuthenticated;
+    var guid = "";
 
-        if (!authenticated) {
-            if (checkCookie) {
-                guid = getCookie('AnonymouseId');
+    if (!authenticated) {
+        if (checkCookie) {
+            guid = getCookie('AnonymouseId');
+        }
+    }
+
+
+    function setCookie(cname, cvalue, exdays) {
+        var d = new Date();
+        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+        var expires = "expires=" + d.toUTCString();
+        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+    }
+
+    function getCookie(cname) {
+        var name = cname + "=";
+        var decodedCookie = decodeURIComponent(document.cookie);
+        var ca = decodedCookie.split(';');
+        for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
             }
         }
+        return "";
+    }
 
-        
-
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            var expires = "expires="+ d.toUTCString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-
-        function checkCookie() {
-            var guid = getCookie("AnonymouseId");
-            return guid != "";
-        }
-    </script>
-*@
+    function checkCookie() {
+        var guid = getCookie("AnonymouseId");
+        return guid != "";
+    }
+</script>

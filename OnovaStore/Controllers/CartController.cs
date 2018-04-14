@@ -33,57 +33,56 @@ namespace OnovaStore.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> AddToCart([FromQuery] int productId)
+        public async Task<IActionResult> AddToCart([FromQuery] int id)
         {
-            if (_claimPrincipalManager.IsAuthenticated)
+            using (var client = restClient.CreateClient(User))
             {
-                using (var client = restClient.CreateClient(User))
+                using (var response = await client.GetAsync("/api/product/" + id))
                 {
-                    using (var response = await client.GetAsync("/api/product/" + productId))
+                    string result = response.StatusCode == HttpStatusCode.OK
+                        ? await response.Content.ReadAsStringAsync()
+                        : null;
+
+                    if (result != null)
                     {
-                        string result = response.StatusCode == HttpStatusCode.OK
-                            ? await response.Content.ReadAsStringAsync()
-                            : null;
+                        var product = JsonConvert.DeserializeObject<ProductCart>(result);
 
-                        if (result != null)
+                        var customerCartDetail = new CustomerCartDetail
                         {
-                            var product = JsonConvert.DeserializeObject<ProductCart>(result);
+                            ProductId = product.ProductId,
+                            CustomerCartId = _claimPrincipalManager.Id,
+                            Price = product.RealPrice,
+                            DisplayPrice = product.DisplayPrice,
+                            Quantity = product.CurrentQuantity
+                        };
 
-                            var customerCartDetail = new CustomerCartDetail
+                        using (var addCartDetail = await client.PostAsync("/api/CustomerCartDetail/",
+                            new StringContent(JsonConvert.SerializeObject(customerCartDetail), Encoding.UTF8,
+                                "application/json")))
+                        {
+                            if (addCartDetail.IsSuccessStatusCode)
                             {
-                                ProductId = product.ProductId,
-                                CustomerCartId = _claimPrincipalManager.Id,
-                                Price = product.RealPrice,
-                                DisplayPrice = product.DisplayPrice,
-                                Quantity = product.CurrentQuantity
-                            };
-
-                            using (var addCartDetail = await client.PostAsync("/api/CustomerCartDetail/",
-                                new StringContent(JsonConvert.SerializeObject(customerCartDetail), Encoding.UTF8,
-                                    "application/json")))
-                            {
-                                if (addCartDetail.IsSuccessStatusCode)
+                                using (var getCartDetail =
+                                    await client.GetAsync(
+                                        "/api/CustomerCartDetail/" + customerCartDetail.CustomerCartId))
                                 {
-                                    using (var getCartDetail = await client.GetAsync("/api/CustomerCartDetail/" + customerCartDetail.CustomerCartId))
-                                    {
-                                        string listCart = response.StatusCode == HttpStatusCode.OK
-                                            ? await response.Content.ReadAsStringAsync()
-                                            : null;
+                                    string listCart = response.StatusCode == HttpStatusCode.OK
+                                        ? await response.Content.ReadAsStringAsync()
+                                        : null;
 
 //                                        var cartDetail = JsonConvert.DeserializeObject<List<dynamic>>(listCart);
 
-                                        return Json(listCart);
-                                    }
+                                    return Json(listCart);
                                 }
                             }
                         }
-
                     }
                 }
             }
-
+            
             return Ok();
         }
+
         public void Set(string key, string value)
         {
             CookieOptions option = new CookieOptions();
