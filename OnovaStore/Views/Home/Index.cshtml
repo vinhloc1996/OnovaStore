@@ -95,13 +95,14 @@
     </p>
 </div>
 <script type="text/javascript">
-    var customerId = @isAuthenticated ? @claimManager.Id : checkCookie("AnonymousId") ? getCookie('AnonymousId') : "";
-
     function addToCart(id) {
         $.ajax({
-            url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + customerId + '&productId=' + id + '&isAuthenticated=@isAuthenticated',
+            url: 'http://localhost:5000/' + 'api/cart/addtocart?&productId=' + id,
             type: "get",
-            success: function(val) {
+            success: function (val) {
+                $.ajax({
+                    url: ''
+                });
                 if (val) {
 //                    var list = $.parseJSON(val);
                     var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
@@ -136,7 +137,7 @@
     }
 </script>
 <script type="text/javascript">
-    var authenticated = @claimManager.IsAuthenticated;
+    var authenticated = '@claimManager.IsAuthenticated';
     var guid = "";
 
     if (!authenticated) {

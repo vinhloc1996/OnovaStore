@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using OnovaApi.Data;
 using OnovaApi.Models.DatabaseModels;
 
@@ -23,17 +24,17 @@ namespace OnovaApi.Controllers
 
         [Route("AddToCart")]
         [HttpGet]
-        public async Task<IActionResult> AddToCart([FromQuery] string customerId, [FromQuery] int productId,
-            [FromQuery] bool isAuthenticated = false, [FromQuery] int quantity = 1)
+        public async Task<IActionResult> AddToCart([FromQuery] string customerId, [FromQuery] int productId, [FromQuery] int quantity = 1)
         {
             var product = _context.Product.Find(productId);
+//            var customerId = Request.Cookies["AnonymousId"];
 
             if (product == null)
             {
                 return BadRequest();
             }
 
-            if (isAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 var userId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
                     ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
@@ -48,6 +49,12 @@ namespace OnovaApi.Controllers
                 });
 
                 await _context.SaveChangesAsync();
+
+                return Json(new
+                {
+                    Status = "Success",
+                    Message = "Add product into cart successful"
+                });
             }
             else
             {
@@ -76,10 +83,16 @@ namespace OnovaApi.Controllers
                     });
 
                     await _context.SaveChangesAsync();
+
+                    return Json(new
+                    {
+                        Status = "Success",
+                        Message = "Add product into cart successful"
+                    });
                 }
                 else
                 {
-                    if (_context.AnonymousCustomer.Find(customerId) != null)
+                    if (_context.AnonymousCustomerCart.Find(customerId) != null)
                     {
                         var cartDetail = _context.AnonymousCustomerCartDetail.Find(customerId, productId);
 
@@ -103,6 +116,7 @@ namespace OnovaApi.Controllers
                                 Message = "Product Quantiy is over maximum quantity can order in a time"
                             });
                         }
+
                         _context.AnonymousCustomerCartDetail.Add(new AnonymousCustomerCartDetail
                         {
                             AnonymousCustomerCartId = customerId,
@@ -113,12 +127,17 @@ namespace OnovaApi.Controllers
                         });
 
                         await _context.SaveChangesAsync();
+
+                        return Json(new
+                        {
+                            Status = "Success",
+                            Message = "Add product into cart successful"
+                        });
                     }
                     else
                     {
-                        Response.Cookies.Delete("AnonymousId");
-
                         customerId = Guid.NewGuid().ToString();
+
                         Set("AnonymousId", customerId);
 
                         _context.AnonymousCustomer.Add(
@@ -141,11 +160,15 @@ namespace OnovaApi.Controllers
                         });
 
                         await _context.SaveChangesAsync();
+
+                        return Json(new
+                        {
+                            Status = "Success",
+                            Message = "Add product into cart successful"
+                        });
                     }
                 }
             }
-
-            return Ok();
         }
 
         public void Set(string key, string value)
@@ -160,39 +183,43 @@ namespace OnovaApi.Controllers
         [Route("ShowCartHeader")]
         public IActionResult ShowCartHeader([FromQuery] string customerId)
         {
+//            var customerId = Request.Cookies["AnonymousId"];
+
             if (string.IsNullOrEmpty(customerId))
             {
                 return NoContent();
             }
 
-            var customer = _context.CustomerCart.Find(customerId);
-            var anonymousCustomer = _context.AnonymousCustomerCart.Find(customerId);
-
             if (User.Identity.IsAuthenticated)
             {
-                var id = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
-                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
+//                var id = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+//                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
 
-                var customerCart = _context.CustomerCartDetail.Where(c => c.CustomerCartId == id).Select(x => new {x.ProductId, x.DisplayPrice, x.Product.ProductThumbImage, x.Quantity, x.Product.Name}).ToList();
+                var customerCart = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(x =>
+                        new {x.ProductId, x.DisplayPrice, x.Product.ProductThumbImage, x.Quantity, x.Product.Name, x.Product.Slug})
+                    .ToList();
 
                 return Json(customerCart);
             }
-            else
-            {
-                if (_context.AnonymousCustomerCart.Find(customerId) != null)
-                {
-                    var customerCart = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x => new { x.ProductId, x.DisplayPrice, x.Product.ProductThumbImage, x.Quantity, x.Product.Name }).ToList();
 
-                    return Json(customerCart);
-                }
-                return NoContent();
+            if (_context.AnonymousCustomerCart.Find(customerId) != null)
+            {
+                var customerCart = _context.AnonymousCustomerCartDetail
+                    .Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                        new {x.ProductId, x.DisplayPrice, x.Product.ProductThumbImage, x.Quantity, x.Product.Name, x.Product.Slug})
+                    .ToList();
+
+                return Json(customerCart);
             }
+
+            return NoContent();
         }
 
         [Route("UpdateCartDetail")]
-        public IActionResult Update([FromBody] )
+        [HttpPost]
+        public IActionResult Update([FromBody] JObject data)
         {
-            
+            return Ok();
         }
     }
 }
