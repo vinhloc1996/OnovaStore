@@ -15,7 +15,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Column("AnonymousCustomerCartID")]
         public string AnonymousCustomerCartId { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.Now;
         [Required]
         public byte[] LastUpdate { get; set; }
         public double? Tax { get; set; }

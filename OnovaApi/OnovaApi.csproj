@@ -31,6 +31,8 @@
     <Compile Remove="Migrations\20180410164827_RemoveRequiredAttribute.Designer.cs" />
     <Compile Remove="Migrations\20180413153119_ChangeProductTypeColumn.cs" />
     <Compile Remove="Migrations\20180413153119_ChangeProductTypeColumn.Designer.cs" />
+    <Compile Remove="Migrations\20180414024409_NullableColumn.cs" />
+    <Compile Remove="Migrations\20180414024409_NullableColumn.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

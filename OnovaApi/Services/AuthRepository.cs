@@ -139,6 +139,10 @@ namespace OnovaApi.Services
                     JoinDate = dto.JoinDate
                 });
 
+                var a = _context.CustomerCart.Add(new CustomerCart { CustomerCartId = newUser.Id, CreateDate = DateTime.Now });
+
+                await _context.SaveChangesAsync();
+
                 return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
             }
 

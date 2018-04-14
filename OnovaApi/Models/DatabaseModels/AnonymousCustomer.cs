@@ -14,10 +14,9 @@ namespace OnovaApi.Models.DatabaseModels
         [Column("AnonymousCustomerID")]
         public string AnonymousCustomerId { get; set; }
         [Column(TypeName = "datetime")]
-        public DateTime VisitDate { get; set; }
+        public DateTime VisitDate { get; set; } = DateTime.Now;
         [Required]
         public byte[] LastUpdateDate { get; set; }
-        [Required]
         [Column("IPAddress")]
         [StringLength(50)]
         public string Ipaddress { get; set; }
