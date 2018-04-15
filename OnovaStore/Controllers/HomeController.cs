@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -106,23 +107,26 @@ namespace OnovaStore.Controllers
                     return View();
                 }
             }
-//
-//            using (var client = restClient.CreateClient(User))
-//            {
-//                using (var response = await client.GetAsync("/api/cart/ShowCartHeader?customerId=" + customerId))
-//                {
-//                    dynamic result = response.StatusCode == HttpStatusCode.OK
-//                        ? await response.Content.ReadAsStringAsync()
-//                        : null;
-//
-//                    if (result != null)
-//                    {
-//                        var list = JsonConvert.DeserializeObject<dynamic>(result);
-//
-//                        ViewBag.CartHeader = result;
-//                    }
-//                }
-//            }
+
+            var id = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
+            //
+            //            using (var client = restClient.CreateClient(User))
+            //            {
+            //                using (var response = await client.GetAsync("/api/cart/ShowCartHeader?customerId=" + customerId))
+            //                {
+            //                    dynamic result = response.StatusCode == HttpStatusCode.OK
+            //                        ? await response.Content.ReadAsStringAsync()
+            //                        : null;
+            //
+            //                    if (result != null)
+            //                    {
+            //                        var list = JsonConvert.DeserializeObject<dynamic>(result);
+            //
+            //                        ViewBag.CartHeader = result;
+            //                    }
+            //                }
+            //            }
 
             return View();
         }
