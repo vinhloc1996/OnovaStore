@@ -28,6 +28,7 @@
     <!-- CSS Customization -->
     <link rel="stylesheet" href="~/html/assets/css/custom.css">
     <script src="~/html/assets/vendor/jquery/jquery.min.js"></script>
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <main>
@@ -58,7 +59,7 @@
     <script src="~/html/assets/js/components/hs.count-qty.js"></script>
     <script src="~/html/assets/js/components/hs.carousel.js"></script>
     <script src="~/html/assets/js/components/hs.go-to.js"></script>
-<script src="~/html/assets/js/components/hs.modal-window.js"></script>
+    <script src="~/html/assets/js/components/hs.modal-window.js"></script>
 
     <!-- JS Customization -->
     <script src="~/html/assets/js/custom.js"></script>
@@ -149,5 +150,6 @@
             $.HSCore.components.HSScrollBar.init($('.js-scrollbar'));
         });
     </script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

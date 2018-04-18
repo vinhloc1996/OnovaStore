@@ -39,7 +39,7 @@
                                     <!-- End Article Info -->
                                     <!-- Article Footer -->
                                     <footer class="d-flex justify-content-between g-font-size-16">
-                                        <span class="g-color-black g-line-height-1">@product.DisplayPrice</span>
+                                        <span class="g-color-black g-line-height-1">$@product.DisplayPrice</span>
                                         <ul class="list-inline g-color-gray-light-v2 g-font-size-14 g-line-height-1">
                                             <li class="list-inline-item align-middle g-brd-right g-brd-gray-light-v3 g-pr-10 g-mr-6">
                                                 <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover" href="#" onclick="addToCart(@product.ProductId);return false;" title="Add to Cart"
@@ -85,75 +85,93 @@
     </p>
 </div>
 
-<div id="addToCart" class="text-left g-max-width-300 g-bg-white g-overflow-y-auto g-pa-20" style="display: none; width: 700px">
-    <button type="button" class="close" onclick="Custombox.modal.close();">
-        <i class="hs-icon hs-icon-close"></i>
-    </button>
-    <h4 class="g-mb-20">Function require login</h4>
-    <p>
-        You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function
-    </p>
-</div>
 <script type="text/javascript">
+    var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
+
     function addToCart(id) {
+        var anonymousId = getCookie("AnonymousId");
         $.ajax({
-            url: 'http://localhost:5000/' + 'api/cart/addtocart?&productId=' + id,
+            url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
             type: "get",
-            success: function (val) {
-                $.ajax({
-                    url: ''
-                });
-                if (val) {
-//                    var list = $.parseJSON(val);
-                    var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
-                    $('div').remove('.cart-detail');
+            success: function(val) {
+                var totalPrice = 0;
+                var numberQuantity = 0;
+                if (val.status == 'Success') {
+                    var list = val.product;
+                    for (var i = 0; i < list.length; i++) {
+                        if (list[i].productThumbImage == null) {
+                            list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
+                        }
 
-                    if (val.productThumbImage == null) {
-                        val.productThumbImage = 'b5aamndnqugqynwxzmm6';
+                        var element =
+                            '<div class="u-basket__product g-brd-none g-px-20 card-detail"> ' +
+                                '<div class="row no-gutters g-pb-5"> ' +
+                                '<div class="col-4 pr-3"> ' +
+                                '<a class="u-basket__product-img" href="#!"> ' +
+                                '<img class="img-fluid" src="' +
+                                imgUrl +
+                                list[i].productThumbImage +
+                                '" alt="Image Description"> ' +
+                                '</a> ' +
+                                '</div> ' +
+                                '<div class="col-8"> ' +
+                                '<h6 class="g-font-weight-400 g-font-size-default"> ' +
+                                '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
+                                list[i].slug +
+                                '">' +
+                                list[i].name +
+                                '</a> ' +
+                                '</h6> ' +
+                                '<small class="g-color-primary g-font-size-12">' +
+                                list[i].quantity +
+                                ' x $' +
+                                list[i].displayPrice +
+                                '</small> ' +
+                                '</div> ' +
+                                '</div> ' +
+                                '<button type="button" class="u-basket__product-remove">' +
+                                'x' +
+                                '</button> ' +
+                                '</div> ';
+
+                        $(element).insertAfter('#mCSB_1_container');
+                        totalPrice = totalPrice + (list[i].quantity * list[i].displayPrice);
+                        numberQuantity += list[i].quantity;
                     }
-                    var element =
-                        '<div class="js-scrollbar g-height-200 cart-detail"> <div class="u-basket__product g-brd-none g-px-20"> <div class="row no-gutters g-pb-5"> <div class="col-4 pr-3"> <a class="u-basket__product-img" href="#!"> <img class="img-fluid" src="' +
-                            imgUrl +
-                            val.productThumbImage +
-                            '" alt="Image Description"> </a> </div> <div class="col-8"> <h6 class="g-font-weight-400 g-font-size-default"> <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
-                            val.slug +
-                            '">' +
-                            val.name +
-                            '</a> </h6> <small class="g-color-primary g-font-size-12">' +
-                            1 +
-                            ' x $' +
-                            val.displayPrice +
-                            '</small> </div> </div> <button type="button" class="u-basket__product-remove">&times;</button> </div> </div>';
-
-                    $(element).insertAfter('.g-brd-bottom.g-brd-gray-light-v4.g-pa-15.g-mb-10');
-
-                    $('#totalPrice').text('$' + val.totalPrice);
 
 
-                    $("#numberQuantity").text(val.length);
+                    $('#totalPrice').text('$' + totalPrice.toString());
+                    $("#numberQuantity").text(numberQuantity);
+                    window.scrollTo(0, 0);
+                    $.notify({
+                            title: '<strong>Add product successful!</strong>',
+                            icon: 'glyphicon glyphicon-star',
+                            message: 'Product ' + val.productName + ' has been added to your cart.'
+                        },
+                        {
+                            type: 'success',
+                            animate: {
+                                enter: 'animated fadeInUp',
+                                exit: 'animated fadeOutRight'
+                            },
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            offset: 20,
+                            spacing: 10,
+                            z_index: 1031,
+                            delay: 3000
+                        });
+
+                    // fail validation
+
                 }
             }
         });
     }
 </script>
 <script type="text/javascript">
-    var authenticated = '@claimManager.IsAuthenticated';
-    var guid = "";
-
-    if (!authenticated) {
-        if (checkCookie) {
-            guid = getCookie('AnonymouseId');
-        }
-    }
-
-
-    function setCookie(cname, cvalue, exdays) {
-        var d = new Date();
-        d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-        var expires = "expires=" + d.toUTCString();
-        document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-    }
-
     function getCookie(cname) {
         var name = cname + "=";
         var decodedCookie = decodeURIComponent(document.cookie);
@@ -169,9 +187,10 @@
         }
         return "";
     }
-
-    function checkCookie() {
-        var guid = getCookie("AnonymouseId");
-        return guid != "";
-    }
 </script>
+
+@section Scripts
+{
+    @*    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js">*@
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+}

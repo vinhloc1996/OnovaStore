@@ -90,44 +90,6 @@ namespace OnovaStore.Controllers
                 }
             }
 
-            var customerId = "";
-
-            if (_claimPrincipalManager.IsAuthenticated)
-            {
-                customerId = _claimPrincipalManager.Id;
-            }
-            else
-            {
-                if (Request.Cookies["AnonymousId"] != null)
-                {
-                    customerId = Request.Cookies["AnonymousId"];
-                }
-                else
-                {
-                    return View();
-                }
-            }
-
-            var id = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
-                ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.NameId)?.Value;
-            //
-            //            using (var client = restClient.CreateClient(User))
-            //            {
-            //                using (var response = await client.GetAsync("/api/cart/ShowCartHeader?customerId=" + customerId))
-            //                {
-            //                    dynamic result = response.StatusCode == HttpStatusCode.OK
-            //                        ? await response.Content.ReadAsStringAsync()
-            //                        : null;
-            //
-            //                    if (result != null)
-            //                    {
-            //                        var list = JsonConvert.DeserializeObject<dynamic>(result);
-            //
-            //                        ViewBag.CartHeader = result;
-            //                    }
-            //                }
-            //            }
-
             return View();
         }
 

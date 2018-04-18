@@ -28,91 +28,11 @@
         <div class="g-brd-bottom g-brd-gray-light-v4 g-pa-15 g-mb-10">
             <span class="d-block h6 text-center text-uppercase mb-0">Shopping Cart</span>
         </div>
-        
-        @*fix displaying*@
+
         <div class="js-scrollbar g-height-200 mCustomScrollbar _mCS_1 mCS-autoHide" style="position: relative; overflow: visible;">
-            <div id="mCSB_1" class="mCustomScrollBox mCS-minimal-dark mCSB_vertical mCSB_outside" style="max-height: none;" tabindex="0">
-                <div id="mCSB_1_container" class="mCSB_container" style="position: relative; top: -188px; left: 0px;" dir="ltr">
-                    <!-- Product -->
-                    <div class="u-basket__product g-brd-none g-px-20">
-                        <div class="row no-gutters g-pb-5">
-                            <div class="col-4 pr-3">
-                                <a class="u-basket__product-img" href="#!">
-                                    <img class="img-fluid mCS_img_loaded" src="../assets/img-temp/150x150/img1.jpg" alt="Image Description">
-                                </a>
-                            </div>
 
-                            <div class="col-8">
-                                <h6 class="g-font-weight-400 g-font-size-default">
-                                    <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="#!">Black Glasses</a>
-                                </h6>
-                                <small class="g-color-primary g-font-size-12">1 x $22.00</small>
-                            </div>
-                        </div>
-                        <button type="button" class="u-basket__product-remove">×</button>
-                    </div>
-                    <!-- End Product -->
-                    <!-- Product -->
-                    <div class="u-basket__product g-brd-none g-px-20">
-                        <div class="row no-gutters g-pb-5">
-                            <div class="col-4 pr-3">
-                                <a class="u-basket__product-img" href="#!">
-                                    <img class="img-fluid mCS_img_loaded" src="../assets/img-temp/150x150/img2.jpg" alt="Image Description">
-                                </a>
-                            </div>
-
-                            <div class="col-8">
-                                <h6 class="g-font-weight-400 g-font-size-default">
-                                    <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="#!">Gloves</a>
-                                </h6>
-                                <small class="g-color-primary g-font-size-12">2 x $55.00</small>
-                            </div>
-                        </div>
-                        <button type="button" class="u-basket__product-remove">×</button>
-                    </div>
-                    <!-- End Product -->
-                    <!-- Product -->
-                    <div class="u-basket__product g-brd-none g-px-20">
-                        <div class="row no-gutters g-pb-5">
-                            <div class="col-4 pr-3">
-                                <a class="u-basket__product-img" href="#!">
-                                    <img class="img-fluid mCS_img_loaded" src="../assets/img-temp/150x150/img3.jpg" alt="Image Description">
-                                </a>
-                            </div>
-
-                            <div class="col-8">
-                                <h6 class="g-font-weight-400 g-font-size-default">
-                                    <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="#!">Chukka Shoes</a>
-                                </h6>
-                                <small class="g-color-primary g-font-size-12">1 x $199.00</small>
-                            </div>
-                        </div>
-                        <button type="button" class="u-basket__product-remove">×</button>
-                    </div>
-                    <!-- End Product -->
-                    <!-- Product -->
-                    <div class="u-basket__product g-brd-none g-px-20">
-                        <div class="row no-gutters g-pb-5">
-                            <div class="col-4 pr-3">
-                                <a class="u-basket__product-img" href="#!">
-                                    <img class="img-fluid mCS_img_loaded" src="../assets/img-temp/150x150/img4.jpg" alt="Image Description">
-                                </a>
-                            </div>
-
-                            <div class="col-8">
-                                <h6 class="g-font-weight-400 g-font-size-default">
-                                    <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="#!">Desk Clock</a>
-                                </h6>
-                                <small class="g-color-primary g-font-size-12">1 x $12.00</small>
-                            </div>
-                        </div>
-                        <button type="button" class="u-basket__product-remove">×</button>
-                    </div>
-                    <!-- End Product -->
-                </div>
-            </div><div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-minimal-dark mCSB_scrollTools_vertical" style="display: block;"><div class="mCSB_draggerContainer"><div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 50px; display: block; height: 91px; max-height: 166px; top: 85px;"><div class="mCSB_dragger_bar" style="line-height: 50px;"></div></div><div class="mCSB_draggerRail"></div></div></div>
         </div>
-        
+
 
         <div class="clearfix g-px-15">
             <div class="row align-items-center text-center g-brd-y g-brd-gray-light-v4 g-font-size-default">
@@ -160,52 +80,68 @@
 
             if (result != null)
             {
-                <input type="hidden" id="listItem" value="@result" />
+                <input type="hidden" id="listItem" value="@result"/>
             }
         }
     }
 }
 
 
-
 <script type="text/javascript">
-    var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
-    if (document.getElementById("listItem")) {
-        var list = JSON.parse(document.getElementById("listItem").value);
-        var totalPrice = 0;
+    $( document ).ready(function() {
+        var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
+        if (document.getElementById("listItem")) {
+            var list = JSON.parse(document.getElementById("listItem").value);
+            var totalPrice = 0;
+            var numberQuantity = 0;
+            if (list != null) {
 
-        if (list != null) {
-            $('div').remove('.cart-detail');
+                for (var i = 0; i < list.length; i++) {
+                    if (list[i].productThumbImage == null) {
+                        list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
+                    }
 
-            for (var i = 0; i < list.length; i++) {
-                if (list[i].productThumbImage == null) {
-                    list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
+                    var element =
+                        '<div class="u-basket__product g-brd-none g-px-20 card-detail"> ' +
+                        '<div class="row no-gutters g-pb-5"> ' +
+                        '<div class="col-4 pr-3"> ' +
+                        '<a class="u-basket__product-img" href="#!"> ' +
+                        '<img class="img-fluid" src="' +
+                        imgUrl +
+                        list[i].productThumbImage +
+                        '" alt="Image Description"> ' +
+                        '</a> ' +
+                        '</div> ' +
+                        '<div class="col-8"> ' +
+                        '<h6 class="g-font-weight-400 g-font-size-default"> ' +
+                        '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
+                        list[i].slug +
+                        '">' +
+                        list[i].name +
+                        '</a> ' +
+                        '</h6> ' +
+                        '<small class="g-color-primary g-font-size-12">' +
+                        list[i].quantity +
+                        ' x $' +
+                        list[i].displayPrice +
+                        '</small> ' +
+                        '</div> ' +
+                        '</div> ' +
+                        '<button type="button" class="u-basket__product-remove">' +
+                        'x' +
+                        '</button> ' +
+                        '</div> ';
+
+                    $(element).appendTo('#mCSB_1_container');
+                    numberQuantity += list[i].quantity;
+                    totalPrice += (list[i].quantity * list[i].displayPrice);
                 }
 
-                var element =
-                    '<div class="js-scrollbar g-height-200 cart-detail"> <div class="u-basket__product g-brd-none g-px-20"> <div class="row no-gutters g-pb-5"> <div class="col-4 pr-3"> <a class="u-basket__product-img" href="#!"> <img class="img-fluid" src="' +
-                    imgUrl +
-                    list[i].productThumbImage +
-                    '" alt="Image Description"> </a> </div> <div class="col-8"> <h6 class="g-font-weight-400 g-font-size-default"> <a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
-                    list[i].slug +
-                    '">' +
-                    list[i].name +
-                    '</a> </h6> <small class="g-color-primary g-font-size-12">' +
-                    list[i].quantity +
-                    ' x $' +
-                    list[i].displayPrice +
-                    '</small> </div> </div> <button type="button" class="u-basket__product-remove">&times;</button> </div> </div>';
 
-                $(element).insertAfter('.g-brd-bottom.g-brd-gray-light-v4.g-pa-15.g-mb-10');
-                totalPrice += (list[i].quantity * list[i].displayPrice);
+                $('#totalPrice').text('$' + totalPrice.toString());
+//                localStorage.setItem("totalPrice", totalPrice.toString());
+                $("#numberQuantity").text(numberQuantity);
             }
-
-
-            $('#totalPrice').text('$' + totalPrice);
-
-
-            $("#numberQuantity").text(list.length);
         }
-    }
-
+    });
 </script>

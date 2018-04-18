@@ -73,7 +73,17 @@ namespace OnovaApi.Controllers
                         return Json(new
                         {
                             Status = "Success",
-                            Message = "Add product into cart successful"
+                            ProductName = product.Name,
+                            Product = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(x =>
+                                new
+                                {
+                                    x.ProductId,
+                                    x.DisplayPrice,
+                                    x.Product.ProductThumbImage,
+                                    x.Quantity,
+                                    x.Product.Name,
+                                    x.Product.Slug
+                                }).ToList()
                         });
                     }
 
@@ -98,7 +108,17 @@ namespace OnovaApi.Controllers
                     return Json(new
                     {
                         Status = "Success",
-                        Message = "Add product into cart successful"
+                        ProductName = product.Name,
+                        Product = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(x =>
+                            new
+                            {
+                                x.ProductId,
+                                x.DisplayPrice,
+                                x.Product.ProductThumbImage,
+                                x.Quantity,
+                                x.Product.Name,
+                                x.Product.Slug
+                            }).ToList()
                     });
                 }
 
@@ -139,7 +159,17 @@ namespace OnovaApi.Controllers
                 return Json(new
                 {
                     Status = "Success",
-                    Message = "Add product into cart successful"
+                    ProductName = product.Name,
+                    Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                        new
+                        {
+                            x.ProductId,
+                            x.DisplayPrice,
+                            x.Product.ProductThumbImage,
+                            x.Quantity,
+                            x.Product.Name,
+                            x.Product.Slug
+                        }).ToList()
                 });
             }
 
@@ -157,7 +187,17 @@ namespace OnovaApi.Controllers
                         return Json(new
                         {
                             Status = "Success",
-                            Message = "Add product into cart successful"
+                            ProductName = product.Name,
+                            Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                                new
+                                {
+                                    x.ProductId,
+                                    x.DisplayPrice,
+                                    x.Product.ProductThumbImage,
+                                    x.Quantity,
+                                    x.Product.Name,
+                                    x.Product.Slug
+                                }).ToList()
                         });
                     }
 
@@ -182,7 +222,17 @@ namespace OnovaApi.Controllers
                 return Json(new
                 {
                     Status = "Success",
-                    Message = "Add product into cart successful"
+                    ProductName = product.Name,
+                    Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                        new
+                        {
+                            x.ProductId,
+                            x.DisplayPrice,
+                            x.Product.ProductThumbImage,
+                            x.Quantity,
+                            x.Product.Name,
+                            x.Product.Slug
+                        }).ToList()
                 });
             }
 
@@ -214,7 +264,17 @@ namespace OnovaApi.Controllers
             return Json(new
             {
                 Status = "Success",
-                Message = "Add product into cart successful"
+                ProductName = product.Name,
+                Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                    new
+                    {
+                        x.ProductId,
+                        x.DisplayPrice,
+                        x.Product.ProductThumbImage,
+                        x.Quantity,
+                        x.Product.Name,
+                        x.Product.Slug
+                    }).ToList()
             });
         }
 
