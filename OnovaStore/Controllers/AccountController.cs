@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -47,6 +48,8 @@ namespace OnovaStore.Controllers
         public async Task<IActionResult> Logout()
         {
             await _claimPrincipalManager.LogoutAsync();
+            Response.Cookies.Delete("AnonymousId");
+            Response.Cookies.Delete("jwt");
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -66,6 +69,8 @@ namespace OnovaStore.Controllers
 
             if (await _claimPrincipalManager.LoginAsync(model.Email, model.Password))
             {
+                Response.Cookies.Delete("AnonymousId");
+                Response.Cookies.Append("jwt", _claimPrincipalManager.Jwt, new CookieOptions { Expires = DateTime.Now.AddDays(30) });
                 return RedirectToLocal(returnUrl);
             }
                 
@@ -106,6 +111,8 @@ namespace OnovaStore.Controllers
             {
                 if (await _claimPrincipalManager.LoginAsync(model.Email, model.Password))
                 {
+                    Response.Cookies.Delete("AnonymousId");
+                    Response.Cookies.Append("jwt", _claimPrincipalManager.Jwt, new CookieOptions { Expires = DateTime.Now.AddDays(30) });
                     return RedirectToLocal(returnUrl);
                 }
             }
@@ -152,10 +159,11 @@ namespace OnovaStore.Controllers
                         $"https://graph.facebook.com/v2.8/me?fields=id,email,name,gender,locale,birthday,picture&access_token={accessToken}");
 
                 var userInfo = JsonConvert.DeserializeObject<FacebookUserData>(userInfoResponse);
+                userInfo.AnonymousId = Request.Cookies["AnonymousId"];
 
                 dynamic userExisted =
                     await Extensions.JsonDataFromApi($"api/auth/CheckUserExistedForFbLogin",
-                        "post", new StringContent(userInfoResponse, Encoding.UTF8,
+                        "post", new StringContent(JsonConvert.SerializeObject(userInfo), Encoding.UTF8,
                             "application/json"));
 
                 if (userExisted.isExisted == false)
@@ -164,8 +172,13 @@ namespace OnovaStore.Controllers
                     return RedirectToAction("LoginFacebookCallback");
                 }
 
-                if (await _claimPrincipalManager.LoginFbAsync(userExisted.data.access_token.ToString()))
+                var token = userExisted.data.access_token.ToString();
+                if (await _claimPrincipalManager.LoginFbAsync(token))
+                {
+                    Response.Cookies.Delete("AnonymousId");
+                    Response.Cookies.Append("jwt", token, new CookieOptions { Expires = DateTime.Now.AddDays(30) });
                     return RedirectToAction("Index", "Home");
+                }
             }
 
             return View("LoginViaFacebook", "Unthorization error, user cancel");
@@ -192,13 +205,18 @@ namespace OnovaStore.Controllers
 
             if (ModelState.IsValid)
             {
+                model.AnonymousId = Request.Cookies["AnonymousId"];
+
                 StringContent userFb = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8,
                     "application/json");
 
                 dynamic result = await Extensions.JsonDataFromApi($"api/auth/FacebookLogin", "post", userFb);
-
-                if (await _claimPrincipalManager.LoginFbAsync(result.access_token.ToString())) 
+                var token = result.access_token.ToString();
+                if (await _claimPrincipalManager.LoginFbAsync(token))
+                {
+                    Response.Cookies.Append("jwt", token, new CookieOptions{Expires = DateTime.Now.AddDays(30) });
                     return RedirectToLocal(returnUrl);
+                }
 
                 return View("LoginViaFacebook", "Login failed!");
             }

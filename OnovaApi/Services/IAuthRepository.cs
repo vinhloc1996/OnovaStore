@@ -25,5 +25,6 @@ namespace OnovaApi.Services
         Task<string> PasswordResetToken(ApplicationUser user);
         Task SendEmailPasswordReset(string email, string callBackUrl, string fullname);
         Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword);
+        Task MoveCart(string anonymousId, string email);
     }
 }

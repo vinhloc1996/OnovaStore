@@ -36,6 +36,7 @@ namespace OnovaApi.DTOs
         public string Password { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
+        public string AnonymousId { get; set; }
         public FacebookPictureData Picture { get; set; }
     }
 

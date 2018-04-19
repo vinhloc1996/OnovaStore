@@ -81,6 +81,7 @@ namespace OnovaApi.Controllers
 
                 if (customer.FacebookId == model.Id)
                 {
+                    await _repository.MoveCart(model.AnonymousId, model.Email);
                     return
                         Json(
                             new
@@ -110,11 +111,9 @@ namespace OnovaApi.Controllers
                 var results = await _repository.UserRegister(userForRegisterDto);
                 if (results.Succeeded)
                 {
-                    var anonymousId = Request.Cookies["AnonymousId"];
-                    if (string.IsNullOrEmpty(anonymousId))
-                    {
-                        // implement move cart function
-                    }
+//                    var anonymousId = Request.Cookies["AnonymousId"];
+
+//                    await _repository.MoveCart(anonymousId, userForRegisterDto.Email);
 
                     return Json(new {result = results.Succeeded, message = "Customer has been signed up successful"});
                 }
@@ -139,7 +138,10 @@ namespace OnovaApi.Controllers
             if (result.Succeeded)
             {
                 var key = Extensions.KeyJwt(_configuration);
-                
+
+//                var anonymousId = Request.Cookies["AnonymousId"];
+
+                await _repository.MoveCart(userForLoginDto.AnonymousId, userForLoginDto.Email);
                 // implement move cart function
 
                 return Ok(await _repository.GenerateJwtToken(user, key));
@@ -226,6 +228,10 @@ namespace OnovaApi.Controllers
                 JoinDate = DateTime.Now,
                 FacebookId = userData.Id
             });
+
+//            var anonymousId = Request.Cookies["AnonymousId"];
+
+            await _repository.MoveCart(userData.AnonymousId, userData.Email);
 
             var localUser = await _repository.FindUserByUserName(userData.Email);
 

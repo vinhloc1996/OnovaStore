@@ -4,6 +4,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ namespace OnovaApi.Controllers
 {
     [Produces("application/json")]
     [Route("api/Cart")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class CartController : Controller
     {
         private readonly OnovaContext _context;
@@ -24,6 +27,7 @@ namespace OnovaApi.Controllers
             _context = context;
         }
 
+        [AllowAnonymous]
         [Route("AddToCart")]
         [HttpGet]
         public async Task<IActionResult> AddToCart([FromQuery] string customerId, [FromQuery] int productId,
@@ -49,6 +53,15 @@ namespace OnovaApi.Controllers
                 });
             }
 
+            if (quantity > product.CurrentQuantity)
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Product Quantiy is over current quantity in store"
+                });
+            }
+
             if (User.Identity.IsAuthenticated)
             {
                 var currentCustomerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
@@ -68,55 +81,64 @@ namespace OnovaApi.Controllers
                 {
                     if (product.MaximumQuantity >= cartDetail.Quantity + quantity)
                     {
-                        cartDetail.Quantity += quantity;
-
-                        if (await _context.SaveChangesAsync() > 0)
+                        if (product.CurrentQuantity >= cartDetail.Quantity + quantity)
                         {
-                            var cart = _context.CustomerCart.Find(customerId);
-
-                            var quantityRemain = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
-                                .Sum(c => c.Quantity);
-                            var totalPriceRemain = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
-                                .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity }).Sum(c => c.totalPriceItem);
-
-                            cart.DisplayPrice = totalPriceRemain;
-                            cart.TotalPrice = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
-                                .Sum(c => c.Price);
-                            cart.TotalQuantity = quantityRemain;
-                            cart.ShippingFee = totalPriceRemain > 100 ? 0 : 25;
-
-                            _context.CustomerCart.Update(cart);
+                            cartDetail.Quantity += quantity;
 
                             if (await _context.SaveChangesAsync() > 0)
                             {
+                                var cart = _context.CustomerCart.Find(customerId);
+
+                                var quantityRemain = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
+                                    .Sum(c => c.Quantity);
+                                var totalPriceRemain = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
+                                    .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity }).Sum(c => c.totalPriceItem);
+
+                                cart.DisplayPrice = totalPriceRemain;
+                                cart.TotalPrice = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId)
+                                    .Sum(c => c.Price);
+                                cart.TotalQuantity = quantityRemain;
+                                cart.ShippingFee = totalPriceRemain > 100 ? 0 : 25;
+
+                                _context.CustomerCart.Update(cart);
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    return Json(new
+                                    {
+                                        Status = "Success",
+                                        ProductName = product.Name,
+                                        Product = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(x =>
+                                            new
+                                            {
+                                                x.ProductId,
+                                                x.DisplayPrice,
+                                                x.Product.ProductThumbImage,
+                                                x.Quantity,
+                                                x.Product.Name,
+                                                x.Product.Slug
+                                            }).ToList()
+                                    });
+                                }
+
                                 return Json(new
                                 {
-                                    Status = "Success",
-                                    ProductName = product.Name,
-                                    Product = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(x =>
-                                        new
-                                        {
-                                            x.ProductId,
-                                            x.DisplayPrice,
-                                            x.Product.ProductThumbImage,
-                                            x.Quantity,
-                                            x.Product.Name,
-                                            x.Product.Slug
-                                        }).ToList()
+                                    Status = "Failed",
+                                    Message = "Error while updating cart"
                                 });
                             }
 
                             return Json(new
                             {
                                 Status = "Failed",
-                                Message = "Error while updating cart"
+                                Message = "Cannot add product into cart"
                             });
                         }
 
                         return Json(new
                         {
                             Status = "Failed",
-                            Message = "Cannot add product into cart"
+                            Message = "Product Quantiy is over current quantity in store"
                         });
                     }
 
@@ -190,7 +212,8 @@ namespace OnovaApi.Controllers
             if (string.IsNullOrEmpty(customerId))
             {
                 customerId = Guid.NewGuid().ToString();
-                Set("AnonymousId", customerId);
+                
+//                Set("AnonymousId", customerId);
 
                 _context.AnonymousCustomer.Add(
                     new AnonymousCustomer {AnonymousCustomerId = customerId, VisitDate = DateTime.Now});
@@ -234,6 +257,7 @@ namespace OnovaApi.Controllers
                         {
                             Status = "Success",
                             ProductName = product.Name,
+                            AnonymousId = customerId,
                             Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
                                 new
                                 {
@@ -271,54 +295,63 @@ namespace OnovaApi.Controllers
                 {
                     if (product.MaximumQuantity >= cartDetail.Quantity + quantity)
                     {
-                        cartDetail.Quantity += quantity;
-
-                        if (await _context.SaveChangesAsync() > 0)
+                        if (product.CurrentQuantity >= cartDetail.Quantity + quantity)
                         {
-
-                            var quantityRemain = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
-                                .Sum(c => c.Quantity);
-                            var totalPriceRemain = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
-                                .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity }).Sum(c => c.totalPriceItem);
-
-                            anonymousCart.DisplayPrice = totalPriceRemain;
-                            anonymousCart.TotalPrice = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
-                                .Sum(c => c.Price);
-                            anonymousCart.TotalQuantity = quantityRemain;
-                            anonymousCart.ShippingFee = totalPriceRemain > 100 ? 0 : 25;
-
-                            _context.AnonymousCustomerCart.Update(anonymousCart);
+                            cartDetail.Quantity += quantity;
 
                             if (await _context.SaveChangesAsync() > 0)
                             {
+
+                                var quantityRemain = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
+                                    .Sum(c => c.Quantity);
+                                var totalPriceRemain = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
+                                    .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity }).Sum(c => c.totalPriceItem);
+
+                                anonymousCart.DisplayPrice = totalPriceRemain;
+                                anonymousCart.TotalPrice = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId)
+                                    .Sum(c => c.Price);
+                                anonymousCart.TotalQuantity = quantityRemain;
+                                anonymousCart.ShippingFee = totalPriceRemain > 100 ? 0 : 25;
+
+                                _context.AnonymousCustomerCart.Update(anonymousCart);
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    return Json(new
+                                    {
+                                        Status = "Success",
+                                        ProductName = product.Name,
+                                        Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
+                                            new
+                                            {
+                                                x.ProductId,
+                                                x.DisplayPrice,
+                                                x.Product.ProductThumbImage,
+                                                x.Quantity,
+                                                x.Product.Name,
+                                                x.Product.Slug
+                                            }).ToList()
+                                    });
+                                }
+
                                 return Json(new
                                 {
-                                    Status = "Success",
-                                    ProductName = product.Name,
-                                    Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
-                                        new
-                                        {
-                                            x.ProductId,
-                                            x.DisplayPrice,
-                                            x.Product.ProductThumbImage,
-                                            x.Quantity,
-                                            x.Product.Name,
-                                            x.Product.Slug
-                                        }).ToList()
+                                    Status = "Failed",
+                                    Message = "Error while updating cart"
                                 });
                             }
 
                             return Json(new
                             {
                                 Status = "Failed",
-                                Message = "Error while updating cart"
+                                Message = "Cannot add product into cart"
                             });
                         }
 
                         return Json(new
                         {
                             Status = "Failed",
-                            Message = "Cannot add product into cart"
+                            Message = "Product Quantiy is over current quantity in store"
                         });
                     }
 
@@ -388,8 +421,7 @@ namespace OnovaApi.Controllers
             }
 
             customerId = Guid.NewGuid().ToString();
-
-            Set("AnonymousId", customerId);
+//            Set("AnonymousId", customerId);
 
             _context.AnonymousCustomer.Add(
                 new AnonymousCustomer {AnonymousCustomerId = customerId, VisitDate = DateTime.Now});
@@ -433,6 +465,7 @@ namespace OnovaApi.Controllers
                     {
                         Status = "Success",
                         ProductName = product.Name,
+                        AnonymousId = customerId,
                         Product = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).Select(x =>
                             new
                             {
@@ -469,6 +502,7 @@ namespace OnovaApi.Controllers
             Response.Cookies.Append(key, value, option);
         }
 
+        [AllowAnonymous]
         [Route("ShowCartHeader")]
         [HttpGet]
         public IActionResult ShowCartHeader([FromQuery] string customerId)
@@ -529,6 +563,7 @@ namespace OnovaApi.Controllers
             return NoContent();
         }
 
+        [AllowAnonymous]
         [Route("RemoveCartItem")]
         [HttpGet]
         public async Task<IActionResult> RemoveCartItem([FromQuery] string customerId, [FromQuery] int productId = 0)

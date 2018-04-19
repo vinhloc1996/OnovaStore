@@ -45,6 +45,7 @@ namespace OnovaStore.DTOs
         public string ConfirmPassword { get; set; }
         public string Name { get; set; }
         public string Gender { get; set; }
+        public string AnonymousId { get; set; }
         public FacebookPictureData Picture { get; set; }
     }
 

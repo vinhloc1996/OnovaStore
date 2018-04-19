@@ -91,6 +91,13 @@
 @section Scripts
 {
     <script type="text/javascript">
+        function setCookie(cname,cvalue,exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            var expires = "expires=" + d.toGMTString();
+            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+        }
+
         function getCookie(cname) {
             var name = cname + "=";
             var decodedCookie = decodeURIComponent(document.cookie);
@@ -116,12 +123,18 @@
             $.ajax({
                 url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
                 type: "get",
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                },
                 success: function (val) {
                     var totalPrice = 0;
                     var numberQuantity = 0;
                     if (val.status == 'Success') {
                         var list = val.product;
-
+                        if (val.anonymousId) {
+                            setCookie("AnonymousId", val.anonymousId, 30);
+                        }
+                        
                         $('.card-detail').remove();
 
                         for (var i = 0; i < list.length; i++) {
@@ -131,34 +144,34 @@
 
                             var element =
                                 '<div class="u-basket__product g-brd-none g-px-20 card-detail" product-id="' + list[i].productId +'"> ' +
-                                '<div class="row no-gutters g-pb-5"> ' +
-                                '<div class="col-4 pr-3"> ' +
-                                '<a class="u-basket__product-img" href="#!"> ' +
-                                '<img class="img-fluid" src="' +
-                                imgUrl +
-                                list[i].productThumbImage +
-                                '" alt="Image Description"> ' +
-                                '</a> ' +
-                                '</div> ' +
-                                '<div class="col-8"> ' +
-                                '<h6 class="g-font-weight-400 g-font-size-default truncate"> ' +
-                                '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
-                                list[i].slug +
-                                '">' +
-                                list[i].name +
-                                '</a> ' +
-                                '</h6> ' +
-                                '<small class="g-color-primary g-font-size-12">' +
-                                list[i].quantity +
-                                ' x $' +
-                                list[i].displayPrice +
-                                '</small> ' +
-                                '</div> ' +
-                                '</div> ' +
-                                '<button type="button" onclick="removeItem(' + list[i].productId + ');" class="u-basket__product-remove">' +
-                                'x' +
-                                '</button> ' +
-                                '</div> ';
+                                    '<div class="row no-gutters g-pb-5"> ' +
+                                    '<div class="col-4 pr-3"> ' +
+                                    '<a class="u-basket__product-img" href="#!"> ' +
+                                    '<img class="img-fluid" src="' +
+                                    imgUrl +
+                                    list[i].productThumbImage +
+                                    '" alt="Image Description"> ' +
+                                    '</a> ' +
+                                    '</div> ' +
+                                    '<div class="col-8"> ' +
+                                    '<h6 class="g-font-weight-400 g-font-size-default truncate"> ' +
+                                    '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
+                                    list[i].slug +
+                                    '">' +
+                                    list[i].name +
+                                    '</a> ' +
+                                    '</h6> ' +
+                                    '<small class="g-color-primary g-font-size-12">' +
+                                    list[i].quantity +
+                                    ' x $' +
+                                    list[i].displayPrice +
+                                    '</small> ' +
+                                    '</div> ' +
+                                    '</div> ' +
+                                    '<button type="button" onclick="removeItem(' + list[i].productId + ');" class="u-basket__product-remove">' +
+                                    'x' +
+                                    '</button> ' +
+                                    '</div> ';
 
                             $(element).appendTo('#mCSB_1_container');
                             totalPrice = totalPrice + (list[i].quantity * list[i].displayPrice);
@@ -170,10 +183,10 @@
                         $("#numberQuantity").text(numberQuantity);
 
                         $.notify({
-                            title: '<strong>Add product successful!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: 'Product ' + val.productName + ' has been added to your cart.'
-                        },
+                                title: '<strong>Add product successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: 'Product ' + val.productName + ' has been added to your cart.'
+                            },
                             {
                                 type: 'success',
                                 animate: {
@@ -194,10 +207,10 @@
                             });
                     } else {
                         $.notify({
-                            title: '<strong>Add product fail!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Add product fail!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'danger',
                                 animate: {
@@ -226,6 +239,9 @@
             $.ajax({
                 url: 'http://localhost:5000/' + 'api/cart/RemoveCartItem?customerId=' + anonymousId + '&productId=' + id,
                 type: "get",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                },
                 success: function (val) {
                     
                     if (val.status == 'Success') {
@@ -233,10 +249,10 @@
                         $('#totalPrice').text('$' + (val.totalPriceRemain || 0));
                         $("#numberQuantity").text((val.quantityRemain || 0));
                         $.notify({
-                            title: '<strong>Remove product successful!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Remove product successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'success',
                                 animate: {
@@ -257,10 +273,10 @@
                             });
                     } else {
                         $.notify({
-                            title: '<strong>Remove product fail!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Remove product fail!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'danger',
                                 animate: {

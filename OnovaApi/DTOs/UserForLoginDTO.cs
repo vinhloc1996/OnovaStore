@@ -9,5 +9,7 @@ namespace OnovaApi.DTOs
         [Required]
         [StringLength(32, MinimumLength = 6, ErrorMessage = "Password length from 6 to 32 characters.")]
         public string Password { get; set; }
+
+        public string AnonymousId { get; set; }
     }
 }

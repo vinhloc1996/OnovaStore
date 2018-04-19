@@ -25,13 +25,14 @@ namespace System.Security.Claims
         Boolean IsAuthenticated { get; }
         String Role { get; }
         String Id { get; }
-
+        String Jwt { get; set; }
         ClaimsPrincipal User { get; }
 
         Task<Boolean> LoginAsync(String email, String password);
         Task<Boolean> LoginFbAsync(String jwtToken);
         Task LogoutAsync();
         Task RenewTokenAsync(String jwtToken);
+        Task<String> FetchJwtToken(String email, String password);
 
         Task<Boolean> HasPolicy(String policyName);
     }
@@ -78,6 +79,8 @@ namespace System.Security.Claims
             }
         }
 
+        public String Jwt { get; set; }
+
         public String GivenName
         {
             get
@@ -123,7 +126,7 @@ namespace System.Security.Claims
         }
 
 
-        private async Task<String> FetchJwtToken(String email, String password)
+        public async Task<String> FetchJwtToken(String email, String password)
         {
             var apiUrl = jwtTokenIssuerSettings.Login;
 
@@ -132,7 +135,8 @@ namespace System.Security.Claims
                 var resource = new
                 {
                     Email = email,
-                    Password = password
+                    Password = password,
+                    AnonymousId = httpContext.Request.Cookies["AnonymousId"]
                 };
                 using (var content = new StringContent(JsonConvert.SerializeObject(resource), Encoding.UTF8,
                     "application/json"))
@@ -145,6 +149,7 @@ namespace System.Security.Claims
 
                         if (!string.IsNullOrEmpty(result))
                         {
+                            Jwt = JsonConvert.DeserializeObject(result).access_token.ToString();
                             return JsonConvert.DeserializeObject(result).access_token.ToString();
                         }
 
@@ -195,7 +200,7 @@ namespace System.Security.Claims
 
                 // Search for missed claims, for example claim 'sub'
                 var extraClaims = securityToken.Claims.Where(c => !identity.Claims.Any(x => x.Type == c.Type)).ToList();
-
+                
                 // Adding the original Jwt has 2 benefits:
                 //  1) Authenticate REST service calls with orginal Jwt
                 //  2) The original Jwt is available for renewing during sliding expiration
@@ -226,6 +231,7 @@ namespace System.Security.Claims
             {
                 Console.WriteLine(ex.Message);
             }
+
             return false;
         }
 

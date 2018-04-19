@@ -176,10 +176,108 @@ namespace OnovaApi.Services
             return await _userManager.ResetPasswordAsync(user, code, newPassword);
         }
 
-        public async Task<int> MoveCart(string anonymousId, string email)
+        public async Task MoveCart(string anonymousId, string email)
         {
-            //move item from anonymous cart to customer cart, remove cookie in onovastore
-            return 0;
+            if (!string.IsNullOrEmpty(anonymousId))
+            {
+                var anonymousCart =
+                    _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == anonymousId);
+                var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+                var customerCart = _context.CustomerCart.Find(user.Id);
+
+                if (anonymousCart.Any())
+                {
+                    foreach (var item in anonymousCart.ToList())
+                    {
+                        var currItemInCart =
+                            _context.CustomerCartDetail.Find(customerCart.CustomerCartId, item.ProductId);
+                        var product = _context.Product.Find(item.ProductId);
+                        var quantityAfterMerge = item.Quantity;
+
+                        if (currItemInCart != null)
+                        {
+                            quantityAfterMerge += currItemInCart.Quantity;
+
+                            if (quantityAfterMerge <= product.MaximumQuantity &&
+                                quantityAfterMerge <= product.CurrentQuantity)
+                            {
+                                currItemInCart.Quantity = quantityAfterMerge;
+                                _context.CustomerCartDetail.Update(currItemInCart);
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    var quantityRemain = _context.CustomerCartDetail
+                                        .Where(c => c.CustomerCartId == customerCart.CustomerCartId)
+                                        .Sum(c => c.Quantity);
+                                    var totalPriceRemain = _context.CustomerCartDetail
+                                        .Where(c => c.CustomerCartId == customerCart.CustomerCartId)
+                                        .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity })
+                                        .Sum(c => c.totalPriceItem);
+
+                                    customerCart.DisplayPrice = totalPriceRemain;
+                                    customerCart.TotalQuantity = quantityRemain;
+
+                                    _context.CustomerCart.Update(customerCart);
+
+                                    await _context.SaveChangesAsync();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            _context.CustomerCartDetail.Add(new Models.DatabaseModels.CustomerCartDetail
+                            {
+                                CustomerCartId = customerCart.CustomerCartId,
+                                ProductId = product.ProductId,
+                                DisplayPrice = product.DisplayPrice,
+                                Quantity = quantityAfterMerge,
+                                Price = product.RealPrice
+                            });
+
+                            await _context.SaveChangesAsync();
+
+                            var quantity = _context.CustomerCartDetail
+                                .Where(c => c.CustomerCartId == customerCart.CustomerCartId)
+                                .Sum(c => c.Quantity);
+                            var totalPrice = _context.CustomerCartDetail
+                                .Where(c => c.CustomerCartId == customerCart.CustomerCartId)
+                                .Select(c => new { totalPriceItem = c.DisplayPrice * c.Quantity })
+                                .Sum(c => c.totalPriceItem);
+
+                            customerCart.DisplayPrice = totalPrice;
+                            customerCart.TotalQuantity = quantity;
+
+                            _context.CustomerCart.Update(customerCart);
+
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
+
+                if (!_context.Order.Any(c => c.CartId == anonymousId))
+                {
+                    _context.AnonymousCustomerCartDetail.RemoveRange(
+                        _context.AnonymousCustomerCartDetail.Where(c =>
+                            c.AnonymousCustomerCartId == anonymousId));
+                    await _context.SaveChangesAsync();
+
+                    var oldCart = _context.AnonymousCustomerCart.Find(anonymousId);
+                    if (oldCart != null)
+                    {
+                        _context.AnonymousCustomerCart.Remove(oldCart);
+                    }
+                    
+                    await _context.SaveChangesAsync();
+
+                    var oldAnonymousCus = _context.AnonymousCustomer.Find(anonymousId);
+                    if (oldAnonymousCus != null)
+                    {
+                        _context.AnonymousCustomer.Remove(oldAnonymousCus);
+                    }
+                    
+                    await _context.SaveChangesAsync();
+                }
+            }
         }
     }
 }
