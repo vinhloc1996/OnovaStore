@@ -40,7 +40,7 @@
                     <strong class="d-block g-py-10 text-uppercase g-color-main g-font-weight-500 g-py-10">Total</strong>
                 </div>
                 <div class="col">
-                    <strong class="d-block g-py-10 g-color-main g-font-weight-500 g-py-10" id="totalPrice"></strong>
+                    <strong class="d-block g-py-10 g-color-main g-font-weight-500 g-py-10" id="totalPrice">$0</strong>
                 </div>
             </div>
         </div>
@@ -86,7 +86,6 @@
     }
 }
 
-
 <script type="text/javascript">
     $( document ).ready(function() {
         var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
@@ -102,7 +101,7 @@
                     }
 
                     var element =
-                        '<div class="u-basket__product g-brd-none g-px-20 card-detail"> ' +
+                        '<div class="u-basket__product g-brd-none g-px-20 card-detail" product-id="' + list[i].productId +'"> ' +
                         '<div class="row no-gutters g-pb-5"> ' +
                         '<div class="col-4 pr-3"> ' +
                         '<a class="u-basket__product-img" href="#!"> ' +
@@ -113,7 +112,7 @@
                         '</a> ' +
                         '</div> ' +
                         '<div class="col-8"> ' +
-                        '<h6 class="g-font-weight-400 g-font-size-default"> ' +
+                        '<h6 class="g-font-weight-400 g-font-size-default truncate"> ' +
                         '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
                         list[i].slug +
                         '">' +
@@ -127,7 +126,7 @@
                         '</small> ' +
                         '</div> ' +
                         '</div> ' +
-                        '<button type="button" class="u-basket__product-remove">' +
+                        '<button type="button" onclick="removeItem(' + list[i].productId + ');" class="u-basket__product-remove">' +
                         'x' +
                         '</button> ' +
                         '</div> ';

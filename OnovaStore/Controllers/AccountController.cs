@@ -108,7 +108,6 @@ namespace OnovaStore.Controllers
                 {
                     return RedirectToLocal(returnUrl);
                 }
-                    
             }
 
             ModelState.AddModelError(String.Empty, user.message.ToString());

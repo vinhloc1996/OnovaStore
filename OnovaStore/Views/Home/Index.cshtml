@@ -13,7 +13,7 @@
     @{
         if (ViewBag.HeaderCategories != null)
         {
-            var categories = (List<Category>) ViewBag.CategoryProducts;
+            var categories = (List<Category>)ViewBag.CategoryProducts;
 
             foreach (var category in categories)
             {
@@ -85,26 +85,52 @@
     </p>
 </div>
 
-<script type="text/javascript">
-    var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
 
-    function addToCart(id) {
-        var anonymousId = getCookie("AnonymousId");
-        $.ajax({
-            url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
-            type: "get",
-            success: function(val) {
-                var totalPrice = 0;
-                var numberQuantity = 0;
-                if (val.status == 'Success') {
-                    var list = val.product;
-                    for (var i = 0; i < list.length; i++) {
-                        if (list[i].productThumbImage == null) {
-                            list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
-                        }
 
-                        var element =
-                            '<div class="u-basket__product g-brd-none g-px-20 card-detail"> ' +
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script type="text/javascript">
+        var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
+
+        function addToCart(id) {
+            var anonymousId = getCookie("AnonymousId");
+            $.ajax({
+                url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
+                type: "get",
+                success: function (val) {
+                    var totalPrice = 0;
+                    var numberQuantity = 0;
+                    if (val.status == 'Success') {
+                        var list = val.product;
+
+                        $('.card-detail').remove();
+
+                        for (var i = 0; i < list.length; i++) {
+                            if (list[i].productThumbImage == null) {
+                                list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
+                            }
+
+                            var element =
+                                '<div class="u-basket__product g-brd-none g-px-20 card-detail" product-id="' + list[i].productId +'"> ' +
                                 '<div class="row no-gutters g-pb-5"> ' +
                                 '<div class="col-4 pr-3"> ' +
                                 '<a class="u-basket__product-img" href="#!"> ' +
@@ -115,7 +141,7 @@
                                 '</a> ' +
                                 '</div> ' +
                                 '<div class="col-8"> ' +
-                                '<h6 class="g-font-weight-400 g-font-size-default"> ' +
+                                '<h6 class="g-font-weight-400 g-font-size-default truncate"> ' +
                                 '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
                                 list[i].slug +
                                 '">' +
@@ -129,68 +155,153 @@
                                 '</small> ' +
                                 '</div> ' +
                                 '</div> ' +
-                                '<button type="button" class="u-basket__product-remove">' +
+                                '<button type="button" onclick="removeItem(' + list[i].productId + ');" class="u-basket__product-remove">' +
                                 'x' +
                                 '</button> ' +
                                 '</div> ';
 
-                        $(element).insertAfter('#mCSB_1_container');
-                        totalPrice = totalPrice + (list[i].quantity * list[i].displayPrice);
-                        numberQuantity += list[i].quantity;
-                    }
+                            $(element).appendTo('#mCSB_1_container');
+                            totalPrice = totalPrice + (list[i].quantity * list[i].displayPrice);
+                            numberQuantity += list[i].quantity;
+                        }
 
 
-                    $('#totalPrice').text('$' + totalPrice.toString());
-                    $("#numberQuantity").text(numberQuantity);
-                    window.scrollTo(0, 0);
-                    $.notify({
+                        $('#totalPrice').text('$' + totalPrice.toString());
+                        $("#numberQuantity").text(numberQuantity);
+
+                        $.notify({
                             title: '<strong>Add product successful!</strong>',
                             icon: 'glyphicon glyphicon-star',
                             message: 'Product ' + val.productName + ' has been added to your cart.'
                         },
-                        {
-                            type: 'success',
-                            animate: {
-                                enter: 'animated fadeInUp',
-                                exit: 'animated fadeOutRight'
-                            },
-                            placement: {
-                                from: "top",
-                                align: "right"
-                            },
-                            offset: 20,
-                            spacing: 10,
-                            z_index: 1031,
-                            delay: 3000
-                        });
-
-                    // fail validation
-
+                            {
+                                type: 'success',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    } else {
+                        $.notify({
+                            title: '<strong>Add product fail!</strong>',
+                            icon: 'glyphicon glyphicon-star',
+                            message: val.message
+                        },
+                            {
+                                type: 'danger',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    }
                 }
-            }
-        });
-    }
-</script>
-<script type="text/javascript">
-    function getCookie(cname) {
-        var name = cname + "=";
-        var decodedCookie = decodeURIComponent(document.cookie);
-        var ca = decodedCookie.split(';');
-        for (var i = 0; i < ca.length; i++) {
-            var c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
+            });
         }
-        return "";
-    }
-</script>
 
-@section Scripts
-{
-    @*    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js">*@
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+        function removeItem(id) {
+            var anonymousId = getCookie("AnonymousId");
+            $.ajax({
+                url: 'http://localhost:5000/' + 'api/cart/RemoveCartItem?customerId=' + anonymousId + '&productId=' + id,
+                type: "get",
+                success: function (val) {
+                    
+                    if (val.status == 'Success') {
+                        $('div[product-id="' + id + '"]').remove();
+                        $('#totalPrice').text('$' + (val.totalPriceRemain || 0));
+                        $("#numberQuantity").text((val.quantityRemain || 0));
+                        $.notify({
+                            title: '<strong>Remove product successful!</strong>',
+                            icon: 'glyphicon glyphicon-star',
+                            message: val.message
+                        },
+                            {
+                                type: 'success',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    } else {
+                        $.notify({
+                            title: '<strong>Remove product fail!</strong>',
+                            icon: 'glyphicon glyphicon-star',
+                            message: val.message
+                        },
+                            {
+                                type: 'danger',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    }
+                }
+            });
+        }
+    </script>
+}
+
+@section Styles
+    {
+    <style type="text/css">
+        [data-notify="progressbar"] {
+            margin-bottom: 0px;
+            position: absolute;
+            bottom: 0px;
+            left: 0px;
+            width: 100%;
+            height: 5px;
+        }
+        .truncate {
+             width: 150px;
+             white-space: nowrap;
+             overflow: hidden;
+             text-overflow: ellipsis;
+         }
+    </style>
 }

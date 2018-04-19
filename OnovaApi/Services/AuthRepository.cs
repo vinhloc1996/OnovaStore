@@ -139,8 +139,6 @@ namespace OnovaApi.Services
                     JoinDate = dto.JoinDate
                 });
 
-                var a = _context.CustomerCart.Add(new CustomerCart { CustomerCartId = newUser.Id, CreateDate = DateTime.Now });
-
                 await _context.SaveChangesAsync();
 
                 return result > 0 ? IdentityResult.Success : IdentityResult.Failed();
@@ -151,7 +149,9 @@ namespace OnovaApi.Services
 
         public async Task<int> AddCustomer(Customer customer)
         {
-            await _context.Customer.AddAsync(customer);
+            _context.Customer.Add(customer);
+            _context.CustomerCart.Add(
+                new CustomerCart {CustomerCartId = customer.CustomerId, CreateDate = DateTime.Now});
 
             return await _context.SaveChangesAsync();
         }
@@ -161,7 +161,7 @@ namespace OnovaApi.Services
             return await _context.Customer.FindAsync(userId);
         }
 
-        public async Task<string> PasswordResetToken (ApplicationUser user)
+        public async Task<string> PasswordResetToken(ApplicationUser user)
         {
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
@@ -174,6 +174,12 @@ namespace OnovaApi.Services
         public async Task<IdentityResult> ResetPassword(ApplicationUser user, string code, string newPassword)
         {
             return await _userManager.ResetPasswordAsync(user, code, newPassword);
+        }
+
+        public async Task<int> MoveCart(string anonymousId, string email)
+        {
+            //move item from anonymous cart to customer cart, remove cookie in onovastore
+            return 0;
         }
     }
 }

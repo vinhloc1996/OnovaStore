@@ -93,6 +93,7 @@ namespace OnovaApi.Data
             {
                 var admin = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "admin@onova.com");
                 var staff = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "staffsupport@onova.com");
+                var manager = await dbContext.Users.FirstOrDefaultAsync(u => u.UserName == "productmanager@onova.com");
 
                 var staffInits = new List<Staff>
                 {
@@ -113,8 +114,18 @@ namespace OnovaApi.Data
                         Address = "Onova",
                         Phone = "22222222",
                         Salary = 0
+                    },
+                    new Staff
+                    {
+                        StaffId = manager.Id,
+                        AddBy = admin.Id,
+                        AddDate = DateTime.Now,
+                        Address = "Onova",
+                        Phone = "22222222",
+                        Salary = 0
                     }
                 };
+
                 await dbContext.Staff.AddRangeAsync(staffInits);
                 await dbContext.SaveChangesAsync();
             }
@@ -159,6 +170,25 @@ namespace OnovaApi.Data
                 if (result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "CustomerSupport");
+                }
+            }
+
+            if (userManager.FindByNameAsync
+                    ("productmanager@onova.com").Result == null)
+            {
+                ApplicationUser user = new ApplicationUser
+                {
+                    UserName = "productmanager@onova.com",
+                    Email = "productmanager@onova.com",
+                    FullName = "Product Manager"
+                };
+
+                IdentityResult result = userManager.CreateAsync
+                    (user, "123456").Result;
+
+                if (result.Succeeded)
+                {
+                    await userManager.AddToRoleAsync(user, "ProductManager");
                 }
             }
         }
