@@ -671,6 +671,7 @@ namespace OnovaApi.Controllers
             });
         }
 
+        [AllowAnonymous]
         [Route("CleanCart")]
         public async Task<IActionResult> CleanCart([FromQuery] string customerId)
         {
@@ -744,6 +745,7 @@ namespace OnovaApi.Controllers
         }
 
         [Route("UpdateCartDetail")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> UpdateCartDetail([FromQuery] string customerId, [FromQuery] int productId, [FromQuery] int quantity)
         {
@@ -769,15 +771,15 @@ namespace OnovaApi.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                var customerCart = _context.CustomerCart.Find(customerId);
-
-                if (string.IsNullOrEmpty(customerId) || customerCart == null)
+                if (string.IsNullOrEmpty(customerId))
                 {
                     customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
                         ?.FindFirst(
                             c => c.Type == JwtRegisteredClaimNames.NameId || c.Type == ClaimTypes.NameIdentifier)
                         ?.Value;
                 }
+
+                var customerCart = _context.CustomerCart.Find(customerId);
 
                 var cartDetail = _context.CustomerCartDetail.Find(customerId, productId);
 
