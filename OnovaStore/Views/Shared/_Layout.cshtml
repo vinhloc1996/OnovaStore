@@ -29,114 +29,129 @@
     <link rel="stylesheet" href="~/html/assets/css/custom.css">
     <script src="~/html/assets/vendor/jquery/jquery.min.js"></script>
     @RenderSection("Styles", required: false)
+    @RenderSection("AdditionalStyles", required: false)
 </head>
 <body>
-    <main>
-        @Html.Partial("_Header")
-        @RenderBody()
-        @Html.Partial("_Footer")
-    </main>
-    <div class="u-outer-spaces-helper"></div>
-    <!-- JS Global Compulsory -->
-    <script src="~/html/assets/vendor/jquery/jquery.min.js"></script>
-    <script src="~/html/assets/vendor/jquery-migrate/jquery-migrate.min.js"></script>
-    <script src="~/html/assets/vendor/popper.min.js"></script>
-    <script src="~/html/assets/vendor/bootstrap/bootstrap.min.js"></script>
-    <!-- JS Implementing Plugins -->
-    <script src="~/html/assets/vendor/jquery.countdown.min.js"></script>
-    <script src="~/html/assets/vendor/slick-carousel/slick/slick.js"></script>
-    <script src="~/html/assets/vendor/hs-megamenu/src/hs.megamenu.js"></script>
-    <script src="~/html/assets/vendor/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="~/html/assets/vendor/appear.js"></script>
-    <script src="~/html/assets/vendor/custombox/custombox.min.js"></script>
-    <!-- JS Unify -->
-    <script src="~/html/assets/js/hs.core.js"></script>
-    <script src="~/html/assets/js/components/hs.header.js"></script>
-    <script src="~/html/assets/js/helpers/hs.hamburgers.js"></script>
-    <script src="~/html/assets/js/components/hs.dropdown.js"></script>
-    <script src="~/html/assets/js/components/hs.scrollbar.js"></script>
-    <script src="~/html/assets/js/components/hs.countdown.js"></script>
-    <script src="~/html/assets/js/components/hs.count-qty.js"></script>
-    <script src="~/html/assets/js/components/hs.carousel.js"></script>
-    <script src="~/html/assets/js/components/hs.go-to.js"></script>
-    <script src="~/html/assets/js/components/hs.modal-window.js"></script>
+<main>
+    @Html.Partial("_Header")
+    @RenderBody()
+    @Html.Partial("_Footer")
+</main>
+<div class="u-outer-spaces-helper"></div>
+<!-- JS Global Compulsory -->
+<script src="~/html/assets/vendor/jquery/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+<script src="~/html/assets/vendor/jquery-migrate/jquery-migrate.min.js"></script>
+<script src="~/html/assets/vendor/popper.min.js"></script>
+<script src="~/html/assets/vendor/bootstrap/bootstrap.min.js"></script>
+<!-- JS Implementing Plugins -->
+<script src="~/html/assets/vendor/jquery.countdown.min.js"></script>
+<script src="~/html/assets/vendor/slick-carousel/slick/slick.js"></script>
+<script src="~/html/assets/vendor/hs-megamenu/src/hs.megamenu.js"></script>
+<script src="~/html/assets/vendor/malihu-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="~/html/assets/vendor/appear.js"></script>
+<script src="~/html/assets/vendor/custombox/custombox.min.js"></script>
+<!-- JS Unify -->
+<script src="~/html/assets/js/hs.core.js"></script>
+<script src="~/html/assets/js/components/hs.header.js"></script>
+<script src="~/html/assets/js/helpers/hs.hamburgers.js"></script>
+<script src="~/html/assets/js/components/hs.dropdown.js"></script>
+<script src="~/html/assets/js/components/hs.scrollbar.js"></script>
+<script src="~/html/assets/js/components/hs.countdown.js"></script>
+<script src="~/html/assets/js/components/hs.count-qty.js"></script>
+<script src="~/html/assets/js/components/hs.carousel.js"></script>
+<script src="~/html/assets/js/components/hs.go-to.js"></script>
+<script src="~/html/assets/js/components/hs.modal-window.js"></script>
 
-    <!-- JS Customization -->
-    <script src="~/html/assets/js/custom.js"></script>
-    <!-- JS Plugins Init. -->
-    <script>
-        $(document).on('ready', function () {
+<!-- JS Customization -->
+<script src="~/html/assets/js/custom.js"></script>
+<!-- JS Plugins Init. -->
+<script>
+    $(document).on('ready',
+        function() {
             // initialization of carousel
             $.HSCore.components.HSCarousel.init('[class*="js-carousel"]');
 
-            $('#carouselCus1').slick('setOption', 'responsive', [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 4
-                }
-            }, {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 3
-                }
-            }, {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 2
-                }
-            }], true);
+            $('#carouselCus1').slick('setOption',
+                'responsive',
+                [
+                    {
+                        breakpoint: 1200,
+                        settings: {
+                            slidesToShow: 4
+                        }
+                    }, {
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    }, {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }
+                ],
+                true);
 
-            $('#carouselCus2').slick('setOption', 'responsive', [{
-                breakpoint: 1200,
-                settings: {
-                    slidesToShow: 3
-                }
-            }, {
-                breakpoint: 992,
-                settings: {
-                    slidesToShow: 2
-                }
-            }, {
-                breakpoint: 768,
-                settings: {
-                    slidesToShow: 1
-                }
-            }, {
-                breakpoint: 480,
-                settings: {
-                    slidesToShow: 1
-                }
-            }], true);
+            $('#carouselCus2').slick('setOption',
+                'responsive',
+                [
+                    {
+                        breakpoint: 1200,
+                        settings: {
+                            slidesToShow: 3
+                        }
+                    }, {
+                        breakpoint: 992,
+                        settings: {
+                            slidesToShow: 2
+                        }
+                    }, {
+                        breakpoint: 768,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }, {
+                        breakpoint: 480,
+                        settings: {
+                            slidesToShow: 1
+                        }
+                    }
+                ],
+                true);
         });
 
-        // initialization of header
-        $.HSCore.components.HSHeader.init($('#js-header'));
-        $.HSCore.helpers.HSHamburgers.init('.hamburger');
+    // initialization of header
+    $.HSCore.components.HSHeader.init($('#js-header'));
+    $.HSCore.helpers.HSHamburgers.init('.hamburger');
 
-        $.HSCore.components.HSModalWindow.init('[data-modal-target]');
+    $.HSCore.components.HSModalWindow.init('[data-modal-target]');
 
-        // initialization of HSMegaMenu component
-        $('.js-mega-menu').HSMegaMenu({
-            event: 'hover',
-            pageContainer: $('.container'),
-            breakpoint: 991
-        });
+    // initialization of HSMegaMenu component
+    $('.js-mega-menu').HSMegaMenu({
+        event: 'hover',
+        pageContainer: $('.container'),
+        breakpoint: 991
+    });
 
-        // initialization of HSDropdown component
-        $.HSCore.components.HSDropdown.init($('[data-dropdown-target]'), {
-            afterOpen: function () {
+    // initialization of HSDropdown component
+    $.HSCore.components.HSDropdown.init($('[data-dropdown-target]'),
+        {
+            afterOpen: function() {
                 $(this).find('input[type="search"]').focus();
             }
         });
 
-        // initialization of go to
-        $.HSCore.components.HSGoTo.init('.js-go-to');
+    // initialization of go to
+    $.HSCore.components.HSGoTo.init('.js-go-to');
 
-        // initialization of quantity counter
-        $.HSCore.components.HSCountQty.init('.js-quantity');
+    // initialization of quantity counter
+    $.HSCore.components.HSCountQty.init('.js-quantity');
 
-        // initialization of countdowns
-        var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown', {
+    // initialization of countdowns
+    var countdowns = $.HSCore.components.HSCountdown.init('.js-countdown',
+        {
             yearsElSelector: '.js-cd-years',
             monthElSelector: '.js-cd-month',
             daysElSelector: '.js-cd-days',
@@ -145,11 +160,13 @@
             secondsElSelector: '.js-cd-seconds'
         });
 
-        $(window).on('load', function () {
+    $(window).on('load',
+        function() {
             // initialization of HSScrollBar component
             $.HSCore.components.HSScrollBar.init($('.js-scrollbar'));
         });
-    </script>
-    @RenderSection("Scripts", required: false)
+</script>
+@RenderSection("Scripts", required: false)
+@RenderSection("AdditionalScripts", required: false)
 </body>
 </html>

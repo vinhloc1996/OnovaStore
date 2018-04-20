@@ -23,9 +23,38 @@ namespace OnovaApi.Controllers
 
         // GET: api/CustomerCart
         [HttpGet]
-        public IEnumerable<CustomerCart> GetCustomerCart()
+        [Route("GetCustomerCarts")]
+        public IActionResult GetCustomerCarts([FromQuery] string customerId)
         {
-            return _context.CustomerCart;
+//            var cart = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(c => new
+//            {
+//                c.ProductId,
+//                c.Product.Name,
+//                c.DisplayPrice,
+//                c.Quantity,
+//                TotalPrice = c.Quantity * c.DisplayPrice,
+//                c.Product.ProductThumbImage
+//            }).ToList();
+
+            var cart = _context.CustomerCart.Where(c => c.CustomerCartId == customerId).Select(c => new
+            {
+                c.DisplayPrice,
+                c.PriceDiscount,
+                c.ShippingFee,
+                c.Tax,
+                c.Promotion.PromotionCode,
+                item = c.CustomerCartDetail.Select(i => new
+                {
+                    i.ProductId,
+                    i.Product.Name,
+                    i.DisplayPrice,
+                    i.Quantity,
+                    TotalPrice = i.Quantity * i.DisplayPrice,
+                    i.Product.ProductThumbImage
+                })
+            }).ToList();
+
+            return Json(cart);
         }
 
         // GET: api/CustomerCart/5
@@ -108,7 +137,7 @@ namespace OnovaApi.Controllers
                 }
             }
 
-            return CreatedAtAction("GetCustomerCart", new { id = customerCart.CustomerCartId }, customerCart);
+            return CreatedAtAction("GetCustomerCart", new {id = customerCart.CustomerCartId}, customerCart);
         }
 
         // DELETE: api/CustomerCart/5

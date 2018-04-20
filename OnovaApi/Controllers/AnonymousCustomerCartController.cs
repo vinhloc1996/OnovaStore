@@ -47,6 +47,31 @@ namespace OnovaApi.Controllers
             return Ok();
         }
 
+        [HttpGet]
+        [Route("GetAnonymousCustomerCarts")]
+        public IActionResult GetAnonymousCustomerCarts([FromQuery]string customerId)
+        {
+            var cart = _context.AnonymousCustomerCart.Where(c => c.AnonymousCustomerCartId == customerId).Select(c => new
+            {
+                c.DisplayPrice,
+                c.PriceDiscount,
+                c.ShippingFee,
+                c.Tax,
+                c.Promotion.PromotionCode,
+                item = c.AnonymousCustomerCartDetail.Select(i => new
+                {
+                    i.ProductId,
+                    i.Product.Name,
+                    i.DisplayPrice,
+                    i.Quantity,
+                    TotalPrice = i.Quantity * i.DisplayPrice,
+                    i.Product.ProductThumbImage
+                })
+            }).ToList();
+
+            return Json(cart);
+        }
+
         // PUT: api/AnonymousCustomerCart/5
         [HttpPut("{id}")]
         public async Task<IActionResult> PutAnonymousCustomerCart([FromRoute] string id, [FromBody] AnonymousCustomerCart anonymousCustomerCart)

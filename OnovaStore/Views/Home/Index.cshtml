@@ -1,21 +1,38 @@
-﻿@using OnovaStore.Models.Category
+﻿@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@using OnovaStore.Models.Category
 @using OnovaStore.Models.Product
 @inject System.Security.Claims.IClaimPrincipalManager claimManager
+@inject IRestClient restClient
 @model dynamic
 @{
     Layout = "_Layout";
     ViewBag.Title = "Home";
     var isAuthenticated = claimManager.IsAuthenticated;
+    var listProduct = new List<Category>();
+}
+@using (var client = restClient.CreateClient(User))
+{
+    using (var response = await client.GetAsync("/api/category/GetCategoriesForIndexPage"))
+    {
+        dynamic result = response.StatusCode == HttpStatusCode.OK
+            ? await response.Content.ReadAsStringAsync()
+            : null;
+
+        if (result != null)
+        {
+            listProduct = JsonConvert.DeserializeObject<List<Category>>(result);
+        }
+    }
 }
 
 <!-- Product Blocks -->
 <section class="container g-py-100">
     @{
-        if (ViewBag.HeaderCategories != null)
+        if (listProduct != null)
         {
-            var categories = (List<Category>)ViewBag.CategoryProducts;
-
-            foreach (var category in categories)
+            foreach (var category in listProduct)
             {
                 <div class="text-center mx-auto g-max-width-600 g-mb-50">
                     <h2 class="g-color-black mb-4">@category.Name</h2>
@@ -85,239 +102,3 @@
     </p>
 </div>
 
-
-
-
-@section Scripts
-{
-    <script type="text/javascript">
-        function setCookie(cname,cvalue,exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            var expires = "expires=" + d.toGMTString();
-            document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-        }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var decodedCookie = decodeURIComponent(document.cookie);
-            var ca = decodedCookie.split(';');
-            for (var i = 0; i < ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length, c.length);
-                }
-            }
-            return "";
-        }
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
-    <script type="text/javascript">
-        var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
-
-        function addToCart(id) {
-            var anonymousId = getCookie("AnonymousId");
-            $.ajax({
-                url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
-                type: "get",
-                beforeSend: function(request) {
-                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
-                },
-                success: function (val) {
-                    var totalPrice = 0;
-                    var numberQuantity = 0;
-                    if (val.status == 'Success') {
-                        var list = val.product;
-                        if (val.anonymousId) {
-                            setCookie("AnonymousId", val.anonymousId, 30);
-                        }
-                        
-                        $('.card-detail').remove();
-
-                        for (var i = 0; i < list.length; i++) {
-                            if (list[i].productThumbImage == null) {
-                                list[i].productThumbImage = 'b5aamndnqugqynwxzmm6';
-                            }
-
-                            var element =
-                                '<div class="u-basket__product g-brd-none g-px-20 card-detail" product-id="' + list[i].productId +'"> ' +
-                                    '<div class="row no-gutters g-pb-5"> ' +
-                                    '<div class="col-4 pr-3"> ' +
-                                    '<a class="u-basket__product-img" href="#!"> ' +
-                                    '<img class="img-fluid" src="' +
-                                    imgUrl +
-                                    list[i].productThumbImage +
-                                    '" alt="Image Description"> ' +
-                                    '</a> ' +
-                                    '</div> ' +
-                                    '<div class="col-8"> ' +
-                                    '<h6 class="g-font-weight-400 g-font-size-default truncate"> ' +
-                                    '<a class="g-color-black g-color-primary--hover g-text-underline--none--hover" href="' +
-                                    list[i].slug +
-                                    '">' +
-                                    list[i].name +
-                                    '</a> ' +
-                                    '</h6> ' +
-                                    '<small class="g-color-primary g-font-size-12">' +
-                                    list[i].quantity +
-                                    ' x $' +
-                                    list[i].displayPrice +
-                                    '</small> ' +
-                                    '</div> ' +
-                                    '</div> ' +
-                                    '<button type="button" onclick="removeItem(' + list[i].productId + ');" class="u-basket__product-remove">' +
-                                    'x' +
-                                    '</button> ' +
-                                    '</div> ';
-
-                            $(element).appendTo('#mCSB_1_container');
-                            totalPrice = totalPrice + (list[i].quantity * list[i].displayPrice);
-                            numberQuantity += list[i].quantity;
-                        }
-
-
-                        $('#totalPrice').text('$' + totalPrice.toString());
-                        $("#numberQuantity").text(numberQuantity);
-
-                        $.notify({
-                                title: '<strong>Add product successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: 'Product ' + val.productName + ' has been added to your cart.'
-                            },
-                            {
-                                type: 'success',
-                                animate: {
-                                    enter: 'animated fadeInUp',
-                                    exit: 'animated fadeOutRight'
-                                },
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                offset: 20,
-                                spacing: 10,
-                                z_index: 1031,
-                                delay: 2000,
-                                showProgressbar: true,
-                                allow_dismiss: true,
-                                newest_on_top: false
-                            });
-                    } else {
-                        $.notify({
-                                title: '<strong>Add product fail!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
-                            {
-                                type: 'danger',
-                                animate: {
-                                    enter: 'animated fadeInUp',
-                                    exit: 'animated fadeOutRight'
-                                },
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                offset: 20,
-                                spacing: 10,
-                                z_index: 1031,
-                                delay: 2000,
-                                showProgressbar: true,
-                                allow_dismiss: true,
-                                newest_on_top: false
-                            });
-                    }
-                }
-            });
-        }
-
-        function removeItem(id) {
-            var anonymousId = getCookie("AnonymousId");
-            $.ajax({
-                url: 'http://localhost:5000/' + 'api/cart/RemoveCartItem?customerId=' + anonymousId + '&productId=' + id,
-                type: "get",
-                beforeSend: function (request) {
-                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
-                },
-                success: function (val) {
-                    
-                    if (val.status == 'Success') {
-                        $('div[product-id="' + id + '"]').remove();
-                        $('#totalPrice').text('$' + (val.totalPriceRemain || 0));
-                        $("#numberQuantity").text((val.quantityRemain || 0));
-                        $.notify({
-                                title: '<strong>Remove product successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
-                            {
-                                type: 'success',
-                                animate: {
-                                    enter: 'animated fadeInUp',
-                                    exit: 'animated fadeOutRight'
-                                },
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                offset: 20,
-                                spacing: 10,
-                                z_index: 1031,
-                                delay: 2000,
-                                showProgressbar: true,
-                                allow_dismiss: true,
-                                newest_on_top: false
-                            });
-                    } else {
-                        $.notify({
-                                title: '<strong>Remove product fail!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
-                            {
-                                type: 'danger',
-                                animate: {
-                                    enter: 'animated fadeInUp',
-                                    exit: 'animated fadeOutRight'
-                                },
-                                placement: {
-                                    from: "top",
-                                    align: "right"
-                                },
-                                offset: 20,
-                                spacing: 10,
-                                z_index: 1031,
-                                delay: 2000,
-                                showProgressbar: true,
-                                allow_dismiss: true,
-                                newest_on_top: false
-                            });
-                    }
-                }
-            });
-        }
-    </script>
-}
-
-@section Styles
-    {
-    <style type="text/css">
-        [data-notify="progressbar"] {
-            margin-bottom: 0px;
-            position: absolute;
-            bottom: 0px;
-            left: 0px;
-            width: 100%;
-            height: 5px;
-        }
-        .truncate {
-             width: 150px;
-             white-space: nowrap;
-             overflow: hidden;
-             text-overflow: ellipsis;
-         }
-    </style>
-}

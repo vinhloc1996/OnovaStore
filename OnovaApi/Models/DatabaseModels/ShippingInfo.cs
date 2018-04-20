@@ -22,6 +22,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [StringLength(50)]
         public string Zip { get; set; }
+        public bool IsDefault { get; set; }
         [Required]
         [StringLength(20)]
         public string Phone { get; set; }

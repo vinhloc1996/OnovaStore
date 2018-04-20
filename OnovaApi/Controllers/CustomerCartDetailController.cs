@@ -30,7 +30,7 @@ namespace OnovaApi.Controllers
 
         // GET: api/CustomerCartDetail/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCustomerCartDetail([FromRoute] string id)
+        public IActionResult GetCustomerCartDetail([FromRoute] string id)
         {
             if (!ModelState.IsValid)
             {

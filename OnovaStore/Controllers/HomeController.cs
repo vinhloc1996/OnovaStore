@@ -41,55 +41,6 @@ namespace OnovaStore.Controllers
                 return RedirectToAction("Index", "Home", new {area = "Manage"});
             }
             
-            using (var client = restClient.CreateClient(User))
-            {
-                using (var response = await client.GetAsync("/api/category/GetCategoriesForHeader"))
-                {
-                    dynamic result = response.StatusCode == HttpStatusCode.OK
-                        ? await response.Content.ReadAsStringAsync()
-                        : null;
-
-                    if (result != null)
-                    {
-                        var list = JsonConvert.DeserializeObject<List<Category>>(result);
-                        ViewBag.HeaderCategories = list;
-                    }
-                }
-            }
-
-            using (var client = restClient.CreateClient(User))
-            {
-                using (var response = await client.GetAsync("/api/brand/GetBrandsForHeader"))
-                {
-                    dynamic result = response.StatusCode == HttpStatusCode.OK
-                        ? await response.Content.ReadAsStringAsync()
-                        : null;
-
-                    if (result != null)
-                    {
-                        var list = JsonConvert.DeserializeObject<List<Brand>>(result);
-                        ViewBag.HeaderBrands = list;
-                    }
-
-                }
-            }
-
-            using (var client = restClient.CreateClient(User))
-            {
-                using (var response = await client.GetAsync("/api/category/GetCategoriesForIndexPage"))
-                {
-                    dynamic result = response.StatusCode == HttpStatusCode.OK
-                        ? await response.Content.ReadAsStringAsync()
-                        : null;
-
-                    if (result != null)
-                    {
-                        var list = JsonConvert.DeserializeObject<List<Category>>(result);
-                        ViewBag.CategoryProducts = list;
-                    }
-                }
-            }
-
             return View();
         }
 
