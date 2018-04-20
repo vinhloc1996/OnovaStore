@@ -8,6 +8,7 @@
     var discount = 0.0;
     var shippingFee = 0.0;
     var subTotal = 0.0;
+    var promotionCode = "";
 }
 @if (Model == null)
 {
@@ -73,8 +74,12 @@ else
                         </thead>
                         <tbody>
                         @foreach (var cart in Model)
-                        {
-                            subTotal = cart.displayPrice;
+                                    {
+                                        subTotal = cart.displayPrice;
+                                        tax = cart.tax;
+                                        discount = cart.priceDiscount;
+                                        shippingFee = cart.shippingFee;
+                                        promotionCode = cart.promotionCode;
                                        foreach (var item in cart.item)
                                         {
                                 <!-- Item-->
@@ -87,12 +92,8 @@ else
                                     </td>
                                     <td class="g-color-gray-dark-v2 g-font-size-13">@item.displayPrice</td>
                                     <td>
-                                        <div class="input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-                                            <input class="form-control text-center g-font-size-13 rounded-0 g-pa-0" type="text" id="quantity-@item.productId" onchange="changeQuantity(@item.productId);" value="@item.quantity">
-                                            <div class="input-group-addon d-flex align-items-center g-width-30 g-brd-gray-light-v2 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
-                                                <i class="g-color-gray g-color-primary--hover fa fa-angle-up" onclick="increaseQuantity(@item.productId);"></i>
-                                                <i class="g-color-gray g-color-primary--hover fa fa-angle-down" onclick="decreaseQuantity(@item.productId);"></i>
-                                            </div>
+                                        <div class="input-group u-quantity-v1 g-width-50 g-brd-primary--focus">
+                                            <input class="form-control text-center g-font-size-13 rounded-0 g-pa-0" type="number" id="quantity-@item.productId" onchange="changeQuantity(@item.productId);" min="1" value="@item.quantity">
                                         </div>
                                     </td>
                                     <td class="text-right g-color-black">
@@ -128,17 +129,24 @@ else
                                 <span class="g-color-black g-font-weight-300">Subtotal</span>
                                 <span class="g-color-black g-font-weight-300">$@subTotal</span>
                             </div>
-                            <div class="d-flex justify-content-between">
-                                <h6 class="g-color-black g-font-weight-200">Discout</h6>
-                                <h6 class="g-color-black g-font-weight-200">$454.00</h6>
-                            </div>
+                            @if (discount > 0)
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="g-color-black g-font-weight-200">Discout</h6>
+                                    <h6 class="g-color-black g-font-weight-200">-$@discount</h6>
+                                </div>
+                            }
                             <div class="d-flex justify-content-between">
                                 <h6 class="g-color-black g-font-weight-200">Shipping Fee</h6>
-                                <h6 class="g-color-black g-font-weight-200">$454.00</h6>
+                                <h6 class="g-color-black g-font-weight-200">@(subTotal > 1000 ? "Free" : "$30")</h6>
                             </div>
                             <div class="d-flex justify-content-between">
                                 <h6 class="g-color-black g-font-weight-200">Tax</h6>
-                                <h6 class="g-color-black g-font-weight-200">$454.00</h6>
+                                @{
+                                    tax = tax * (subTotal + shippingFee - discount);
+                                    totalPrice = subTotal + shippingFee - discount + tax;
+                                }
+                                <h6 class="g-color-black g-font-weight-200">$@tax</h6>
                             </div>
 
                         </div>
@@ -147,17 +155,23 @@ else
 
                     <div class="d-flex justify-content-between">
                         <span class="g-color-black">Order Total</span>
-                        <span class="g-color-black">$454.00</span>
+                        <span class="g-color-black">$@totalPrice</span>
                     </div>
                 </div>
                 <!-- End Summary -->
                 <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>
                 <button class="btn btn-block u-btn-primary g-font-size-13 text-uppercase g-py-15 mb-4" type="button" data-next-step="#step2">Proceed to Checkout</button>
+                @{
+                    var isNotDiscounted = string.IsNullOrEmpty(promotionCode);
+                }
+                
+
+                <!-- Bug: not displaying -->
                 <!-- Accordion -->
                 <div id="accordion-02" role="tablist" aria-multiselectable="true">
                     <div id="accordion-02-heading-02" role="tab">
                         <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                            <a class="g-color-black g-text-underline--none--hover" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
+                            <a class="g-color-black g-text-underline--none--hover collapse" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
                                 Apply discount code
                                 <span class="ml-3 fa fa-angle-down"></span>
                             </a>
@@ -165,9 +179,9 @@ else
                     </div>
                     <div id="accordion-02-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-02-heading-02">
                         <div class="input-group rounded g-pt-15">
-                            <input class="form-control g-brd-gray-light-v1 g-brd-right-none g-color-gray-dark-v3 g-placeholder-gray-dark-v3" type="text" placeholder="Enter discount code" id="promotionCode">
+                            <input class="form-control g-brd-gray-light-v1 g-brd-right-none g-color-gray-dark-v3 g-placeholder-gray-dark-v3" type="text" placeholder="Enter discount code" id="promotionCode" @(isNotDiscounted ? "" : "readonly") value="@promotionCode">
                             <span class="input-group-addon g-brd-gray-light-v1 g-bg-white">
-                                <button class="btn u-btn-primary rounded" id="submitPromotion" type="submit">Apply</button>
+                                <button class="btn u-btn-primary rounded" id="submitPromotion" type="button">@(isNotDiscounted ? "Apply" : "Remove Code")</button>
                             </span>
                         </div>
                     </div>
@@ -860,6 +874,215 @@ else
             });
         }
 
+        function changeQuantity(id) {
+            var quantity = $('#quantity-' + id).val();
+            var anonymousId = getCookie("AnonymousId");
+            $.ajax({
+                url: 'http://localhost:5000/' +
+                    'api/cart/UpdateCartDetail?customerId=' +
+                    anonymousId +
+                    '&productId=' +
+                    id +
+                    '&quantity=' +
+                    quantity,
+                type: "get",
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                },
+                success: function(val) {
+                    if (val.status == "Success") {
+                        $.notify({
+                                title: '<strong>Update quantity product successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                            {
+                                type: 'success',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
 
+                        setTimeout(location.reload.bind(location), 2000);
+                    } else {
+                        $.notify({
+                                title: '<strong>Update quantity product failed!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                            {
+                                type: 'danger',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                        setTimeout(location.reload.bind(location), 2000);
+                    }
+                }
+            });
+        }
+
+        $('#submitPromotion').click(function () {
+            var promotion = $('#promotionCode').val();
+            if ($('#submitPromotion').text() == 'Apply') {
+                var anonymousId = getCookie("AnonymousId");
+                $.ajax({
+                    url: 'http://localhost:5000/' +
+                        'api/promotion/AddPromotionToCart?customerId=' +
+                        anonymousId +
+                        '&code=' +
+                        promotion,
+                    type: "get",
+                    beforeSend: function(request) {
+                        request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                    },
+                    success: function(val) {
+                        if (val.status == "Success") {
+                            $.notify({
+                                    title: '<strong>Apply promotion code for cart successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
+                                {
+                                    type: 'success',
+                                    animate: {
+                                        enter: 'animated fadeInUp',
+                                        exit: 'animated fadeOutRight'
+                                    },
+                                    placement: {
+                                        from: "top",
+                                        align: "right"
+                                    },
+                                    offset: 20,
+                                    spacing: 10,
+                                    z_index: 1031,
+                                    delay: 2000,
+                                    showProgressbar: true,
+                                    allow_dismiss: true,
+                                    newest_on_top: false
+                                });
+
+                            setTimeout(location.reload.bind(location), 2000);
+                        } else {
+                            $.notify({
+                                    title: '<strong>Apply promotion code for cart failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
+                                {
+                                    type: 'danger',
+                                    animate: {
+                                        enter: 'animated fadeInUp',
+                                        exit: 'animated fadeOutRight'
+                                    },
+                                    placement: {
+                                        from: "top",
+                                        align: "right"
+                                    },
+                                    offset: 20,
+                                    spacing: 10,
+                                    z_index: 1031,
+                                    delay: 2000,
+                                    showProgressbar: true,
+                                    allow_dismiss: true,
+                                    newest_on_top: false
+                                });
+                            setTimeout(location.reload.bind(location), 2000);
+                        }
+                    }
+                });
+            } else {
+                var anonymousId = getCookie("AnonymousId");
+                $.ajax({
+                    url: 'http://localhost:5000/' +
+                        'api/promotion/RemovePromotionFromCart?customerId=' +
+                        anonymousId +
+                        '&code=' +
+                        promotion,
+                    type: "get",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                    },
+                    success: function (val) {
+                        if (val.status == "Success") {
+                            $.notify({
+                                title: '<strong>Remove promotion code for cart successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                                {
+                                    type: 'success',
+                                    animate: {
+                                        enter: 'animated fadeInUp',
+                                        exit: 'animated fadeOutRight'
+                                    },
+                                    placement: {
+                                        from: "top",
+                                        align: "right"
+                                    },
+                                    offset: 20,
+                                    spacing: 10,
+                                    z_index: 1031,
+                                    delay: 2000,
+                                    showProgressbar: true,
+                                    allow_dismiss: true,
+                                    newest_on_top: false
+                                });
+
+                            setTimeout(location.reload.bind(location), 2000);
+                        } else {
+                            $.notify({
+                                title: '<strong>Remove promotion code for cart failed!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                                {
+                                    type: 'danger',
+                                    animate: {
+                                        enter: 'animated fadeInUp',
+                                        exit: 'animated fadeOutRight'
+                                    },
+                                    placement: {
+                                        from: "top",
+                                        align: "right"
+                                    },
+                                    offset: 20,
+                                    spacing: 10,
+                                    z_index: 1031,
+                                    delay: 2000,
+                                    showProgressbar: true,
+                                    allow_dismiss: true,
+                                    newest_on_top: false
+                                });
+                            setTimeout(location.reload.bind(location), 2000);
+                        }
+                    }
+                });
+            }
+        });
     </script>
 }

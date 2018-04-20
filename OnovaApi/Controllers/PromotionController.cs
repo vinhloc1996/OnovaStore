@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -33,10 +35,13 @@ namespace OnovaApi.Controllers
 
         [HttpGet]
         [Route("GetPromotionsForStaff")]
-        public async Task<IEnumerable<GetPromotionForStaff>> GetPromotionsForStaff([FromQuery] string sortOrder, [FromQuery] string searchString)
+        public async Task<IEnumerable<GetPromotionForStaff>> GetPromotionsForStaff([FromQuery] string sortOrder,
+            [FromQuery] string searchString)
         {
             string sortQuery = "";
-            string whereQuery = string.IsNullOrEmpty(searchString) ? "" : " WHERE LOWER(p.PromotionCode) LIKE @searchString OR LOWER(p.TargetApply) LIKE @searchString OR LOWER(p.PercentOff) LIKE @searchString OR LOWER(p.PromotionStatus) LIKE @searchString ";
+            string whereQuery = string.IsNullOrEmpty(searchString)
+                ? ""
+                : " WHERE LOWER(p.PromotionCode) LIKE @searchString OR LOWER(p.TargetApply) LIKE @searchString OR LOWER(p.PercentOff) LIKE @searchString OR LOWER(p.PromotionStatus) LIKE @searchString ";
 
             sortOrder = string.IsNullOrEmpty(sortOrder) ? "id" : sortOrder.Trim().ToLower();
 
@@ -81,9 +86,10 @@ namespace OnovaApi.Controllers
                 await conn.OpenAsync();
                 using (var command = conn.CreateCommand())
                 {
-                    string query = "SELECT p.PromotionID, p.PromotionCode, p.PromotionStatus, p.TargetApply, p.PercentOff " +
-                                   "FROM Promotion p " +
-                                   whereQuery + " " + sortQuery + " ";
+                    string query =
+                        "SELECT p.PromotionID, p.PromotionCode, p.PromotionStatus, p.TargetApply, p.PercentOff " +
+                        "FROM Promotion p " +
+                        whereQuery + " " + sortQuery + " ";
 
                     command.CommandText = query;
 
@@ -110,7 +116,6 @@ namespace OnovaApi.Controllers
                             promotions.Add(row);
                         }
                     }
-
                 }
             }
             finally
@@ -119,6 +124,512 @@ namespace OnovaApi.Controllers
             }
 
             return promotions;
+        }
+
+        [HttpGet]
+        [Route("AddPromotionToCart")]
+        public async Task<IActionResult> AddPromotionToCart([FromQuery] string code, [FromQuery] string customerId)
+        {
+            var promotion = _context.Promotion.FirstOrDefault(p => p.PromotionCode == code.Trim());
+
+            if (promotion != null)
+            {
+                var currentTime = DateTime.Now;
+
+                if (promotion.TargetApply.ToLower() == "all")
+                {
+                    if (currentTime > promotion.StartDate && currentTime < promotion.EndDate)
+                    {
+                        if (User.Identity.IsAuthenticated)
+                        {
+                            if (string.IsNullOrEmpty(customerId))
+                            {
+                                customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                                    ?.FindFirst(
+                                        c => c.Type == JwtRegisteredClaimNames.NameId ||
+                                             c.Type == ClaimTypes.NameIdentifier)
+                                    ?.Value;
+                            }
+
+                            var customerCart = _context.CustomerCart.Find(customerId);
+
+                            if (customerCart != null)
+                            {
+                                customerCart.PromotionId = promotion.PromotionId;
+                                customerCart.PriceDiscount = customerCart.DisplayPrice * (double) promotion.PercentOff;
+
+                                _context.CustomerCart.Update(customerCart);
+                                
+                                var customerCartDetail =
+                                    _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).ToList();
+
+                                if (customerCartDetail.Any())
+                                {
+                                    customerCartDetail.ForEach(c =>
+                                    {
+                                        c.PromotionId = promotion.PromotionId;
+                                        c.PriceDiscount = c.DisplayPrice * (double) promotion.PercentOff;
+                                    });
+                                }
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    return Json(new
+                                    {
+                                        Status = "Success",
+                                        Message = "Promotion is applied",
+                                    });
+                                }
+
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Cannot apply promotion to your cart",
+                                });
+                            }
+
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Cannot find customer cart",
+                            });
+                        }
+
+                        if (string.IsNullOrEmpty(customerId))
+                        {
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Cannot find customer cart",
+                            });
+                        }
+
+                        var anonymousCart = _context.AnonymousCustomerCart.Find(customerId);
+
+                        if (anonymousCart != null)
+                        {
+                            anonymousCart.PromotionId = promotion.PromotionId;
+                            anonymousCart.PriceDiscount = anonymousCart.DisplayPrice * (double)promotion.PercentOff;
+
+                            _context.AnonymousCustomerCart.Update(anonymousCart);
+
+                            var anonymousCartDetail =
+                                _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).ToList();
+
+                            if (anonymousCartDetail.Any())
+                            {
+                                anonymousCartDetail.ForEach(c =>
+                                {
+                                    c.PromotionId = promotion.PromotionId;
+                                    c.PriceDiscount = c.DisplayPrice * (double)promotion.PercentOff;
+                                });
+                            }
+
+                            if (await _context.SaveChangesAsync() > 0)
+                            {
+                                return Json(new
+                                {
+                                    Status = "Success",
+                                    Message = "Promotion is applied",
+                                });
+                            }
+
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Cannot apply promotion to your cart",
+                            });
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Cannot find customer cart",
+                        });
+                    }
+
+                    return Json(new
+                    {
+                        Status = "Failed",
+                        Message = "Promotion invalid"
+                    });
+                }
+
+                if (promotion.TargetApply.ToLower() == "brand")
+                {
+                    var promoBrand =
+                        _context.PromotionBrand.FirstOrDefault(b => b.PromotionId == promotion.PromotionId);
+                    if (promoBrand != null)
+                    {
+                        if (currentTime > promotion.StartDate && currentTime < promotion.EndDate)
+                        {
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                if (string.IsNullOrEmpty(customerId))
+                                {
+                                    customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                                        ?.FindFirst(
+                                            c => c.Type == JwtRegisteredClaimNames.NameId ||
+                                                 c.Type == ClaimTypes.NameIdentifier)
+                                        ?.Value;
+                                }
+
+                                var customerCartDetail =
+                                    _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId && c.Product.BrandId == promoBrand.BrandId).ToList();
+
+                                if (customerCartDetail.Any())
+                                {
+                                    customerCartDetail.ForEach(c =>
+                                    {
+                                        c.PromotionId = promotion.PromotionId;
+                                        c.PriceDiscount = c.DisplayPrice * (double)promotion.PercentOff;
+                                    });
+
+                                    if (await _context.SaveChangesAsync() > 0)
+                                    {
+                                        var customerCart = _context.CustomerCart.Find(customerId);
+                                        customerCart.PromotionId = promotion.PromotionId;
+                                        customerCart.PriceDiscount = customerCartDetail.Sum(c => c.PriceDiscount);
+
+                                        _context.CustomerCart.Update(customerCart);
+
+                                        if (await _context.SaveChangesAsync() > 0)
+                                        {
+                                            return Json(new
+                                            {
+                                                Status = "Success",
+                                                Message = "Promotion is applied",
+                                            });
+                                        }
+                                    }
+
+                                    return Json(new
+                                    {
+                                        Status = "Failed",
+                                        Message = "Cannot apply promotion to your cart",
+                                    });
+                                }
+
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Your cart don't have valid product for promotion",
+                                });
+                            }
+
+                            if (string.IsNullOrEmpty(customerId))
+                            {
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Cannot find customer cart",
+                                });
+                            }
+
+                            var anonymouseCartDetail =
+                                    _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId && c.Product.BrandId == promoBrand.BrandId).ToList();
+
+                            if (anonymouseCartDetail.Any())
+                            {
+                                anonymouseCartDetail.ForEach(c =>
+                                {
+                                    c.PromotionId = promotion.PromotionId;
+                                    c.PriceDiscount = c.DisplayPrice * (double)promotion.PercentOff;
+                                });
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    var anonymousCart = _context.AnonymousCustomerCart.Find(customerId);
+                                    anonymousCart.PromotionId = promotion.PromotionId;
+                                    anonymousCart.PriceDiscount = anonymouseCartDetail.Sum(c => c.PriceDiscount);
+
+                                    _context.AnonymousCustomerCart.Update(anonymousCart);
+
+                                    if (await _context.SaveChangesAsync() > 0)
+                                    {
+                                        return Json(new
+                                        {
+                                            Status = "Success",
+                                            Message = "Promotion is applied",
+                                        });
+                                    }
+                                }
+
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Cannot apply promotion to your cart",
+                                });
+                            }
+
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Your cart don't have valid product for promotion",
+                            });
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Promotion invalid",
+                        });
+                    }
+                }
+
+                if (promotion.TargetApply.ToLower() == "category")
+                {
+                    var promoCategory =
+                        _context.PromotionCategory.FirstOrDefault(b => b.PromotionId == promotion.PromotionId);
+
+                    if (promoCategory != null)
+                    {
+                        if (currentTime > promotion.StartDate && currentTime < promotion.EndDate)
+                        {
+                            if (User.Identity.IsAuthenticated)
+                            {
+                                if (string.IsNullOrEmpty(customerId))
+                                {
+                                    customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                                        ?.FindFirst(
+                                            c => c.Type == JwtRegisteredClaimNames.NameId ||
+                                                 c.Type == ClaimTypes.NameIdentifier)
+                                        ?.Value;
+                                }
+
+                                var customerCartDetail =
+                                    _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId && c.Product.CategoryId == promoCategory.CategoryId).ToList();
+
+                                if (customerCartDetail.Any())
+                                {
+                                    customerCartDetail.ForEach(c =>
+                                    {
+                                        c.PromotionId = promotion.PromotionId;
+                                        c.PriceDiscount = c.DisplayPrice * (double)promotion.PercentOff;
+                                    });
+
+                                    if (await _context.SaveChangesAsync() > 0)
+                                    {
+                                        var customerCart = _context.CustomerCart.Find(customerId);
+                                        customerCart.PromotionId = promotion.PromotionId;
+                                        customerCart.PriceDiscount = customerCartDetail.Sum(c => c.PriceDiscount);
+
+                                        _context.CustomerCart.Update(customerCart);
+
+                                        if (await _context.SaveChangesAsync() > 0)
+                                        {
+                                            return Json(new
+                                            {
+                                                Status = "Success",
+                                                Message = "Promotion is applied",
+                                            });
+                                        }
+                                    }
+
+                                    return Json(new
+                                    {
+                                        Status = "Failed",
+                                        Message = "Cannot apply promotion to your cart",
+                                    });
+                                }
+
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Your cart don't have valid product for promotion",
+                                });
+                            }
+
+                            if (string.IsNullOrEmpty(customerId))
+                            {
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Cannot find customer cart",
+                                });
+                            }
+
+                            var anonymouseCartDetail =
+                                    _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId && c.Product.CategoryId == promoCategory.CategoryId).ToList();
+
+                            if (anonymouseCartDetail.Any())
+                            {
+                                anonymouseCartDetail.ForEach(c =>
+                                {
+                                    c.PromotionId = promotion.PromotionId;
+                                    c.PriceDiscount = c.DisplayPrice * (double)promotion.PercentOff;
+                                });
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    var anonymousCart = _context.AnonymousCustomerCart.Find(customerId);
+                                    anonymousCart.PromotionId = promotion.PromotionId;
+                                    anonymousCart.PriceDiscount = anonymouseCartDetail.Sum(c => c.PriceDiscount);
+
+                                    _context.AnonymousCustomerCart.Update(anonymousCart);
+
+                                    if (await _context.SaveChangesAsync() > 0)
+                                    {
+                                        return Json(new
+                                        {
+                                            Status = "Success",
+                                            Message = "Promotion is applied",
+                                        });
+                                    }
+                                }
+
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Cannot apply promotion to your cart",
+                                });
+                            }
+
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Your cart don't have valid product for promotion",
+                            });
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Promotion invalid",
+                        });
+                    }
+                }
+            }
+
+            return Json(new
+            {
+                Status = "Failed",
+                Message = "Promotion invalid"
+            });
+        }
+
+        [HttpGet]
+        [Route("RemovePromotionFromCart")]
+        public async Task<IActionResult> RemovePromotionFromCart([FromQuery] string code, [FromQuery] string customerId)
+        {
+            var promotion = _context.Promotion.FirstOrDefault(p => p.PromotionCode == code.Trim());
+
+            if (promotion != null)
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    if (string.IsNullOrEmpty(customerId))
+                    {
+                        customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                            ?.FindFirst(
+                                c => c.Type == JwtRegisteredClaimNames.NameId ||
+                                     c.Type == ClaimTypes.NameIdentifier)
+                            ?.Value;
+                    }
+
+                    var customerCart = _context.CustomerCart.Find(customerId);
+
+                    if (customerCart != null)
+                    {
+                        customerCart.PriceDiscount = 0.0;
+                        customerCart.PromotionId = null;
+
+                        _context.CustomerCart.Update(customerCart);
+
+                        if (await _context.SaveChangesAsync() > 0)
+                        {
+                            var customerCartDetail =
+                                _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).ToList();
+
+                            if (customerCartDetail.Any())
+                            {
+                                customerCartDetail.ForEach(c =>
+                                {
+                                    c.PromotionId = null;
+                                    c.PriceDiscount = 0.0;
+                                });
+                            }
+
+                            if (await _context.SaveChangesAsync() > 0)
+                            {
+                                return Json(new
+                                {
+                                    Status = "Success",
+                                    Message = "Remove promotion code successful"
+                                });
+                            }
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Remove promotion code failed"
+                        });
+                    }
+                }
+
+                if (string.IsNullOrEmpty(customerId))
+                {
+                    return Json(new
+                    {
+                        Status = "Failed",
+                        Message = "Cannot find customer cart",
+                    });
+                }
+
+                var anonymouseCart =
+                    _context.AnonymousCustomerCart.Find(customerId);
+
+                if (anonymouseCart != null)
+                {
+                    anonymouseCart.PriceDiscount = 0.0;
+                    anonymouseCart.PromotionId = null;
+
+                    _context.AnonymousCustomerCart.Update(anonymouseCart);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var anonymousCartDetail =
+                            _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == customerId).ToList();
+
+                        if (anonymousCartDetail.Any())
+                        {
+                            anonymousCartDetail.ForEach(c =>
+                            {
+                                c.PromotionId = null;
+                                c.PriceDiscount = 0.0;
+                            });
+                        }
+
+                        if (await _context.SaveChangesAsync() > 0)
+                        {
+                            return Json(new
+                            {
+                                Status = "Success",
+                                Message = "Remove promotion code successful"
+                            });
+                        }
+                    }
+
+                    return Json(new
+                    {
+                        Status = "Failed",
+                        Message = "Remove promotion code failed"
+                    });
+                }
+
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find customer cart"
+                });
+            }
+            
+            return Json(new
+            {
+                Status = "Failed",
+                Message = "Promotion invalid"
+            });
         }
 
         // GET: api/Promotion/5
