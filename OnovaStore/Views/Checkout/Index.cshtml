@@ -87,11 +87,11 @@ else
                                     </td>
                                     <td class="g-color-gray-dark-v2 g-font-size-13">@item.displayPrice</td>
                                     <td>
-                                        <div class="js-quantity input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-                                            <input class="js-result form-control text-center g-font-size-13 rounded-0 g-pa-0" type="text" value="@item.quantity" readonly>
+                                        <div class="input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                                            <input class="form-control text-center g-font-size-13 rounded-0 g-pa-0" type="text" id="quantity-@item.productId" onchange="changeQuantity(@item.productId);" value="@item.quantity">
                                             <div class="input-group-addon d-flex align-items-center g-width-30 g-brd-gray-light-v2 g-bg-white g-font-size-12 rounded-0 g-px-5 g-py-6">
-                                                <i class="js-plus g-color-gray g-color-primary--hover fa fa-angle-up"></i>
-                                                <i class="js-minus g-color-gray g-color-primary--hover fa fa-angle-down"></i>
+                                                <i class="g-color-gray g-color-primary--hover fa fa-angle-up" onclick="increaseQuantity(@item.productId);"></i>
+                                                <i class="g-color-gray g-color-primary--hover fa fa-angle-down" onclick="decreaseQuantity(@item.productId);"></i>
                                             </div>
                                         </div>
                                     </td>
@@ -859,5 +859,7 @@ else
                 }
             });
         }
+
+
     </script>
 }

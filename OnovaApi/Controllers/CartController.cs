@@ -744,10 +744,156 @@ namespace OnovaApi.Controllers
         }
 
         [Route("UpdateCartDetail")]
-        [HttpPost]
-        public IActionResult Update([FromBody] JObject data)
+        [HttpGet]
+        public async Task<IActionResult> UpdateCartDetail([FromQuery] string customerId, [FromQuery] int productId, [FromQuery] int quantity)
         {
-            return Ok();
+            var product = productId == 0 ? null : _context.Product.Find(productId);
+
+            if (product == null)
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "The product not found"
+                });
+            }
+
+            if (quantity <= 0)
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "The quantity is invalid"
+                });
+            }
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var customerCart = _context.CustomerCart.Find(customerId);
+
+                if (string.IsNullOrEmpty(customerId) || customerCart == null)
+                {
+                    customerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                        ?.FindFirst(
+                            c => c.Type == JwtRegisteredClaimNames.NameId || c.Type == ClaimTypes.NameIdentifier)
+                        ?.Value;
+                }
+
+                var cartDetail = _context.CustomerCartDetail.Find(customerId, productId);
+
+                if (cartDetail != null)
+                {
+                    if (quantity > product.CurrentQuantity)
+                    {
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Product Quantiy is over current quantity in store"
+                        });
+                    }
+
+                    if (quantity > product.MaximumQuantity)
+                    {
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Product Quantiy is over maximum quantity can order in a time"
+                        });
+                    }
+
+                    customerCart.TotalQuantity = customerCart.TotalQuantity - cartDetail.Quantity + quantity;
+                    customerCart.DisplayPrice = customerCart.DisplayPrice - (cartDetail.Quantity * cartDetail.DisplayPrice) + (quantity * cartDetail.DisplayPrice);
+
+                    cartDetail.Quantity = quantity;
+
+                    _context.CustomerCart.Update(customerCart);
+                    _context.CustomerCartDetail.Update(cartDetail);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return Json(new
+                        {
+                            Status = "Success",
+                            Message = "Update product quantity successful"
+                        });
+                    }
+
+                    return Json(new
+                    {
+                        Status = "Failed",
+                        Message = "Cannot update product to database"
+                    });
+                }
+
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "The product is not in cart"
+                });
+            }
+
+            var anonymousCart = _context.AnonymousCustomerCart.Find(customerId);
+
+            if (anonymousCart != null)
+            {
+                var cartDetail = _context.AnonymousCustomerCartDetail.Find(customerId, productId);
+
+                if (cartDetail != null)
+                {
+                    if (quantity > product.CurrentQuantity)
+                    {
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Product Quantiy is over current quantity in store"
+                        });
+                    }
+
+                    if (quantity > product.MaximumQuantity)
+                    {
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Product Quantiy is over maximum quantity can order in a time"
+                        });
+                    }
+
+                    anonymousCart.TotalQuantity = anonymousCart.TotalQuantity - cartDetail.Quantity + quantity;
+                    anonymousCart.DisplayPrice = anonymousCart.DisplayPrice - (cartDetail.Quantity * cartDetail.DisplayPrice) + (quantity * cartDetail.DisplayPrice);
+
+                    cartDetail.Quantity = quantity;
+
+                    _context.AnonymousCustomerCart.Update(anonymousCart);
+                    _context.AnonymousCustomerCartDetail.Update(cartDetail);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return Json(new
+                        {
+                            Status = "Success",
+                            Message = "Update product quantity successful"
+                        });
+                    }
+
+                    return Json(new
+                    {
+                        Status = "Failed",
+                        Message = "Cannot update product to database"
+                    });
+                }
+
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "The product is not in cart"
+                });
+            }
+
+            return Json(new
+            {
+                Status = "Failed",
+                Message = "Customer cart not found"
+            });
         }
     }
 }
