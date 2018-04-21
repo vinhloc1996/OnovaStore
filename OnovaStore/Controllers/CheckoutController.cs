@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OnovaStore.Areas.Manage.Data;
+using Stripe;
 
 namespace OnovaStore.Controllers
 {
@@ -63,5 +64,31 @@ namespace OnovaStore.Controllers
                 }
             }
         }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> Charge(string stripeEmail, string stripeToken, string submitAddressLine1, string submitAddressLine2, string submitCity, string submitPhone, string submitFullName, string submitZipCode, string submitEmail, int totalPrice, string anonymousId)
+        {
+            var customers = new StripeCustomerService();
+            var charges = new StripeChargeService();
+
+            var customer = customers.Create(new StripeCustomerCreateOptions
+            {
+                Email = stripeEmail,
+                SourceToken = stripeToken
+            });
+
+            var charge = charges.Create(new StripeChargeCreateOptions
+            {
+                Amount = totalPrice,
+                Description = "Payment Order",
+                Currency = "usd",
+                CustomerId = customer.Id
+            });
+
+            return View();
+        }
+
+
     }
 }

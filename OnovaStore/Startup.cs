@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using OnovaStore.Helpers;
+using Stripe;
 
 namespace OnovaStore
 {
@@ -58,19 +59,19 @@ namespace OnovaStore
 
             var serviceProvider = services.BuildServiceProvider();
             var authenticationSettings = serviceProvider.GetService<IAuthenticationSettings>();
-
-//            services.Configure<JwtBearerOptions>(options =>
-//            {
-//                options.SaveToken = true;
-//                options.TokenValidationParameters = new TokenValidationParameters
-//                {
-//                    ValidateIssuerSigningKey = true,
-//                    IssuerSigningKey = new SymmetricSecurityKey(key),
-//                    ValidateIssuer = false,
-//                    ValidateAudience = false,
-//                    ValidateLifetime = false
-//                };
-//            });
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+            //            services.Configure<JwtBearerOptions>(options =>
+            //            {
+            //                options.SaveToken = true;
+            //                options.TokenValidationParameters = new TokenValidationParameters
+            //                {
+            //                    ValidateIssuerSigningKey = true,
+            //                    IssuerSigningKey = new SymmetricSecurityKey(key),
+            //                    ValidateIssuer = false,
+            //                    ValidateAudience = false,
+            //                    ValidateLifetime = false
+            //                };
+            //            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddCookie(JwtBearerDefaults.AuthenticationScheme,
@@ -99,6 +100,7 @@ namespace OnovaStore
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["SecretKey"]);
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
