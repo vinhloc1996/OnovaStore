@@ -9,6 +9,7 @@
     var shippingFee = 0.0;
     var subTotal = 0.0;
     var promotionCode = "";
+    var totalQuantity = 0;
 }
 @if (Model == null)
 {
@@ -74,14 +75,15 @@ else
                         </thead>
                         <tbody>
                         @foreach (var cart in Model)
-                                    {
-                                        subTotal = cart.displayPrice;
-                                        tax = cart.tax;
-                                        discount = cart.priceDiscount;
-                                        shippingFee = cart.shippingFee;
-                                        promotionCode = cart.promotionCode;
-                                       foreach (var item in cart.item)
-                                        {
+                        {
+                            subTotal = cart.displayPrice;
+                            tax = cart.tax;
+                            discount = cart.priceDiscount;
+                            shippingFee = cart.shippingFee;
+                            promotionCode = cart.promotionCode;
+                            totalQuantity = cart.totalQuantity;
+                            foreach (var item in cart.item)
+                            {
                                 <!-- Item-->
                                 <tr class="g-brd-bottom g-brd-gray-light-v3">
                                     <td class="text-left g-py-25">
@@ -164,14 +166,12 @@ else
                 @{
                     var isNotDiscounted = string.IsNullOrEmpty(promotionCode);
                 }
-                
 
-                <!-- Bug: not displaying -->
                 <!-- Accordion -->
                 <div id="accordion-02" role="tablist" aria-multiselectable="true">
                     <div id="accordion-02-heading-02" role="tab">
                         <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                            <a class="g-color-black g-text-underline--none--hover collapse" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
+                            <a class="g-color-black g-text-underline--none--hover" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
                                 Apply discount code
                                 <span class="ml-3 fa fa-angle-down"></span>
                             </a>
@@ -195,361 +195,181 @@ else
     <div id="step2">
     <div class="row">
     <div class="col-md-8 g-mb-30">
-    <div class="row">
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">First Name</label>
-                <input id="inputGroup4" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="firstName" type="text" placeholder="Alexander" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+        <div class="row">
+            <div class="col-md-6 g-mb-20">
+                <!-- Addresses -->
+                <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30">
+                    <div class="g-mb-50">
+                        <h3 class="h5 mb-3">
+                            Address 1
+                            <label class="u-ribbon-v1 g-color-white g-bg-primary rounded ml-3">Default</label>
+                        </h3>
+                        <span class="d-block g-color-gray-dark-v3 g-font-weight-600 mb-2">James Collins</span>
+                        <!-- Address -->
+                        <address class="media">
+                            <div class="d-flex mr-3">
+                                <span class="u-icon-v1 g-color-gray-dark-v4">
+                                    <i class="icon-real-estate-027 u-line-icon-pro"></i>
+                                </span>
+                            </div>
+                            <div class="media-body g-color-text">
+                                <!--Address Line 1-->
+                                9455 Ne Alderwood Rd
+                                <br>
+                                <!--Address Line 2-->
+                                C/O Uzw-Fh Portland Oregon 97252
+                                <br>
+                                <!--City + Zip Code-->
+                                Portland, Or 97252-1777
+                                <br>
+                                United Kingdom
+                                <br>
+                            </div>
+                        </address>
+                        <!-- End Address -->
+                        <!-- Phone -->
+                        <div class="media">
+                            <div class="d-flex mr-3">
+                                <span class="u-icon-v1 g-color-gray-dark-v4">
+                                    <i class="icon-electronics-005 u-line-icon-pro"></i>
+                                </span>
+                            </div>
+                            <div class="media-body g-color-text">
+                                +(01) 503­-914­-6317
+                            </div>
+                        </div>
+                        <!-- End Phone -->
+                    </div>
+                    <!-- Edit/Delete -->
+                    <ul class="d-flex align-items-center list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#!" title="Edit"
+                               data-toggle="tooltip"
+                               data-placement="top">
+                                <i class="icon-finance-023 u-line-icon-pro"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item g-width-1 g-height-16 g-bg-gray-light-v2 g-pr-1 ml-2 mr-3"></li>
+                        <li class="list-inline-item">
+                            <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#!" title="Delete"
+                               data-toggle="tooltip"
+                               data-placement="top">
+                                <i class="icon-hotel-restaurant-214 u-line-icon-pro"></i>
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- End Edit/Delete -->
+                </div>
+                <!-- End Addresses -->
+            </div>
+            <div class="col-md-6 g-mb-20">
+                <!-- Addresses -->
+                <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30">
+                    <div class="g-mb-50">
+                        <h3 class="h5 mb-3">Address 2</h3>
+                        <span class="d-block g-color-gray-dark-v3 g-font-weight-600 mb-2">James Collins</span>
+                        <!-- Address -->
+                        <address class="media">
+                            <div class="d-flex mr-3">
+                                <span class="u-icon-v1 g-color-gray-dark-v4">
+                                    <i class="icon-real-estate-027 u-line-icon-pro"></i>
+                                </span>
+                            </div>
+                            <div class="media-body g-color-text">
+                                2091 Parkson
+                                <br>
+                                New York Avenue 2309
+                                <br>
+                                New York, Or 2309-1777
+                                <br>
+                                United States
+                                <br>
+                            </div>
+                        </address>
+                        <!-- End Address -->
+                        <!-- Phone -->
+                        <div class="media">
+                            <div class="d-flex mr-3">
+                                <span class="u-icon-v1 g-color-gray-dark-v4">
+                                    <i class="icon-electronics-005 u-line-icon-pro"></i>
+                                </span>
+                            </div>
+                            <div class="media-body g-color-text">
+                                +(01) 401-542-2900
+                            </div>
+                        </div>
+                        <!-- End Phone -->
+                    </div>
+                    <!-- Edit/Delete -->
+                    <ul class="d-flex align-items-center list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#!" title="Edit"
+                               data-toggle="tooltip"
+                               data-placement="top">
+                                <i class="icon-finance-023 u-line-icon-pro"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item g-width-1 g-height-16 g-bg-gray-light-v2 g-pr-1 ml-2 mr-3"></li>
+                        <li class="list-inline-item">
+                            <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#!" title="Delete"
+                               data-toggle="tooltip"
+                               data-placement="top">
+                                <i class="icon-hotel-restaurant-214 u-line-icon-pro"></i>
+                            </a>
+                        </li>
+                        <li class="list-inline-item g-width-1 g-height-16 g-bg-gray-light-v2 g-pr-1 ml-2 mr-3"></li>
+                        <li class="list-inline-item">
+                            <label class="form-check-inline u-check d-block u-link-v5 g-color-text g-pl-30 mb-0">
+                                <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox">
+                                <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
+                                    <i class="fa" data-check-icon="&#xf00c"></i>
+                                </span>
+                                Set as Default
+                            </label>
+                        </li>
+                    </ul>
+                    <!-- End Edit/Delete -->
+                </div>
+                <!-- End Addresses -->
             </div>
         </div>
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">Last Name</label>
-                <input id="inputGroup5" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="lastName" type="text" placeholder="Teseira" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+        <!-- Contact Form -->
+        <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30 g-mb-20">
+            <h3 class="h5 mb-3">Add Address</h3>
+            <div class="row">
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">Address Line 1</label>
+                    <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">Address Line 2</label>
+                    <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">City</label>
+                    <input id="inputCity" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="City" name="inputCity" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">Zip Code</label>
+                    <input id="inputZipCode" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Zip Code" name="inputZipCode" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">Full Name</label>
+                    <input id="inputFullName" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Full Name" name="inputFullName" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <label class="g-color-text g-font-size-13">Phone</label>
+                    <input id="inputPhone" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Phone" name="inputPhone" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                </div>
+                <div class="col-sm-6 form-group g-mb-20">
+                    <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="button">Add Address</button>
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">Email Address</label>
-                <input id="inputGroup6" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="email" type="email" placeholder="alex@gmail.com" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
             </div>
-        </div>
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">Company</label>
-                <input id="inputGroup7" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="company" type="text" placeholder="Pixeel Ltd.">
-            </div>
-        </div>
+        <!-- End Contact Form -->
+        <button class="btn u-btn-primary g-font-size-13 text-uppercase g-px-40 g-py-15" type="button" data-next-step="#step3">Proceed to Payment</button>
     </div>
-    <div class="row">
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">State/Province</label>
-                <input id="inputGroup8" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="stateProvince" type="text" placeholder="London" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-            </div>
-        </div>
-        <div class="col-sm-6 g-mb-20">
-            <div class="form-group">
-                <label class="d-block g-color-gray-dark-v2 g-font-size-13">Zip/Postal Code</label>
-                <input id="inputGroup9" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="zip" type="text" placeholder="AB123" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-            </div>
-        </div>
-    </div>
-    <div class="row">
-    <div class="col-sm-6 g-mb-20">
-    <div class="form-group">
-    <label class="d-block g-color-gray-dark-v2 g-font-size-13">Country</label>
-    <select class="js-custom-select u-select-v1 g-brd-gray-light-v2 g-color-gray-light-v1 g-py-12" style="width: 100%;" data-placeholder="Choose your Country" data-open-icon="fa fa-angle-down" data-close-icon="fa fa-angle-up" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-    <option></option>
-    <option value="AF">Afghanistan</option>
-    <option value="AX">Åland Islands</option>
-    <option value="AL">Albania</option>
-    <option value="DZ">Algeria</option>
-    <option value="AS">American Samoa</option>
-    <option value="AD">Andorra</option>
-    <option value="AO">Angola</option>
-    <option value="AI">Anguilla</option>
-    <option value="AQ">Antarctica</option>
-    <option value="AG">Antigua and Barbuda</option>
-    <option value="AR">Argentina</option>
-    <option value="AM">Armenia</option>
-    <option value="AW">Aruba</option>
-    <option value="AU">Australia</option>
-    <option value="AT">Austria</option>
-    <option value="AZ">Azerbaijan</option>
-    <option value="BS">Bahamas</option>
-    <option value="BH">Bahrain</option>
-    <option value="BD">Bangladesh</option>
-    <option value="BB">Barbados</option>
-    <option value="BY">Belarus</option>
-    <option value="BE">Belgium</option>
-    <option value="BZ">Belize</option>
-    <option value="BJ">Benin</option>
-    <option value="BM">Bermuda</option>
-    <option value="BT">Bhutan</option>
-    <option value="BO">Bolivia, Plurinational State of</option>
-    <option value="BQ">Bonaire, Sint Eustatius and Saba</option>
-    <option value="BA">Bosnia and Herzegovina</option>
-    <option value="BW">Botswana</option>
-    <option value="BV">Bouvet Island</option>
-    <option value="BR">Brazil</option>
-    <option value="IO">British Indian Ocean Territory</option>
-    <option value="BN">Brunei Darussalam</option>
-    <option value="BG">Bulgaria</option>
-    <option value="BF">Burkina Faso</option>
-    <option value="BI">Burundi</option>
-    <option value="KH">Cambodia</option>
-    <option value="CM">Cameroon</option>
-    <option value="CA">Canada</option>
-    <option value="CV">Cape Verde</option>
-    <option value="KY">Cayman Islands</option>
-    <option value="CF">Central African Republic</option>
-    <option value="TD">Chad</option>
-    <option value="CL">Chile</option>
-    <option value="CN">China</option>
-    <option value="CX">Christmas Island</option>
-    <option value="CC">Cocos (Keeling) Islands</option>
-    <option value="CO">Colombia</option>
-    <option value="KM">Comoros</option>
-    <option value="CG">Congo</option>
-    <option value="CD">Congo, the Democratic Republic of the</option>
-    <option value="CK">Cook Islands</option>
-    <option value="CR">Costa Rica</option>
-    <option value="CI">Côte d'Ivoire</option>
-    <option value="HR">Croatia</option>
-    <option value="CU">Cuba</option>
-    <option value="CW">Curaçao</option>
-    <option value="CY">Cyprus</option>
-    <option value="CZ">Czech Republic</option>
-    <option value="DK">Denmark</option>
-    <option value="DJ">Djibouti</option>
-    <option value="DM">Dominica</option>
-    <option value="DO">Dominican Republic</option>
-    <option value="EC">Ecuador</option>
-    <option value="EG">Egypt</option>
-    <option value="SV">El Salvador</option>
-    <option value="GQ">Equatorial Guinea</option>
-    <option value="ER">Eritrea</option>
-    <option value="EE">Estonia</option>
-    <option value="ET">Ethiopia</option>
-    <option value="FK">Falkland Islands (Malvinas)</option>
-    <option value="FO">Faroe Islands</option>
-    <option value="FJ">Fiji</option>
-    <option value="FI">Finland</option>
-    <option value="FR">France</option>
-    <option value="GF">French Guiana</option>
-    <option value="PF">French Polynesia</option>
-    <option value="TF">French Southern Territories</option>
-    <option value="GA">Gabon</option>
-    <option value="GM">Gambia</option>
-    <option value="GE">Georgia</option>
-    <option value="DE">Germany</option>
-    <option value="GH">Ghana</option>
-    <option value="GI">Gibraltar</option>
-    <option value="GR">Greece</option>
-    <option value="GL">Greenland</option>
-    <option value="GD">Grenada</option>
-    <option value="GP">Guadeloupe</option>
-    <option value="GU">Guam</option>
-    <option value="GT">Guatemala</option>
-    <option value="GG">Guernsey</option>
-    <option value="GN">Guinea</option>
-    <option value="GW">Guinea-Bissau</option>
-    <option value="GY">Guyana</option>
-    <option value="HT">Haiti</option>
-    <option value="HM">Heard Island and McDonald Islands</option>
-    <option value="VA">Holy See (Vatican City State)</option>
-    <option value="HN">Honduras</option>
-    <option value="HK">Hong Kong</option>
-    <option value="HU">Hungary</option>
-    <option value="IS">Iceland</option>
-    <option value="IN">India</option>
-    <option value="ID">Indonesia</option>
-    <option value="IR">Iran, Islamic Republic of</option>
-    <option value="IQ">Iraq</option>
-    <option value="IE">Ireland</option>
-    <option value="IM">Isle of Man</option>
-    <option value="IL">Israel</option>
-    <option value="IT">Italy</option>
-    <option value="JM">Jamaica</option>
-    <option value="JP">Japan</option>
-    <option value="JE">Jersey</option>
-    <option value="JO">Jordan</option>
-    <option value="KZ">Kazakhstan</option>
-    <option value="KE">Kenya</option>
-    <option value="KI">Kiribati</option>
-    <option value="KP">Korea, Democratic People's Republic of</option>
-    <option value="KR">Korea, Republic of</option>
-    <option value="KW">Kuwait</option>
-    <option value="KG">Kyrgyzstan</option>
-    <option value="LA">Lao People's Democratic Republic</option>
-    <option value="LV">Latvia</option>
-    <option value="LB">Lebanon</option>
-    <option value="LS">Lesotho</option>
-    <option value="LR">Liberia</option>
-    <option value="LY">Libya</option>
-    <option value="LI">Liechtenstein</option>
-    <option value="LT">Lithuania</option>
-    <option value="LU">Luxembourg</option>
-    <option value="MO">Macao</option>
-    <option value="MK">Macedonia, the former Yugoslav Republic of</option>
-    <option value="MG">Madagascar</option>
-    <option value="MW">Malawi</option>
-    <option value="MY">Malaysia</option>
-    <option value="MV">Maldives</option>
-    <option value="ML">Mali</option>
-    <option value="MT">Malta</option>
-    <option value="MH">Marshall Islands</option>
-    <option value="MQ">Martinique</option>
-    <option value="MR">Mauritania</option>
-    <option value="MU">Mauritius</option>
-    <option value="YT">Mayotte</option>
-    <option value="MX">Mexico</option>
-    <option value="FM">Micronesia, Federated States of</option>
-    <option value="MD">Moldova, Republic of</option>
-    <option value="MC">Monaco</option>
-    <option value="MN">Mongolia</option>
-    <option value="ME">Montenegro</option>
-    <option value="MS">Montserrat</option>
-    <option value="MA">Morocco</option>
-    <option value="MZ">Mozambique</option>
-    <option value="MM">Myanmar</option>
-    <option value="NA">Namibia</option>
-    <option value="NR">Nauru</option>
-    <option value="NP">Nepal</option>
-    <option value="NL">Netherlands</option>
-    <option value="NC">New Caledonia</option>
-    <option value="NZ">New Zealand</option>
-    <option value="NI">Nicaragua</option>
-    <option value="NE">Niger</option>
-    <option value="NG">Nigeria</option>
-    <option value="NU">Niue</option>
-    <option value="NF">Norfolk Island</option>
-    <option value="MP">Northern Mariana Islands</option>
-    <option value="NO">Norway</option>
-    <option value="OM">Oman</option>
-    <option value="PK">Pakistan</option>
-    <option value="PW">Palau</option>
-    <option value="PS">Palestinian Territory, Occupied</option>
-    <option value="PA">Panama</option>
-    <option value="PG">Papua New Guinea</option>
-    <option value="PY">Paraguay</option>
-    <option value="PE">Peru</option>
-    <option value="PH">Philippines</option>
-    <option value="PN">Pitcairn</option>
-    <option value="PL">Poland</option>
-    <option value="PT">Portugal</option>
-    <option value="PR">Puerto Rico</option>
-    <option value="QA">Qatar</option>
-    <option value="RE">Réunion</option>
-    <option value="RO">Romania</option>
-    <option value="RU">Russian Federation</option>
-    <option value="RW">Rwanda</option>
-    <option value="BL">Saint Barthélemy</option>
-    <option value="SH">Saint Helena, Ascension and Tristan da Cunha</option>
-    <option value="KN">Saint Kitts and Nevis</option>
-    <option value="LC">Saint Lucia</option>
-    <option value="MF">Saint Martin (French part)</option>
-    <option value="PM">Saint Pierre and Miquelon</option>
-    <option value="VC">Saint Vincent and the Grenadines</option>
-    <option value="WS">Samoa</option>
-    <option value="SM">San Marino</option>
-    <option value="ST">Sao Tome and Principe</option>
-    <option value="SA">Saudi Arabia</option>
-    <option value="SN">Senegal</option>
-    <option value="RS">Serbia</option>
-    <option value="SC">Seychelles</option>
-    <option value="SL">Sierra Leone</option>
-    <option value="SG">Singapore</option>
-    <option value="SX">Sint Maarten (Dutch part)</option>
-    <option value="SK">Slovakia</option>
-    <option value="SI">Slovenia</option>
-    <option value="SB">Solomon Islands</option>
-    <option value="SO">Somalia</option>
-    <option value="ZA">South Africa</option>
-    <option value="GS">South Georgia and the South Sandwich Islands</option>
-    <option value="SS">South Sudan</option>
-    <option value="ES">Spain</option>
-    <option value="LK">Sri Lanka</option>
-    <option value="SD">Sudan</option>
-    <option value="SR">Suriname</option>
-    <option value="SJ">Svalbard and Jan Mayen</option>
-    <option value="SZ">Swaziland</option>
-    <option value="SE">Sweden</option>
-    <option value="CH">Switzerland</option>
-    <option value="SY">Syrian Arab Republic</option>
-    <option value="TW">Taiwan, Province of China</option>
-    <option value="TJ">Tajikistan</option>
-    <option value="TZ">Tanzania, United Republic of</option>
-    <option value="TH">Thailand</option>
-    <option value="TL">Timor-Leste</option>
-    <option value="TG">Togo</option>
-    <option value="TK">Tokelau</option>
-    <option value="TO">Tonga</option>
-    <option value="TT">Trinidad and Tobago</option>
-    <option value="TN">Tunisia</option>
-    <option value="TR">Turkey</option>
-    <option value="TM">Turkmenistan</option>
-    <option value="TC">Turks and Caicos Islands</option>
-    <option value="TV">Tuvalu</option>
-    <option value="UG">Uganda</option>
-    <option value="UA">Ukraine</option>
-    <option value="AE">United Arab Emirates</option>
-    <option value="GB">United Kingdom</option>
-    <option value="US">United States</option>
-    <option value="UM">United States Minor Outlying Islands</option>
-    <option value="UY">Uruguay</option>
-    <option value="UZ">Uzbekistan</option>
-    <option value="VU">Vanuatu</option>
-    <option value="VE">Venezuela, Bolivarian Republic of</option>
-    <option value="VN">Viet Nam</option>
-    <option value="VG">Virgin Islands, British</option>
-    <option value="VI">Virgin Islands, U.S.</option>
-    <option value="WF">Wallis and Futuna</option>
-    <option value="EH">Western Sahara</option>
-    <option value="YE">Yemen</option>
-    <option value="ZM">Zambia</option>
-    <option value="ZW">Zimbabwe</option>
-    </select>
-    </div>
-    </div>
-    <div class="col-sm-6 g-mb-20">
-        <div class="form-group">
-            <label class="d-block g-color-gray-dark-v2 g-font-size-13">Phone Number</label>
-            <input id="inputGroup10" class="form-control u-form-control g-placeholder-gray-light-v1 rounded-0 g-py-15" name="phoneNumber" type="text" placeholder="+01 (00) 555 666 77" required data-msg="This field is mandatory" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-        </div>
-    </div>
-    </div>
-    <hr class="g-mb-50">
-    <h4 class="h6 text-uppercase mb-5">Shipping method</h4>
-    <!-- Shipping Mehtod -->
-    <table class="mb-5">
-        <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-gray-dark-v3 g-font-size-13">
-        <tr>
-            <th class="g-width-70 g-font-weight-500 g-pa-0 g-pb-10">Destination</th>
-            <th class="g-width-110 g-font-weight-500 g-pa-0 g-pb-10">Delivery type</th>
-            <th class="g-width-150 g-font-weight-500 g-pa-0 g-pb-10">Delivery time</th>
-            <th class="g-width-70 g-font-weight-500 text-right g-pa-0 g-pb-10">Cost</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr class="g-color-gray-dark-v4 g-font-size-13">
-            <td class="align-top g-py-10">UK</td>
-            <td class="align-top g-py-10">Standard delivery</td>
-            <td class="align-top g-py-10">2-3 Working days</td>
-            <td class="align-top text-right g-py-10">$5.5</td>
-        </tr>
-        <tr class="g-color-gray-dark-v4 g-font-size-13">
-            <td class="align-top g-py-10"></td>
-            <td class="align-top g-py-10">Next day</td>
-            <td class="align-top g-py-10">Order before 12pm monday - thursday and receive it the next day</td>
-            <td class="align-top text-right g-py-10">$9.5</td>
-        </tr>
-        <tr class="g-color-gray-dark-v4 g-font-size-13">
-            <td class="align-top g-py-10"></td>
-            <td class="align-top g-py-10">Saturday delivery</td>
-            <td class="align-top g-py-10">Saturday delivery for orders placed before 12pm on friday</td>
-            <td class="align-top text-right g-py-10">$12.00</td>
-        </tr>
-        <tr class="g-color-gray-dark-v4 g-font-size-13">
-            <td class="align-top g-py-10">Europe</td>
-            <td class="align-top g-py-10">Standard delivery</td>
-            <td class="align-top g-py-10">3-9 Working days</td>
-            <td class="align-top text-right g-py-10">$20.00</td>
-        </tr>
-        <tr class="g-color-gray-dark-v4 g-font-size-13">
-            <td class="align-top g-py-10">America</td>
-            <td class="align-top g-py-10">Standard delivery</td>
-            <td class="align-top g-py-10">3-9 Working days</td>
-            <td class="align-top text-right g-py-10">$25.00</td>
-        </tr>
-        </tbody>
-    </table>
-    <!-- End Shipping Mehtod -->
-    <button class="btn u-btn-primary g-font-size-13 text-uppercase g-px-40 g-py-15" type="button" data-next-step="#step3">Proceed to Payment</button>
-    </div>
+
     <div class="col-md-4 g-mb-30">
         <!-- Order Summary -->
         <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
@@ -559,7 +379,7 @@ else
                 <div id="accordion-03-heading-03" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
                     <h5 class="g-font-weight-400 g-font-size-default mb-0">
                         <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-03-body-03" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-03">
-                            3 items in cart
+                            @totalQuantity item@(totalQuantity > 0 ? "s" : "") in cart
                             <span class="ml-3 fa fa-angle-down"></span>
                         </a>
                     </h5>
@@ -946,7 +766,7 @@ else
             });
         }
 
-        $('#submitPromotion').click(function () {
+        $('#submitPromotion').click(function() {
             var promotion = $('#promotionCode').val();
             if ($('#submitPromotion').text() == 'Apply') {
                 var anonymousId = getCookie("AnonymousId");
@@ -1024,16 +844,16 @@ else
                         '&code=' +
                         promotion,
                     type: "get",
-                    beforeSend: function (request) {
+                    beforeSend: function(request) {
                         request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                     },
-                    success: function (val) {
+                    success: function(val) {
                         if (val.status == "Success") {
                             $.notify({
-                                title: '<strong>Remove promotion code for cart successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Remove promotion code for cart successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'success',
                                     animate: {
@@ -1056,10 +876,10 @@ else
                             setTimeout(location.reload.bind(location), 2000);
                         } else {
                             $.notify({
-                                title: '<strong>Remove promotion code for cart failed!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Remove promotion code for cart failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'danger',
                                     animate: {

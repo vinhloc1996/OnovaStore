@@ -58,6 +58,7 @@ namespace OnovaApi.Controllers
                 c.ShippingFee,
                 c.Tax,
                 c.Promotion.PromotionCode,
+                c.TotalQuantity,
                 item = c.AnonymousCustomerCartDetail.Select(i => new
                 {
                     i.ProductId,
