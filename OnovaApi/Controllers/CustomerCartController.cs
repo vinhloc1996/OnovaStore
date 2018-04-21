@@ -26,16 +26,6 @@ namespace OnovaApi.Controllers
         [Route("GetCustomerCarts")]
         public IActionResult GetCustomerCarts([FromQuery] string customerId)
         {
-//            var cart = _context.CustomerCartDetail.Where(c => c.CustomerCartId == customerId).Select(c => new
-//            {
-//                c.ProductId,
-//                c.Product.Name,
-//                c.DisplayPrice,
-//                c.Quantity,
-//                TotalPrice = c.Quantity * c.DisplayPrice,
-//                c.Product.ProductThumbImage
-//            }).ToList();
-
             var cart = _context.CustomerCart.Where(c => c.CustomerCartId == customerId).Select(c => new
             {
                 c.DisplayPrice,
@@ -52,7 +42,19 @@ namespace OnovaApi.Controllers
                     i.Quantity,
                     TotalPrice = i.Quantity * i.DisplayPrice,
                     i.Product.ProductThumbImage
-                })
+                }),
+                shippingInfo = c.CustomerCartNavigation.ShippingInfo.Select(s => new
+                {
+                    s.AddressLine1,
+                    s.AddressLine2,
+                    s.City,
+                    s.Phone,
+                    s.Zip,
+                    s.FullName,
+                    s.IsDefault,
+                    s.ShippingInfoId
+                }),
+                customerType = "customer"
             }).ToList();
 
             return Json(cart);

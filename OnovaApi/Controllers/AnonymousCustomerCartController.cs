@@ -67,7 +67,8 @@ namespace OnovaApi.Controllers
                     i.Quantity,
                     TotalPrice = i.Quantity * i.DisplayPrice,
                     i.Product.ProductThumbImage
-                })
+                }),
+                customerType = "anonymous"
             }).ToList();
 
             return Json(cart);
