@@ -54,6 +54,7 @@ namespace OnovaApi.Controllers
                     s.IsDefault,
                     s.ShippingInfoId
                 }),
+                email = c.CustomerCartNavigation.ApplicationUser.Email,
                 customerType = "customer"
             }).ToList();
 

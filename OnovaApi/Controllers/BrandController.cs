@@ -183,7 +183,7 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                brand.Slug = "/b" + brand.BrandId + "/" + brand.Slug;
+                brand.Slug = "/brand" + "/b" + brand.BrandId + "/" + brand.Slug;
                 _context.Entry(brand).State = EntityState.Modified;
 
                 if (await _context.SaveChangesAsync() > 0)

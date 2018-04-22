@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Config;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
@@ -129,6 +130,23 @@ namespace OnovaStore
                     template: "{controller=Home}/{action=Index}/{id?}"
                 );
 
+                routes.MapRoute(
+                    name: "ViewProduct",
+                    template: "{controller=Product}/{id:string}/{slug:string}",
+                    defaults: new {controller = "Product", action = "Detail"}
+                );
+
+                routes.MapRoute(
+                    name: "ViewCategory",
+                    template: "{controller=Category}/{id:string}/{slug:string}",
+                    defaults: new { controller = "Category", action = "Detail" }
+                );
+
+                routes.MapRoute(
+                    name: "ViewBrand",
+                    template: "{controller=Brand}/{id:string}/{slug:string}",
+                    defaults: new { controller = "Brand", action = "Detail" }
+                );
             });
         }
     }

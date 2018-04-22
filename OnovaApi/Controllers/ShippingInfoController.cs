@@ -236,9 +236,13 @@ namespace OnovaApi.Controllers
                         c => c.Type == JwtRegisteredClaimNames.NameId || c.Type == ClaimTypes.NameIdentifier)
                     ?.Value;
 
+                var isOnly = _context.ShippingInfo.Where(c => c.CustomerId == currentCustomerId);
+
+                bool isDefault = !isOnly.Any();
+
                 var newInfo = new ShippingInfo
                 {
-                    IsDefault = false,
+                    IsDefault = isDefault,
                     CustomerId = currentCustomerId,
                     AddressLine1 = addressLine1,
                     AddressLine2 = addressLine2,

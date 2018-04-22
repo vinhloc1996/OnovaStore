@@ -193,6 +193,38 @@ namespace OnovaApi.Data
             }
         }
 
+        public static async Task SeedOrderStatus(OnovaContext context)
+        {
+            if (context.OrderStatus.Find(1) == null)
+            {
+                context.OrderStatus.Add(new OrderStatus
+                {
+                    Code = "Paid",
+                    Name = "Order Paid"
+                });
+            }
+
+            if (context.OrderStatus.Find(2) == null)
+            {
+                context.OrderStatus.Add(new OrderStatus
+                {
+                    Code = "Cancel",
+                    Name = "Order Cancel"
+                });
+            }
+
+            if (context.OrderStatus.Find(3) == null)
+            {
+                context.OrderStatus.Add(new OrderStatus
+                {
+                    Code = "Refund",
+                    Name = "Order Refund"
+                });
+            }
+
+            await context.SaveChangesAsync();
+        }
+
         public static async Task SeedData
         (UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager, OnovaContext context)
@@ -201,6 +233,7 @@ namespace OnovaApi.Data
             await SeedUsers(userManager);
             await SeedStaffs(context);
             await SeedProductStatus(context);
+            await SeedOrderStatus(context);
         }
     }
 }

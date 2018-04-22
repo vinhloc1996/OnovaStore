@@ -4,12 +4,14 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OnovaStore.Areas.Manage.Data;
+using OnovaStore.Models.Order;
 using Stripe;
 
 namespace OnovaStore.Controllers
@@ -67,10 +69,11 @@ namespace OnovaStore.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Charge(string stripeEmail, string stripeToken, string submitAddressLine1, string submitAddressLine2, string submitCity, string submitPhone, string submitFullName, string submitZipCode, string submitEmail, int totalPrice, string anonymousId)
+        public async Task<IActionResult> Charge(string stripeEmail, string stripeToken, string stripeBillingName, string stripeBillingAddressLine1, string stripeBillingAddressZip, string stripeBillingAddressState, string stripeBillingAddressCity, int totalPrice)
         {
             var customers = new StripeCustomerService();
             var charges = new StripeChargeService();
+            string anonymousId = Request.Cookies["AnonymousId"];
 
             var customer = customers.Create(new StripeCustomerCreateOptions
             {
@@ -83,12 +86,89 @@ namespace OnovaStore.Controllers
                 Amount = totalPrice,
                 Description = "Payment Order",
                 Currency = "usd",
-                CustomerId = customer.Id
+                CustomerId = customer.Id,
+                ReceiptEmail = stripeEmail
             });
 
-            return View();
+            
+
+            if (charge.Paid)
+            {
+                if (_claimPrincipalManager.IsAuthenticated)
+                {
+                    var order = new Order
+                    {
+                        TypeUser = "customer",
+                        CartId = _claimPrincipalManager.Id,
+                        TokenId = charge.Id
+                    };
+
+                    using (var client = _restClient.CreateClient(User))
+                    {
+                        using (var response = await client.PostAsync("/api/order/createorder", new StringContent(JsonConvert.SerializeObject(order), Encoding.UTF8,
+                            "application/json")))
+                        {
+                            dynamic result = response.StatusCode == HttpStatusCode.OK
+                                ? JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync())
+                                : null;
+
+                            if (result.status == "Success")
+                            {
+                                return View("Success", result.orderCode.ToString());
+                            }
+
+                            return View("Index");
+                        }
+                    }
+                }
+
+                if (string.IsNullOrEmpty(anonymousId))
+                {
+                    return View("Index");
+                }
+
+                var anonymousOrder = new Order
+                {
+                    Email = stripeEmail,
+                    AddressLine1 = stripeBillingAddressLine1,
+                    AddressLine2 = "",
+                    CartId = anonymousId,
+                    TypeUser = "anonymous",
+                    City = stripeBillingAddressCity,
+                    Zip = stripeBillingAddressZip,
+                    Phone = "None",
+                    FullName = stripeBillingName,
+                    TokenId = charge.Id
+                };
+
+                using (var client = _restClient.CreateClient(User))
+                {
+                    using (var response = await client.PostAsync("/api/order/createorder", new StringContent(JsonConvert.SerializeObject(anonymousOrder), Encoding.UTF8,
+                        "application/json")))
+                    {
+                        dynamic result = response.StatusCode == HttpStatusCode.OK
+                            ? JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync())
+                            : null;
+
+                        if (result.status == "Success")
+                        {
+                            return View("Success", result.orderCode.ToString());
+                        }
+
+                        return View("Index");
+                    }
+                }
+            }
+
+            return View("Index");
         }
 
-
+        [AllowAnonymous]
+        [HttpGet]
+        public async Task<IActionResult> Success([FromQuery] string orderCode)
+        {
+            
+            return View();
+        }
     }
 }

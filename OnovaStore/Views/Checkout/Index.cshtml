@@ -17,6 +17,7 @@
     var listShippingInfo = new List<dynamic>();
     var typeUser = "";
     var listItem = new List<dynamic>();
+    var email = "";
 }
 @if (Model == null)
 {
@@ -37,474 +38,496 @@ else
 {
     <!-- Checkout Form -->
     <div class="container g-pt-100 g-pb-70">
-        <form class="js-validate js-step-form" data-progress-id="#stepFormProgress" data-steps-id="#stepFormSteps">
-            <div class="g-mb-100">
-                <!-- Step Titles -->
-                <ul id="stepFormProgress" class="js-step-progress row justify-content-center list-inline text-center g-font-size-17 mb-0">
-                    <li class="col-3 list-inline-item g-mb-20 g-mb-0--sm">
-                        <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-primary g-color-primary g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
-                            <i class="g-font-style-normal g-font-weight-700 g-hide-check">1</i>
-                            <i class="fa fa-check g-show-check"></i>
-                        </span>
-                        <h4 class="g-font-size-16 text-uppercase mb-0">Shopping Cart</h4>
-                    </li>
-                    <li class="col-3 list-inline-item g-mb-20 g-mb-0--sm">
-                        <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-gray-light-v2 g-color-gray-dark-v5 g-brd-primary--active g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
-                            <i class="g-font-style-normal g-font-weight-700 g-hide-check">2</i>
-                            <i class="fa fa-check g-show-check"></i>
-                        </span>
-                        <h4 class="g-font-size-16 text-uppercase mb-0">Shipping</h4>
-                    </li>
-                    <li class="col-3 list-inline-item">
-                        <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-gray-light-v2 g-color-gray-dark-v5 g-brd-primary--active g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
-                            <i class="g-font-style-normal g-font-weight-700 g-hide-check">3</i>
-                            <i class="fa fa-check g-show-check"></i>
-                        </span>
-                        <h4 class="g-font-size-16 text-uppercase mb-0">Payment &amp; Review</h4>
-                    </li>
-                </ul>
-                <!-- End Step Titles -->
-            </div>
-            <div id="stepFormSteps">
-                <!-- Shopping Cart -->
-                <div id="step1" class="active">
-                    <div class="row">
-                        <div class="col-md-8 g-mb-30">
-                            <!-- Products Block -->
-                            <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
-                                <table class="text-center w-100">
-                                    <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black text-uppercase">
-                                        <tr>
-                                            <th class="g-font-weight-400 text-left g-pb-20">Product</th>
-                                            <th class="g-font-weight-400 g-width-130 g-pb-20">Price</th>
-                                            <th class="g-font-weight-400 g-width-50 g-pb-20">Qty</th>
-                                            <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var cart in Model)
-                                        {
-                                            subTotal = cart.displayPrice;
-                                            tax = cart.tax;
-                                            discount = cart.priceDiscount;
-                                            shippingFee = cart.shippingFee;
-                                            promotionCode = cart.promotionCode;
-                                            totalQuantity = cart.totalQuantity;
-                                            typeUser = cart.customerType;
-                                            listItem = JsonConvert.DeserializeObject<List<dynamic>>(cart.item.ToString());
-                                            if (typeUser == "customer")
-                                            {
-                                                listShippingInfo = JsonConvert.DeserializeObject<List<dynamic>>(cart.shippingInfo.ToString());
-                                            }
-                                            foreach (var item in listItem)
-                                            {
-                                                <!-- Item-->
-                                                <tr class="g-brd-bottom g-brd-gray-light-v3">
-                                                    <td class="text-left g-py-25">
-                                                        <img class="d-inline-block g-width-100 mr-4" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
-                                                        <div class="d-inline-block align-middle">
-                                                            <h4 class="h6 g-color-black">@item.name</h4>
-                                                        </div>
-                                                    </td>
-                                                    <td class="g-color-gray-dark-v2 g-font-size-13">@item.displayPrice</td>
-                                                    <td>
-                                                        <div class="input-group u-quantity-v1 g-width-50 g-brd-primary--focus">
-                                                            <input class="form-control text-center g-font-size-13 rounded-0 g-pa-0" type="number" id="quantity-@item.productId" onchange="changeQuantity(@item.productId);" min="1" value="@item.quantity">
-                                                        </div>
-                                                    </td>
-                                                    <td class="text-right g-color-black">
-                                                        <span class="g-color-gray-dark-v2 g-font-size-13 mr-4">@item.totalPrice</span>
-                                                        <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer" onclick="removeItemWithReload(@item.productId);">
-                                                            <i class="mt-auto fa fa-trash"></i>
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                                <!-- End Item-->
-                                            }
-                                        }
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <!-- End Products Block -->
-                        </div>
-                        <div class="col-md-4 g-mb-30">
-                            <!-- Summary -->
-                            <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
-                                <h4 class="h6 text-uppercase mb-3">Summary</h4>
-                                <!-- Accordion -->
-                                <div class="mb-4" role="tablist" aria-multiselectable="true">
-                                    <div class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
-                                        <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                                            <a class="g-color-gray-dark-v4 g-text-underline--none--hover">
-                                                Estimate shipping
-                                            </a>
-                                        </h5>
-                                        <br />
-                                        <div class="d-flex justify-content-between mb-2">
-                                            <span class="g-color-black g-font-weight-300">Subtotal</span>
-                                            <span class="g-color-black g-font-weight-300">$@subTotal</span>
-                                        </div>
-                                        @if (discount > 0)
-                                        {
-                                            <div class="d-flex justify-content-between">
-                                                <h6 class="g-color-black g-font-weight-200">Discout</h6>
-                                                <h6 class="g-color-black g-font-weight-200">-$@discount</h6>
-                                            </div>
-                                        }
-                                        <div class="d-flex justify-content-between">
-                                            <h6 class="g-color-black g-font-weight-200">Shipping Fee</h6>
-                                            <h6 class="g-color-black g-font-weight-200">@(subTotal > 1000 ? "Free" : "$30")</h6>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <h6 class="g-color-black g-font-weight-200">Tax</h6>
-                                            @{
-                                                tax = tax * (subTotal + shippingFee - discount);
-                                                totalPrice = subTotal + shippingFee - discount + tax;
-                                            }
-                                            <h6 class="g-color-black g-font-weight-200">$@tax</h6>
-                                        </div>
-
-                                    </div>
-                                </div>
-                                <!-- End Accordion -->
-
-                                <div class="d-flex justify-content-between">
-                                    <span class="g-color-black">Order Total</span>
-                                    <span class="g-color-black">$@totalPrice</span>
-                                </div>
-                            </div>
-                            <!-- End Summary -->
-                            <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>
-                            <button class="btn btn-block u-btn-primary g-font-size-13 text-uppercase g-py-15 mb-4" type="button" data-next-step="#step2">Proceed to Checkout</button>
-                            @{
-                                var isNotDiscounted = string.IsNullOrEmpty(promotionCode);
+    <form class="js-validate js-step-form" data-progress-id="#stepFormProgress" data-steps-id="#stepFormSteps">
+    <div class="g-mb-100">
+        <!-- Step Titles -->
+        <ul id="stepFormProgress" class="js-step-progress row justify-content-center list-inline text-center g-font-size-17 mb-0">
+            <li class="col-3 list-inline-item g-mb-20 g-mb-0--sm">
+                <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-primary g-color-primary g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
+                    <i class="g-font-style-normal g-font-weight-700 g-hide-check">1</i>
+                    <i class="fa fa-check g-show-check"></i>
+                </span>
+                <h4 class="g-font-size-16 text-uppercase mb-0">Shopping Cart</h4>
+            </li>
+            <li class="col-3 list-inline-item g-mb-20 g-mb-0--sm">
+                <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-gray-light-v2 g-color-gray-dark-v5 g-brd-primary--active g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
+                    <i class="g-font-style-normal g-font-weight-700 g-hide-check">2</i>
+                    <i class="fa fa-check g-show-check"></i>
+                </span>
+                <h4 class="g-font-size-16 text-uppercase mb-0">Shipping</h4>
+            </li>
+            <li class="col-3 list-inline-item">
+                <span class="d-block u-icon-v2 u-icon-size--sm g-rounded-50x g-brd-gray-light-v2 g-color-gray-dark-v5 g-brd-primary--active g-color-white--parent-active g-bg-primary--active g-color-white--checked g-bg-primary--checked mx-auto mb-3">
+                    <i class="g-font-style-normal g-font-weight-700 g-hide-check">3</i>
+                    <i class="fa fa-check g-show-check"></i>
+                </span>
+                <h4 class="g-font-size-16 text-uppercase mb-0">Payment &amp; Review</h4>
+            </li>
+        </ul>
+        <!-- End Step Titles -->
+    </div>
+    <div id="stepFormSteps">
+    <!-- Shopping Cart -->
+    <div id="step1" class="active">
+        <div class="row">
+            <div class="col-md-8 g-mb-30">
+                <!-- Products Block -->
+                <div class="g-overflow-x-scroll g-overflow-x-visible--lg">
+                    <table class="text-center w-100">
+                        <thead class="h6 g-brd-bottom g-brd-gray-light-v3 g-color-black text-uppercase">
+                        <tr>
+                            <th class="g-font-weight-400 text-left g-pb-20">Product</th>
+                            <th class="g-font-weight-400 g-width-130 g-pb-20">Price</th>
+                            <th class="g-font-weight-400 g-width-50 g-pb-20">Qty</th>
+                            <th class="g-font-weight-400 g-width-130 g-pb-20">Total</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var cart in Model)
+                        {
+                            subTotal = cart.displayPrice;
+                            tax = cart.tax;
+                            discount = cart.priceDiscount;
+                            shippingFee = cart.shippingFee;
+                            promotionCode = cart.promotionCode;
+                            totalQuantity = cart.totalQuantity;
+                            typeUser = cart.customerType;
+                            listItem = JsonConvert.DeserializeObject<List<dynamic>>(cart.item.ToString());
+                            if (typeUser == "customer")
+                            {
+                                listShippingInfo = JsonConvert.DeserializeObject<List<dynamic>>(cart.shippingInfo.ToString());
+                                email = cart.email;
                             }
-
-                            <!-- Accordion -->
-                            <div id="accordion-02" role="tablist" aria-multiselectable="true">
-                                <div id="accordion-02-heading-02" role="tab">
-                                    <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                                        <a class="g-color-black g-text-underline--none--hover" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
-                                            Apply discount code
-                                            <span class="ml-3 fa fa-angle-down"></span>
-                                        </a>
-                                    </h5>
-                                </div>
-                                <div id="accordion-02-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-02-heading-02">
-                                    <div class="input-group rounded g-pt-15">
-                                        <input class="form-control g-brd-gray-light-v1 g-brd-right-none g-color-gray-dark-v3 g-placeholder-gray-dark-v3" type="text" placeholder="Enter discount code" id="promotionCode" @(isNotDiscounted ? "" : "readonly") value="@promotionCode">
-                                        <span class="input-group-addon g-brd-gray-light-v1 g-bg-white">
-                                            <button class="btn u-btn-primary rounded" id="submitPromotion" type="button">@(isNotDiscounted ? "Apply" : "Remove Code")</button>
+                            foreach (var item in listItem)
+                            {
+                                <!-- Item-->
+                                <tr class="g-brd-bottom g-brd-gray-light-v3">
+                                    <td class="text-left g-py-25">
+                                        <img class="d-inline-block g-width-100 mr-4" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
+                                        <div class="d-inline-block align-middle">
+                                            <h4 class="h6 g-color-black">@item.name</h4>
+                                        </div>
+                                    </td>
+                                    <td class="g-color-gray-dark-v2 g-font-size-13">@item.displayPrice</td>
+                                    <td>
+                                        <div class="input-group u-quantity-v1 g-width-50 g-brd-primary--focus">
+                                            <input class="form-control text-center g-font-size-13 rounded-0 g-pa-0" type="number" id="quantity-@item.productId" onchange="changeQuantity(@item.productId);" min="1" value="@item.quantity">
+                                        </div>
+                                    </td>
+                                    <td class="text-right g-color-black">
+                                        <span class="g-color-gray-dark-v2 g-font-size-13 mr-4">@item.totalPrice</span>
+                                        <span class="g-color-gray-dark-v4 g-color-black--hover g-cursor-pointer" onclick="removeItemWithReload(@item.productId);">
+                                            <i class="mt-auto fa fa-trash"></i>
                                         </span>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- End Accordion -->
-                        </div>
-                    </div>
-                </div>
-                <!-- End Shopping Cart -->
-                <!-- Shipping -->
-                <div id="step2">
-                    <div class="row">
-                        <div class="col-md-8 g-mb-30">
-                            <div class="row">
-                                @{
-                                    if (typeUser == "customer")
-                                    {
-                                        var i = 0;
-                                        foreach (var info in listShippingInfo)
-                                        {
-                                            <div class="col-md-6 g-mb-20">
-                                                <!-- Addresses -->
-                                                <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30">
-                                                    <div class="g-mb-50">
-                                                        <h3 class="h5 mb-3">
-                                                            Address @(++i)
-                                                            @if (info.isDefault == true)
-                                                            {
-                                                                <label class="u-ribbon-v1 g-color-white g-bg-primary rounded ml-3">Default</label>
-                                                            }
-                                                        </h3>
-                                                        <span class="d-block g-color-gray-dark-v3 g-font-weight-600 mb-2">@info.fullName</span>
-                                                        <!-- Address -->
-                                                        <address class="media">
-                                                            <div class="d-flex mr-3">
-                                                                <span class="u-icon-v1 g-color-gray-dark-v4">
-                                                                    <i class="icon-real-estate-027 u-line-icon-pro"></i>
-                                                                </span>
-                                                            </div>
-                                                            <div class="media-body g-color-text">
-                                                                <!--Address Line 1-->
-                                                                @info.addressLine1
-                                                                <br>
-                                                                <!--Address Line 2-->
-                                                                @info.addressLine2
-                                                                <br>
-                                                                <!--City + Zip Code-->
-                                                                @info.city, @info.zip
-                                                                <br>
-                                                                United Kingdom
-                                                                <br>
-                                                            </div>
-                                                        </address>
-                                                        <!-- End Address -->
-                                                        <!-- Phone -->
-                                                        <div class="media">
-                                                            <div class="d-flex mr-3">
-                                                                <span class="u-icon-v1 g-color-gray-dark-v4">
-                                                                    <i class="icon-electronics-005 u-line-icon-pro"></i>
-                                                                </span>
-                                                            </div>
-                                                            <div class="media-body g-color-text">
-                                                                @info.phone
-                                                            </div>
-                                                        </div>
-                                                        <!-- End Phone -->
-                                                    </div>
-                                                    <!-- Edit/Delete -->
-                                                    <ul class="d-flex align-items-center list-inline mb-0">
-                                                        @if (info.isDefault == false)
-                                                        {
-                                                            <li class="list-inline-item">
-                                                                <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#" onclick="removeAddressInfo(@info.shippingInfoId);return false;" title="Delete"
-                                                                   data-toggle="tooltip"
-                                                                   data-placement="top">
-                                                                    <i class="icon-hotel-restaurant-214 u-line-icon-pro"></i>
-                                                                </a>
-                                                            </li>
-                                                        }
-                                                        @if (info.isDefault == false)
-                                                        {
-                                                            <li class="list-inline-item g-width-1 g-height-16 g-bg-gray-light-v2 g-pr-1 ml-2 mr-3"></li>
-                                                            <li class="list-inline-item">
-                                                                <label class="form-check-inline u-check d-block u-link-v5 g-color-text g-pl-30 mb-0">
-                                                                    <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox" id="defaultInfo-@info.shippingInfoId" onclick="setDefaultAddress(@info.shippingInfoId);">
-                                                                    <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
-                                                                        <i class="fa" data-check-icon="&#xf00c"></i>
-                                                                    </span>
-                                                                    Set as Default
-                                                                </label>
-                                                            </li>
-                                                        }
-                                                    </ul>
-                                                    <!-- End Edit/Delete -->
-                                                </div>
-                                                <!-- End Addresses -->
-                                            </div>
-                                        }
-                                    }
-                                }
-                            </div>
-                            <!-- Contact Form -->
-                            <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30 g-mb-20">
-                                <h3 class="h5 mb-3">Add Address</h3>
-                                <div class="row">
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">Address Line 1</label>
-                                        <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">Address Line 2</label>
-                                        <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">City</label>
-                                        <input id="inputCity" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="City" name="inputCity" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">Zip Code</label>
-                                        <input id="inputZipCode" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Zip Code" name="inputZipCode" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">Full Name</label>
-                                        <input id="inputFullName" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Full Name" name="inputFullName" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    @if (typeUser == "anonymous")
-                                    {
-                                        <div class="col-sm-6 form-group g-mb-20">
-                                            <label class="g-color-text g-font-size-13">Email</label>
-                                            <input id="inputEmail" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="email" placeholder="Email" name="inputEmail" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                        </div>
-                                    }
-                                    <div class="col-sm-6 form-group g-mb-20">
-                                        <label class="g-color-text g-font-size-13">Phone</label>
-                                        <input id="inputPhone" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Phone" name="inputPhone" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                                    </div>
-                                    @if (typeUser == "customer")
-                                    {
-                                        <div class="col-sm-6 form-group g-mb-20">
-                                            <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="button" onclick="addShippingInfo();">Add Address</button>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                            <!-- End Contact Form -->
-                            <button class="btn u-btn-primary g-font-size-13 text-uppercase g-px-40 g-py-15" type="button" id="processPayment" data-next-step="#step3">Proceed to Payment</button>
-                        </div>
+                                    </td>
+                                </tr>
+                                <!-- End Item-->
+                            }
+                        }
 
-                        <div class="col-md-4 g-mb-30">
-                            <!-- Order Summary -->
-                            <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
-                                <h4 class="h6 text-uppercase mb-3">Order summary</h4>
-                                <!-- Accordion -->
-                                <div id="accordion-03" class="mb-4" role="tablist" aria-multiselectable="true">
-                                    <div id="accordion-03-heading-03" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
-                                        <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                                            <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-03-body-03" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-03">
-                                                @totalQuantity item@(totalQuantity > 0 ? "s" : "") in cart
-                                                <span class="ml-3 fa fa-angle-down"></span>
-                                            </a>
-                                        </h5>
-                                    </div>
-                                    <div id="accordion-03-body-03" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-03">
-                                        <div class="g-py-15">
-                                            <ul class="list-unstyled mb-3">
-                                                <!-- Product -->
-                                                @foreach (var item in listItem)
-                                                {
-                                                    <li class="d-flex justify-content-start">
-                                                        <img class="g-width-100 g-height-100 mr-3" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
-                                                        <div class="d-block">
-                                                            <h4 class="h6 g-color-black">@item.name</h4>
-                                                            <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_4 mb-1">
-                                                                <li>QTY: @item.quantity</li>
-                                                            </ul>
-                                                            <span class="d-block g-color-black g-font-weight-400">$@item.totalPrice</span>
-                                                        </div>
-                                                    </li>
-                                                }
-                                                <!-- End Product -->
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Accordion -->
-                                <div class="d-flex justify-content-between mb-2">
-                                    <span class="g-color-black">Discount</span>
-                                    <span class="g-color-black g-font-weight-300">-$@discount</span>
-                                </div>
-                                <div class="d-flex justify-content-between">
-                                    <span class="g-color-black">Order Total</span>
-                                    <span class="g-color-black g-font-weight-300">$@totalPrice</span>
-                                </div>
-                            </div>
-                            <!-- End Order Summary -->
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-                <!-- End Shipping -->
-                <!-- Payment & Review -->
-                <div id="step3">
-                    <div class="row">
-                        <div class="col-md-8 g-mb-30">
-                            <!-- Shipping Details -->
-                            <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-15 g-pl-70 mb-5">
-                                @if (typeUser == "anonymous")
-                                {
-                                    <li id="displayFullName" class="g-my-3"></li>
-                                    <li id="displayEmail" class="g-my-3"></li>
-                                    <li id="displayAddressLine1" class="g-my-3"></li>
-                                    <li id="displayAddressLine2" class="g-my-3"></li>
-                                    <li id="displayCity" class="g-my-3"></li>
-                                    <li id="displayZipCode" class="g-my-3"></li>
-                                    <li class="g-my-3">United Kingdom</li>
-                                    <li id="displayPhone" class="g-my-3"></li>
-                                }
-                                @if (typeUser == "customer")
-                                {
-                                    var defaultInfo = listShippingInfo.FirstOrDefault(c => c.isDefault == true);
-                                    <li class="g-my-3">@defaultInfo.fullName</li>
-                                    <li class="g-my-3">@defaultInfo.addressLine1</li>
-                                    <li class="g-my-3">@defaultInfo.addressLine2</li>
-                                    <li class="g-my-3">@defaultInfo.city</li>
-                                    <li class="g-my-3">@defaultInfo.zip</li>
-                                    <li class="g-my-3">United Kingdom</li>
-                                    <li class="g-my-3">@defaultInfo.phone</li>
-                                }
-                            </ul>
-                        </div>
-                        <div class="col-md-4 g-mb-30">
-                            <!-- Order Summary -->
-                            <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
-                                <div class="g-brd-bottom g-brd-gray-light-v3 g-mb-15">
-                                    <h4 class="h6 text-uppercase mb-3">Order summary</h4>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="d-flex justify-content-between mb-1">
-                                        <span class="g-color-black">Shipping</span>
-                                        <span class="g-color-black g-font-weight-300">@(subTotal > 1000 ? "Free" : "$30")</span>
-                                    </div>
-                                    <p class="g-font-size-13">UK Standard Delivery - 2-3 Working Days</p>
-                                </div>
-                                <div class="d-flex justify-content-between mb-3">
-                                    <span class="g-color-black">Order Total</span>
-                                    <span class="g-color-black g-font-weight-300">$@totalPrice</span>
-                                </div>
-                                <!-- Accordion -->
-                                <div id="accordion-05" class="mb-4" role="tablist" aria-multiselectable="true">
-                                    <div id="accordion-05-heading-05" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
-                                        <h5 class="g-font-weight-400 g-font-size-default mb-0">
-                                            <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-05-body-05" data-toggle="collapse" data-parent="#accordion-05" aria-expanded="false" aria-controls="accordion-05-body-05">
-                                                @totalQuantity item@(totalQuantity > 0 ? "s" : "") in cart
-                                                <span class="ml-3 fa fa-angle-down"></span>
-                                            </a>
-                                        </h5>
-                                    </div>
-                                    <div id="accordion-05-body-05" class="collapse" role="tabpanel" aria-labelledby="accordion-05-heading-05">
-                                        <div class="g-py-15">
-                                            <ul class="list-unstyled mb-3">
-                                                <!-- Product -->
-                                                @foreach (var item in listItem)
-                                                {
-                                                    <li class="d-flex justify-content-start">
-                                                        <img class="g-width-100 g-height-100 mr-3" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
-                                                        <div class="d-block">
-                                                            <h4 class="h6 g-color-black">@item.name</h4>
-                                                            <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_4 mb-1">
-                                                                <li>QTY: @item.quantity</li>
-                                                            </ul>
-                                                            <span class="d-block g-color-black g-font-weight-400">$@item.totalPrice</span>
-                                                        </div>
-                                                    </li>
-                                                }
-                                                <!-- End Product -->
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- End Accordion -->
-                            </div>
-                            <!-- End Order Summary -->
-                            <!-- Shipping Method -->
-                            <div class="g-px-20 mb-5">
-                                <div class="d-flex justify-content-between g-brd-bottom g-brd-gray-light-v3 g-mb-15">
-                                    <h4 class="h6 text-uppercase mb-3">Shipping Method</h4>
-                                </div>
-                                <p class="g-color-gray-dark-v4 g-font-size-15">UK Standard Delivery - 2-3 Working Days</p>
-                            </div>
-                            <!-- End Shipping Method -->
-                        </div>
-                    </div>
-                </div>
-                <!-- End Payment & Review -->
+                <!-- End Products Block -->
             </div>
-        </form>
+            <div class="col-md-4 g-mb-30">
+                <!-- Summary -->
+                <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
+                    <h4 class="h6 text-uppercase mb-3">Summary</h4>
+                    <!-- Accordion -->
+                    <div class="mb-4" role="tablist" aria-multiselectable="true">
+                        <div class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
+                            <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                                <a class="g-color-gray-dark-v4 g-text-underline--none--hover">
+                                    Estimate shipping
+                                </a>
+                            </h5>
+                            <br/>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="g-color-black g-font-weight-300">Subtotal</span>
+                                <span class="g-color-black g-font-weight-300">$@subTotal</span>
+                            </div>
+                            @if (discount > 0)
+                            {
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="g-color-black g-font-weight-200">Discout</h6>
+                                    <h6 class="g-color-black g-font-weight-200">-$@discount</h6>
+                                </div>
+                            }
+                            <div class="d-flex justify-content-between">
+                                <h6 class="g-color-black g-font-weight-200">Shipping Fee</h6>
+                                <h6 class="g-color-black g-font-weight-200">@(subTotal > 1000 ? "Free" : "$30")</h6>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <h6 class="g-color-black g-font-weight-200">Tax</h6>
+                                @{
+                                    tax = tax * (subTotal + shippingFee - discount);
+                                    totalPrice = subTotal + shippingFee - discount + tax;
+                                }
+                                <h6 class="g-color-black g-font-weight-200">$@tax</h6>
+                            </div>
+
+                        </div>
+                    </div>
+                    <!-- End Accordion -->
+
+                    <div class="d-flex justify-content-between">
+                        <span class="g-color-black">Order Total</span>
+                        <span class="g-color-black">$@totalPrice</span>
+                    </div>
+                </div>
+                <!-- End Summary -->
+                <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>
+                <button class="btn btn-block u-btn-primary g-font-size-13 text-uppercase g-py-15 mb-4" type="button" data-next-step="#step2">Proceed to Checkout</button>
+                @{
+                    var isNotDiscounted = string.IsNullOrEmpty(promotionCode);
+                }
+
+                <!-- Accordion -->
+                <div id="accordion-02" role="tablist" aria-multiselectable="true">
+                    <div id="accordion-02-heading-02" role="tab">
+                        <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                            <a class="g-color-black g-text-underline--none--hover" href="#accordion-02-body-02" data-toggle="collapse" data-parent="#accordion-02" aria-expanded="false" aria-controls="accordion-02-body-02">
+                                Apply discount code
+                                <span class="ml-3 fa fa-angle-down"></span>
+                            </a>
+                        </h5>
+                    </div>
+                    <div id="accordion-02-body-02" class="collapse" role="tabpanel" aria-labelledby="accordion-02-heading-02">
+                        <div class="input-group rounded g-pt-15">
+                            <input class="form-control g-brd-gray-light-v1 g-brd-right-none g-color-gray-dark-v3 g-placeholder-gray-dark-v3" type="text" placeholder="Enter discount code" id="promotionCode" @(isNotDiscounted ? "" : "readonly") value="@promotionCode">
+                            <span class="input-group-addon g-brd-gray-light-v1 g-bg-white">
+                                <button class="btn u-btn-primary rounded" id="submitPromotion" type="button">@(isNotDiscounted ? "Apply" : "Remove Code")</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Accordion -->
+            </div>
+        </div>
+    </div>
+    <!-- End Shopping Cart -->
+    <!-- Shipping -->
+    <div id="step2">
+        <div class="row">
+            <div class="col-md-8 g-mb-30">
+                <div class="row">
+                    @{
+                        if (typeUser == "customer")
+                        {
+                            var i = 0;
+                            foreach (var info in listShippingInfo)
+                            {
+                                <div class="col-md-6 g-mb-20">
+                                    <!-- Addresses -->
+                                    <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30">
+                                        <div class="g-mb-50">
+                                            <h3 class="h5 mb-3">
+                                                Address @(++i)
+                                                @if (info.isDefault == true)
+                                                {
+                                                    <label class="u-ribbon-v1 g-color-white g-bg-primary rounded ml-3">Default</label>
+                                                }
+                                            </h3>
+                                            <span class="d-block g-color-gray-dark-v3 g-font-weight-600 mb-2">@info.fullName</span>
+                                            <!-- Address -->
+                                            <address class="media">
+                                                <div class="d-flex mr-3">
+                                                    <span class="u-icon-v1 g-color-gray-dark-v4">
+                                                        <i class="icon-real-estate-027 u-line-icon-pro"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="media-body g-color-text">
+                                                    <!--Address Line 1-->
+                                                    @info.addressLine1
+                                                    <br>
+                                                    <!--Address Line 2-->
+                                                    @info.addressLine2
+                                                    <br>
+                                                    <!--City + Zip Code-->
+                                                    @info.city, @info.zip
+                                                    <br>
+                                                    United Kingdom
+                                                    <br>
+                                                </div>
+                                            </address>
+                                            <!-- End Address -->
+                                            <!-- Phone -->
+                                            <div class="media">
+                                                <div class="d-flex mr-3">
+                                                    <span class="u-icon-v1 g-color-gray-dark-v4">
+                                                        <i class="icon-electronics-005 u-line-icon-pro"></i>
+                                                    </span>
+                                                </div>
+                                                <div class="media-body g-color-text">
+                                                    @info.phone
+                                                </div>
+                                            </div>
+                                            <!-- End Phone -->
+                                        </div>
+                                        <!-- Edit/Delete -->
+                                        <ul class="d-flex align-items-center list-inline mb-0">
+                                            @if (info.isDefault == false)
+                                            {
+                                                <li class="list-inline-item">
+                                                    <a class="u-icon-v1 g-font-size-16 g-text-underline--none--hover" href="#" onclick="removeAddressInfo(@info.shippingInfoId);return false;" title="Delete"
+                                                       data-toggle="tooltip"
+                                                       data-placement="top">
+                                                        <i class="icon-hotel-restaurant-214 u-line-icon-pro"></i>
+                                                    </a>
+                                                </li>
+                                            }
+                                            @if (info.isDefault == false)
+                                            {
+                                                <li class="list-inline-item g-width-1 g-height-16 g-bg-gray-light-v2 g-pr-1 ml-2 mr-3"></li>
+                                                <li class="list-inline-item">
+                                                    <label class="form-check-inline u-check d-block u-link-v5 g-color-text g-pl-30 mb-0">
+                                                        <input class="g-hidden-xs-up g-pos-abs g-top-0 g-left-0" type="checkbox" id="defaultInfo-@info.shippingInfoId" onclick="setDefaultAddress(@info.shippingInfoId);">
+                                                        <span class="d-block u-check-icon-checkbox-v4 g-absolute-centered--y g-left-0">
+                                                            <i class="fa" data-check-icon="&#xf00c"></i>
+                                                        </span>
+                                                        Set as Default
+                                                    </label>
+                                                </li>
+                                            }
+                                        </ul>
+                                        <!-- End Edit/Delete -->
+                                    </div>
+                                    <!-- End Addresses -->
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <!-- Contact Form -->
+                <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30 g-mb-20">
+                    <h3 class="h5 mb-3">Add Address</h3>
+                    <div class="row">
+                        @if (typeUser == "customer")
+                        {
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">Address Line 1</label>
+                                <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">Address Line 2</label>
+                                <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">City</label>
+                                <input id="inputCity" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="City" name="inputCity" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">Zip Code</label>
+                                <input id="inputZipCode" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Zip Code" name="inputZipCode" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">Full Name</label>
+                                <input id="inputFullName" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Full Name" name="inputFullName" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <label class="g-color-text g-font-size-13">Phone</label>
+                                <input id="inputPhone" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Phone" name="inputPhone" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                            </div>
+
+                            <div class="col-sm-6 form-group g-mb-20">
+                                <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="button" onclick="addShippingInfo();">Add Address</button>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <!-- End Contact Form -->
+                @if (typeUser == "customer")
+                {
+                    var defaultInfo = listShippingInfo.FirstOrDefault(c => c.isDefault == true);
+                    <button class="btn u-btn-primary g-font-size-13 text-uppercase g-px-40 g-py-15" type="button" id="processPayment">Proceed to Payment</button>
+                }
+                else
+                {
+                    <button class="btn u-btn-primary g-font-size-13 text-uppercase g-px-40 g-py-15" type="button" id="processPayment" data-next-step="#step3">Proceed to Payment</button>
+                }
+
+            </div>
+
+            <div class="col-md-4 g-mb-30">
+                <!-- Order Summary -->
+                <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
+                    <h4 class="h6 text-uppercase mb-3">Order summary</h4>
+                    <!-- Accordion -->
+                    <div id="accordion-03" class="mb-4" role="tablist" aria-multiselectable="true">
+                        <div id="accordion-03-heading-03" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
+                            <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                                <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-03-body-03" data-toggle="collapse" data-parent="#accordion-03" aria-expanded="false" aria-controls="accordion-03-body-03">
+                                    @totalQuantity item@(totalQuantity > 0 ? "s" : "") in cart
+                                    <span class="ml-3 fa fa-angle-down"></span>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="accordion-03-body-03" class="collapse" role="tabpanel" aria-labelledby="accordion-03-heading-03">
+                            <div class="g-py-15">
+                                <ul class="list-unstyled mb-3">
+                                    <!-- Product -->
+                                    @foreach (var item in listItem)
+                                    {
+                                        <li class="d-flex justify-content-start">
+                                            <img class="g-width-100 g-height-100 mr-3" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
+                                            <div class="d-block">
+                                                <h4 class="h6 g-color-black">@item.name</h4>
+                                                <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_4 mb-1">
+                                                    <li>QTY: @item.quantity</li>
+                                                </ul>
+                                                <span class="d-block g-color-black g-font-weight-400">$@item.totalPrice</span>
+                                            </div>
+                                        </li>
+                                    }
+                                    <!-- End Product -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Accordion -->
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="g-color-black">Discount</span>
+                        <span class="g-color-black g-font-weight-300">-$@discount</span>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="g-color-black">Order Total</span>
+                        <span class="g-color-black g-font-weight-300">$@totalPrice</span>
+                    </div>
+                </div>
+                <!-- End Order Summary -->
+            </div>
+        </div>
+    </div>
+    <!-- End Shipping -->
+    <!-- Payment & Review -->
+    <div id="step3">
+        <div class="row">
+            <div class="col-md-8 g-mb-30">
+                <!-- Shipping Details -->
+                <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-15 g-pl-70 mb-5">
+                    @if (typeUser == "anonymous")
+                    {
+                        <li id="displayFullName" class="g-my-3"></li>
+                        <li id="displayEmail" class="g-my-3"></li>
+                        <li id="displayAddressLine1" class="g-my-3"></li>
+                        <li id="displayAddressLine2" class="g-my-3"></li>
+                        <li id="displayCity" class="g-my-3"></li>
+                        <li id="displayZipCode" class="g-my-3"></li>
+                        <li class="g-my-3">United Kingdom</li>
+                        <li id="displayPhone" class="g-my-3"></li>
+                    }
+                    @if (typeUser == "customer")
+                    {
+                        var defaultInfo = listShippingInfo.FirstOrDefault(c => c.isDefault == true);
+                        if (defaultInfo != null)
+                        {
+                            <li class="g-my-3">@defaultInfo.fullName</li>
+                            <li class="g-my-3">@defaultInfo.addressLine1</li>
+                            <li class="g-my-3">@defaultInfo.addressLine2</li>
+                            <li class="g-my-3">@defaultInfo.city</li>
+                            <li class="g-my-3">@defaultInfo.zip</li>
+                            <li class="g-my-3">United Kingdom</li>
+                            <li class="g-my-3">@defaultInfo.phone</li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="col-md-4 g-mb-30">
+                <!-- Order Summary -->
+                <div class="g-bg-gray-light-v5 g-pa-20 g-pb-50 mb-4">
+                    <div class="g-brd-bottom g-brd-gray-light-v3 g-mb-15">
+                        <h4 class="h6 text-uppercase mb-3">Order summary</h4>
+                    </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="g-color-black">Shipping</span>
+                            <span class="g-color-black g-font-weight-300">@(subTotal > 1000 ? "Free" : "$30")</span>
+                        </div>
+                        <p class="g-font-size-13">UK Standard Delivery - 2-3 Working Days</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="g-color-black">Order Total</span>
+                        <span class="g-color-black g-font-weight-300">$@totalPrice</span>
+                    </div>
+                    <!-- Accordion -->
+                    <div id="accordion-05" class="mb-4" role="tablist" aria-multiselectable="true">
+                        <div id="accordion-05-heading-05" class="g-brd-y g-brd-gray-light-v2 py-3" role="tab">
+                            <h5 class="g-font-weight-400 g-font-size-default mb-0">
+                                <a class="g-color-gray-dark-v4 g-text-underline--none--hover" href="#accordion-05-body-05" data-toggle="collapse" data-parent="#accordion-05" aria-expanded="false" aria-controls="accordion-05-body-05">
+                                    @totalQuantity item@(totalQuantity > 0 ? "s" : "") in cart
+                                    <span class="ml-3 fa fa-angle-down"></span>
+                                </a>
+                            </h5>
+                        </div>
+                        <div id="accordion-05-body-05" class="collapse" role="tabpanel" aria-labelledby="accordion-05-heading-05">
+                            <div class="g-py-15">
+                                <ul class="list-unstyled mb-3">
+                                    <!-- Product -->
+                                    @foreach (var item in listItem)
+                                    {
+                                        <li class="d-flex justify-content-start">
+                                            <img class="g-width-100 g-height-100 mr-3" src="@(imgUrl + (item.productThumbImage == null ? "b5aamndnqugqynwxzmm6" : item.productThumbImage))" alt="Image Description">
+                                            <div class="d-block">
+                                                <h4 class="h6 g-color-black">@item.name</h4>
+                                                <ul class="list-unstyled g-color-gray-dark-v4 g-font-size-12 g-line-height-1_4 mb-1">
+                                                    <li>QTY: @item.quantity</li>
+                                                </ul>
+                                                <span class="d-block g-color-black g-font-weight-400">$@item.totalPrice</span>
+                                            </div>
+                                        </li>
+                                    }
+                                    <!-- End Product -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End Accordion -->
+                </div>
+                <!-- End Order Summary -->
+                <!-- Shipping Method -->
+                <div class="g-px-20 mb-5">
+                    <div class="d-flex justify-content-between g-brd-bottom g-brd-gray-light-v3 g-mb-15">
+                        <h4 class="h6 text-uppercase mb-3">Shipping Method</h4>
+                    </div>
+                    <p class="g-color-gray-dark-v4 g-font-size-15">UK Standard Delivery - 2-3 Working Days</p>
+                </div>
+                <!-- End Shipping Method -->
+            </div>
+        </div>
+    </div>
+    <!-- End Payment & Review -->
+    </div>
+    </form>
     </div>
     <!-- End Checkout Form -->
 
     <form id="chargePayment" asp-action="Charge" asp-controller="Checkout" method="post">
-        <script src="//checkout.stripe.com/v2/checkout.js"
-                class="stripe-button"
-                data-key="@Stripe.Value.PublishableKey"
-                data-locale="auto"
-                data-shipping-address=@(typeUser == "anonymous" ? "true" : "false")
-                data-billing-address=@(typeUser == "anonymous" ? "true" : "false")
-                data-description="Payment Order"
-                data-amount="@(Math.Round(totalPrice, 2) * 100)">
-        </script>
+        @if (typeUser == "anonymous" || !listShippingInfo.Any())
+        {
+            <script src="//checkout.stripe.com/v2/checkout.js"
+                    class="stripe-button"
+                    data-key="@Stripe.Value.PublishableKey"
+                    data-locale="auto"
+                    data-shipping-address=@(typeUser == "anonymous" ? "true" : "false")
+                    data-billing-address=@(typeUser == "anonymous" ? "true" : "false")
+                    data-description="Payment Order"
+                    data-amount="@(Math.Round(totalPrice, 2) * 100)">
+            </script>
+        }
+        else
+        {
+            <script src="//checkout.stripe.com/v2/checkout.js"
+                    class="stripe-button"
+                    data-key="@Stripe.Value.PublishableKey"
+                    data-locale="auto"
+                    data-email="@email"
+                    data-description="Payment Order"
+                    data-amount="@(Math.Round(totalPrice, 2) * 100)">
+            </script>
+        }
+
         <script>
             document.getElementsByClassName("stripe-button-el")[0].style.display = 'none';
         </script>
@@ -514,20 +537,20 @@ else
             </div>
         </div>
         <input type="hidden" name="totalPrice" value="@(Math.Round(totalPrice, 2) * 100)"/>
-        <input type="hidden" id="anonymousId" name="anonymousId"/>
+        @*        <input type="hidden" id="anonymousId" name="anonymousId" />*@
     </form>
 }
 
 
 
 @section Styles
-    {
+{
     <link rel="stylesheet" href="~/html/assets/vendor/icon-line/css/simple-line-icons.css">
     <link rel="stylesheet" href="~/html/assets/vendor/chosen/chosen.css">
 }
 
 @section Scripts
-    {
+{
     <script src="~/html/assets/vendor/jquery-validation/dist/jquery.validate.min.js">
     </script>
     <script src="~/html/assets/vendor/chosen/chosen.jquery.js"></script>
@@ -554,10 +577,10 @@ else
                     '&productId=' +
                     id,
                 type: "get",
-                beforeSend: function (request) {
+                beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                 },
-                success: function (val) {
+                success: function(val) {
                     location.reload();
                 }
             });
@@ -575,16 +598,16 @@ else
                     '&quantity=' +
                     quantity,
                 type: "get",
-                beforeSend: function (request) {
+                beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                 },
-                success: function (val) {
+                success: function(val) {
                     if (val.status == "Success") {
                         $.notify({
-                            title: '<strong>Update quantity product successful!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Update quantity product successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'success',
                                 animate: {
@@ -607,10 +630,10 @@ else
                         setTimeout(location.reload.bind(location), 2000);
                     } else {
                         $.notify({
-                            title: '<strong>Update quantity product failed!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Update quantity product failed!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'danger',
                                 animate: {
@@ -635,7 +658,7 @@ else
             });
         }
 
-        $('#submitPromotion').click(function () {
+        $('#submitPromotion').click(function() {
             var promotion = $('#promotionCode').val();
             if ($('#submitPromotion').text() == 'Apply') {
                 var anonymousId = getCookie("AnonymousId");
@@ -646,16 +669,16 @@ else
                         '&code=' +
                         promotion,
                     type: "get",
-                    beforeSend: function (request) {
+                    beforeSend: function(request) {
                         request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                     },
-                    success: function (val) {
+                    success: function(val) {
                         if (val.status == "Success") {
                             $.notify({
-                                title: '<strong>Apply promotion code for cart successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Apply promotion code for cart successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'success',
                                     animate: {
@@ -678,10 +701,10 @@ else
                             setTimeout(location.reload.bind(location), 2000);
                         } else {
                             $.notify({
-                                title: '<strong>Apply promotion code for cart failed!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Apply promotion code for cart failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'danger',
                                     animate: {
@@ -713,16 +736,16 @@ else
                         '&code=' +
                         promotion,
                     type: "get",
-                    beforeSend: function (request) {
+                    beforeSend: function(request) {
                         request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                     },
-                    success: function (val) {
+                    success: function(val) {
                         if (val.status == "Success") {
                             $.notify({
-                                title: '<strong>Remove promotion code for cart successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Remove promotion code for cart successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'success',
                                     animate: {
@@ -745,10 +768,10 @@ else
                             setTimeout(location.reload.bind(location), 2000);
                         } else {
                             $.notify({
-                                title: '<strong>Remove promotion code for cart failed!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Remove promotion code for cart failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'danger',
                                     animate: {
@@ -781,16 +804,16 @@ else
                         'api/ShippingInfo/UpdateAddressDefault?infoId=' +
                         id,
                     type: "get",
-                    beforeSend: function (request) {
+                    beforeSend: function(request) {
                         request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                     },
-                    success: function (val) {
+                    success: function(val) {
                         if (val.status == "Success") {
                             $.notify({
-                                title: '<strong>Update shipping address successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Update shipping address successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'success',
                                     animate: {
@@ -813,10 +836,10 @@ else
                             setTimeout(location.reload.bind(location), 2000);
                         } else {
                             $.notify({
-                                title: '<strong>Update shipping address failed!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Update shipping address failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'danger',
                                     animate: {
@@ -848,16 +871,16 @@ else
                     'api/ShippingInfo/RemoveAddressInfo?infoId=' +
                     id,
                 type: "get",
-                beforeSend: function (request) {
+                beforeSend: function(request) {
                     request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                 },
-                success: function (val) {
+                success: function(val) {
                     if (val.status == "Success") {
                         $.notify({
-                            title: '<strong>Remove shipping address successful!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Remove shipping address successful!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'success',
                                 animate: {
@@ -880,10 +903,10 @@ else
                         setTimeout(location.reload.bind(location), 2000);
                     } else {
                         $.notify({
-                            title: '<strong>Remove shipping address failed!</strong>',
-                            icon: 'glyphicon glyphicon-star',
-                            message: val.message
-                        },
+                                title: '<strong>Remove shipping address failed!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
                             {
                                 type: 'danger',
                                 animate: {
@@ -933,16 +956,16 @@ else
                     contentType: "application/json",
                     dataType: "json",
                     data: JSON.stringify(data),
-                    beforeSend: function (request) {
+                    beforeSend: function(request) {
                         request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
                     },
-                    success: function (val) {
+                    success: function(val) {
                         if (val.status == "Success") {
                             $.notify({
-                                title: '<strong>Add shipping address successful!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Add shipping address successful!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'success',
                                     animate: {
@@ -965,10 +988,10 @@ else
                             setTimeout(location.reload.bind(location), 2000);
                         } else {
                             $.notify({
-                                title: '<strong>Add shipping address failed!</strong>',
-                                icon: 'glyphicon glyphicon-star',
-                                message: val.message
-                            },
+                                    title: '<strong>Add shipping address failed!</strong>',
+                                    icon: 'glyphicon glyphicon-star',
+                                    message: val.message
+                                },
                                 {
                                     type: 'danger',
                                     animate: {
@@ -992,32 +1015,12 @@ else
                 });
             }
         }
-        
-        @if (typeUser == "anonymous")
-        {
-            @:$('#processPayment').click(function() {
-            @:        var addressLine1 = $('#inputAddressLine1').val().trim();
-            @:        var addressLine2 = $('#inputAddressLine2').val().trim();
-            @:        var city = $('#inputCity').val().trim();
-            @:        var zip = $('#inputZipCode').val().trim();
-            @:        var phone = $('#inputPhone').val().trim();
-            @:        var fullName = $('#inputFullName').val().trim();
-            @:        var email = $('#inputEmail').val().trim();
 
-            @:$('#displayFullName').text(fullName);
-            @:$('#displayAddressLine1').text(addressLine1);
-            @:$('#displayAddressLine2').text(addressLine2);
-            @:$('#displayCity').text(city);
-            @:$('#displayZipCode').text(zip);
-            @:$('#displayPhone').text(phone);
-            @:$('#displayEmail').text(email);
-                @:$('#makePayment').removeAttr('hidden');
-                
-            @: });
-        }
+        $('#processPayment').click(function() {
+            $('#makePayment').click();
 
+        });
 
 
     </script>
 }
-

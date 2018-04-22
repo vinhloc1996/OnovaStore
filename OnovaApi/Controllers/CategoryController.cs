@@ -208,7 +208,7 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                category.Slug = "/c" + category.CategoryId + "/" + category.Slug;
+                category.Slug = "/category" + "/c" + category.CategoryId + "/" + category.Slug;
                 _context.Entry(category).State = EntityState.Modified;
 
                 if (await _context.SaveChangesAsync() > 0)

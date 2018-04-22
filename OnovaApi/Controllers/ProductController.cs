@@ -275,7 +275,7 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                product.Slug = "/p" + product.ProductId + "/" + product.Slug;
+                product.Slug = "/product" + "/p" + product.ProductId + "/" + product.Slug;
                 _context.Entry(product).State = EntityState.Modified;
 
                 var productImages = new List<ProductImage>();
