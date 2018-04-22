@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OnovaStore.Controllers
 {
-    public class ProductController : Controller
+    public class CategoryController : Controller
     {
         public IActionResult Detail([FromRoute] string slug)
         {

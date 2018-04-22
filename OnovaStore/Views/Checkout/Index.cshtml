@@ -302,40 +302,42 @@ else
                 </div>
                 <!-- Contact Form -->
                 <div class="g-brd-around g-brd-gray-light-v4 rounded g-pa-30 g-mb-20">
+                @if (typeUser == "customer")
+                {
                     <h3 class="h5 mb-3">Add Address</h3>
                     <div class="row">
-                        @if (typeUser == "customer")
-                        {
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">Address Line 1</label>
-                                <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">Address Line 2</label>
-                                <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">City</label>
-                                <input id="inputCity" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="City" name="inputCity" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">Zip Code</label>
-                                <input id="inputZipCode" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Zip Code" name="inputZipCode" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">Full Name</label>
-                                <input id="inputFullName" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Full Name" name="inputFullName" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <label class="g-color-text g-font-size-13">Phone</label>
-                                <input id="inputPhone" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Phone" name="inputPhone" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                            </div>
 
-                            <div class="col-sm-6 form-group g-mb-20">
-                                <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="button" onclick="addShippingInfo();">Add Address</button>
-                            </div>
-                        }
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">Address Line 1</label>
+                            <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">Address Line 2</label>
+                            <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">City</label>
+                            <input id="inputCity" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="City" name="inputCity" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">Zip Code</label>
+                            <input id="inputZipCode" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Zip Code" name="inputZipCode" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">Full Name</label>
+                            <input id="inputFullName" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Full Name" name="inputFullName" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <label class="g-color-text g-font-size-13">Phone</label>
+                            <input id="inputPhone" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" placeholder="Phone" name="inputPhone" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
+                        </div>
+
+                        <div class="col-sm-6 form-group g-mb-20">
+                            <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" type="button" onclick="addShippingInfo();">Add Address</button>
+                        </div>
+                        
                     </div>
+                }
                 </div>
                 <!-- End Contact Form -->
                 @if (typeUser == "customer")
