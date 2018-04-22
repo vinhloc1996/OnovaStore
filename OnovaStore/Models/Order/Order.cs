@@ -17,5 +17,6 @@ namespace OnovaStore.Models.Order
         public string Phone { get; set; }
         public string Email { get; set; }
         public string TokenId { get; set; }
+        public double TotalPrice { get; set; }
     }
 }

@@ -1,6 +1,145 @@
-﻿
+﻿@using System.Collections.Specialized
+@model dynamic
 @{
-    Layout = null;
+    Layout = "_Layout";
+    ViewBag.Title = Model.name;
+    var imgUrl = "http://res.cloudinary.com/vinhloc1996/image/upload/";
 }
 
-<h2>háh</h2>
+<!-- Product Description -->
+<div class="container g-pt-50 g-pb-100">
+    <div class="row">
+        <div class="col-lg-7 g-mb-30 g-mb-0--lg">
+            <div class="row align-items-center">
+                <div class="col-3">
+                    <div id="carouselCus2" class="js-carousel text-center u-carousel-v3"
+                         data-infinite="true"
+                         data-center-mode="true"
+                         data-vertical="true"
+                         data-slides-show="3"
+                         data-is-thumbs="true"
+                         data-nav-for="#carouselCus1">
+                        <div class="js-slide g-cursor-pointer g-py-5">
+                            <img class="img-fluid" src="@(imgUrl + Model.productThumbImage)" alt="Image Description">
+                        </div>
+                        @foreach (var image in Model.productImages)
+                        {
+                            <div class="js-slide g-cursor-pointer g-py-5">
+                                <img class="img-fluid" src="@(imgUrl + image.generalImageId)" alt="Image Description">
+                            </div>
+                        }
+
+                    </div>
+                </div>
+                <div class="col-9">
+                    <!-- Carousel -->
+                    <div id="carouselCus1" class="js-carousel g-pt-10 g-mb-10"
+                         data-infinite="true"
+                         data-fade="true"
+                         data-arrows-classes="u-arrow-v1 g-brd-around g-brd-white g-absolute-centered--y g-width-45 g-height-45 g-font-size-14 g-color-white g-color-primary--hover rounded-circle"
+                         data-arrow-left-classes="fa fa-angle-left g-left-40"
+                         data-arrow-right-classes="fa fa-angle-right g-right-40"
+                         data-nav-for="#carouselCus2">
+                        <div class="js-slide g-bg-cover g-bg-black-opacity-0_1--after">
+                            <img class="img-fluid w-100" src="@(imgUrl + Model.productThumbImage)" alt="Image Description">
+                        </div>
+                        @foreach (var image in Model.productImages)
+                        {
+                            <div class="js-slide g-bg-cover g-bg-black-opacity-0_1--after">
+                                <img class="img-fluid w-100" src="@(imgUrl + image.generalImageId)" alt="Image Description">
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <!-- End Carousel -->
+        </div>
+        <div class="col-lg-5">
+            <div class="g-px-40--lg">
+                <!-- Product Info -->
+                <div class="g-mb-30">
+                    <h1 class="g-font-weight-300 mb-4">@Model.name</h1>
+                    <p>@Model.productShortDesc</p>
+                </div>
+                <!-- End Product Info -->
+                <!-- Price -->
+                <div class="g-mb-30">
+                    <h2 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-12 text-uppercase mb-2">Price</h2>
+                    <span class="g-color-black g-font-weight-500 g-font-size-30 mr-2">$@Model.displayPrice</span>
+@*                    <s class="g-color-gray-dark-v4 g-font-weight-500 g-font-size-16">$101.00</s>*@
+                </div>
+                <!-- End Price -->
+                <!-- Quantity -->
+                <div class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30" role="tab">
+                    <h5 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-default mb-0">Quantity</h5>
+                    <div class="input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                        <input class="form-control text-center g-font-size-13 rounded-0" id="productQuantity" type="number" value="1" min="1">
+                    </div>
+                </div>
+                <!-- End Quantity -->
+                <!-- Buttons -->
+                <div class="row g-mx-minus-5 g-mb-20">
+                    <div class="col g-px-5 g-mb-10">
+                        <button class="btn btn-block u-btn-primary g-font-size-12 text-uppercase g-py-15 g-px-25" onclick="addToCartCustom(@Model.productId)" type="button">
+                            Add to Cart <i class="align-middle ml-2 icon-finance-100 u-line-icon-pro"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- End Buttons -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Product Description -->
+<!-- Description & Review -->
+<div class="container">
+    <div class="g-brd-y g-brd-gray-light-v3 g-py-100">
+        <!-- Nav tabs -->
+        <ul class="nav g-max-width-200 text-center mx-auto" role="tablist" data-target="nav-1-2-accordion-default-hor-left-underline" data-tabs-mobile-type="accordion" data-btn-classes="btn btn-md btn-block rounded-0 u-btn-outline-primary g-mb-20">
+            <li class="nav-item text-center mx-auto g-pb-10">
+                <a class="nav-link active g-brd-around g-brd-primary--active g-color-text g-color-primary--parent-active g-font-size-16 rounded" data-toggle="tab" href="#nav-1-2-accordion-default-hor-left-underline--1" role="tab">Description</a>
+            </li>
+        </ul>
+        <!-- End Nav tabs -->
+        <!-- Tab panes -->
+        <div id="nav-1-2-accordion-default-hor-left-underline" class="tab-content">
+            <div class="tab-pane fade show active g-pt-50" id="nav-1-2-accordion-default-hor-left-underline--1" role="tabpanel">
+                <h2 class="h4 mb-3">Description</h2>
+                <div class="row">
+                    <div class="col-md-8 g-mb-30">
+                        <p>@Model.productLongDesc</p>
+                    </div>
+                    <div class="col-md-4 g-mb-0 g-mb-30--md">
+                        <!-- List -->
+                        <ul class="list-unstyled g-color-text">
+                            <li class="g-brd-bottom--dashed g-brd-gray-light-v3 pt-1 mb-3">
+                                <span>Brand Name:</span>
+                                <span class="float-right g-color-black">@Model.brandName</span>
+                            </li>
+                            <li class="g-brd-bottom--dashed g-brd-gray-light-v3 pt-1 mb-3">
+                                <span>Category Name:</span>
+                                <span class="float-right g-color-black">@Model.categoryName</span>
+                            </li>
+                        </ul>
+                        <!-- End List -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Tab panes -->
+    </div>
+</div>
+<!-- End Description & Review -->
+
+@section Scripts
+    {
+    <script src="~/html/assets/js/components/hs.tabs.js"></script>
+    <script src="~/html/assets/js/helpers/hs.rating.js"></script>
+       
+    <script type="text/javascript">
+        function addToCartCustom (id) {
+            addToCart(id, $('#productQuantity').val());
+        }
+    </script>
+    
+}

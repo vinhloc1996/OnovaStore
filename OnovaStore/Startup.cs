@@ -116,6 +116,16 @@ namespace OnovaStore
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404)
+                {
+                    context.Request.Path = "/Home/NotFound404";
+                    await next();
+                }
+            });
+
             app.UseStaticFiles();
             app.UseSession();
             app.UseMvc(routes =>
@@ -132,19 +142,19 @@ namespace OnovaStore
 
                 routes.MapRoute(
                     name: "ViewProduct",
-                    template: "{controller}/{slug}",
+                    template: "product/{slug}",
                     defaults: new {controller = "Product", action = "Detail"}
                 );
 
                 routes.MapRoute(
                     name: "ViewCategory",
-                    template: "{controller}/{slug}",
+                    template: "category/{slug}",
                     defaults: new { controller = "Category", action = "Detail" }
                 );
 
                 routes.MapRoute(
                     name: "ViewBrand",
-                    template: "{controller}/{slug}",
+                    template: "brand/{slug}",
                     defaults: new { controller = "Brand", action = "Detail" }
                 );
             });

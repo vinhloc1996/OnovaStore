@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +11,7 @@ using OnovaApi.Data;
 using OnovaApi.DTOs;
 using OnovaApi.Helpers;
 using OnovaApi.Models.DatabaseModels;
+using OnovaApi.Services;
 
 namespace OnovaApi.Controllers
 {
@@ -17,10 +20,12 @@ namespace OnovaApi.Controllers
     public class OrderController : Controller
     {
         private readonly OnovaContext _context;
+        private readonly IEmailSender _emailSender;
 
-        public OrderController(OnovaContext context)
+        public OrderController(OnovaContext context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         // GET: api/Order
@@ -93,13 +98,18 @@ namespace OnovaApi.Controllers
             {
                 var cart = _context.CustomerCart.Find(orderDto.CartId);
                 var shippingInfo = _context.ShippingInfo.Where(c => c.CustomerId == orderDto.CartId).FirstOrDefault(c => c.IsDefault);
+                var email = _context.Users.Find(orderDto.CartId).Email;
+                var currentCustomerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                    ?.FindFirst(
+                        c => c.Type == JwtRegisteredClaimNames.Email || c.Type == ClaimTypes.Email)
+                    ?.Value;
 
                 if (cart != null)
                 {
                     var order = new Order
                     {
                         CartId = orderDto.CartId,
-                        DisplayPrice = cart.DisplayPrice,
+                        DisplayPrice = orderDto.TotalPrice,
                         ShippingFee = cart.DisplayPrice > 1000 ? 0 : 30,
                         AddressLine1 = shippingInfo.AddressLine1,
                         AddressLine2 = shippingInfo.AddressLine2,
@@ -156,9 +166,15 @@ namespace OnovaApi.Controllers
                                 CustomerCartId = orderDto.CartId,
                                 CreateDate = DateTime.Now
                             });
-
+                            
                             if (await _context.SaveChangesAsync() > 0)
                             {
+                                var tax = cart.Tax * (cart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
+                                
+                                await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber, cart.DisplayPrice,
+                                    order.PriceDiscount, order.ShippingFee, tax, order.TotalPrice, order.FullName,
+                                    order.Phone, order.AddressLine1, order.City, order.Zip, email);
+
                                 return Json(new
                                 {
                                     Status = "Success",
@@ -190,7 +206,7 @@ namespace OnovaApi.Controllers
                 var order = new Order
                 {
                     CartId = orderDto.CartId,
-                    DisplayPrice = anonymousCart.DisplayPrice,
+                    DisplayPrice = orderDto.TotalPrice,
                     ShippingFee = anonymousCart.DisplayPrice > 1000 ? 0 : 30,
                     AddressLine1 = orderDto.AddressLine1,
                     AddressLine2 = orderDto.AddressLine2,
@@ -250,6 +266,12 @@ namespace OnovaApi.Controllers
 
                         if (await _context.SaveChangesAsync() > 0)
                         {
+                            var tax = anonymousCart.Tax * (anonymousCart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
+
+                            await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber, anonymousCart.DisplayPrice,
+                                order.PriceDiscount, order.ShippingFee, tax, order.TotalPrice, order.FullName,
+                                order.Phone, order.AddressLine1, order.City, order.Zip, orderDto.Email);
+
                             return Json(new
                             {
                                 Status = "Success",

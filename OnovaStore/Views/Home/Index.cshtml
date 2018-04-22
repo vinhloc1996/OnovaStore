@@ -65,13 +65,6 @@
                                                     <i class="icon-finance-100 u-line-icon-pro"></i>
                                                 </a>
                                             </li>
-                                            <li class="list-inline-item align-middle">
-                                                <a class="g-color-gray-dark-v5 g-color-primary--hover g-text-underline--none--hover" href="@(isAuthenticated ? "" : "#wishList")" @(isAuthenticated ? "" : @"data-modal-target=#wishList data-modal-effect=fadein") title="Add to Wishlist"
-                                                   data-toggle="tooltip"
-                                                   data-placement="top">
-                                                    <i class="icon-medical-022 u-line-icon-pro"></i>
-                                                </a>
-                                            </li>
                                         </ul>
                                     </footer>
                                     <!-- End Article Footer -->
@@ -91,14 +84,4 @@
     }
 </section>
 <!-- End Product Blocks -->
-
-<div id="wishList" class="text-left g-max-width-300 g-bg-white g-overflow-y-auto g-pa-20" style="display: none; width: 700px">
-    <button type="button" class="close" onclick="Custombox.modal.close();">
-        <i class="hs-icon hs-icon-close"></i>
-    </button>
-    <h4 class="g-mb-20">Function require login</h4>
-    <p>
-        You have to <a href="@Url.Action("Login", "Account", new {Area = ""})">login</a> to use this function
-    </p>
-</div>
 

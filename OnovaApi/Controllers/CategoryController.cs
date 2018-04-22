@@ -76,6 +76,46 @@ namespace OnovaApi.Controllers
         }
 
         [HttpGet]
+        [Route("GetProductsForCategory")]
+        [AllowAnonymous]
+        public IActionResult GetProductsForCategory([FromQuery] int id)
+        {
+            var category = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
+            {
+                c.CategoryId,
+                c.CategoryImage,
+                c.Name,
+                TotalProduct = c.Product.Count,
+                c.Slug,
+                Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                {
+                    p.ProductId,
+                    p.DisplayPrice,
+                    p.Name,
+                    p.Slug,
+                    p.ProductThumbImage,
+                    BrandName = p.Brand.Name
+                })
+            }).ToList();
+
+            if (!category.Any())
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find the category"
+                });
+            }
+
+            return Json(new
+            {
+                Status = "Success",
+                Message = "Category products",
+                category
+            });
+        }
+
+        [HttpGet]
         [Route("GetCategoriesForStaff")]
         public async Task<IEnumerable<GetCategoryForStaff>> GetCategoriesForStaff([FromQuery] string sortOrder, [FromQuery] string searchString)
         {
@@ -208,7 +248,8 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                category.Slug = "/category" + "/c" + category.CategoryId + "/" + category.Slug;
+                //                category.Slug = "/category" + "/c" + category.CategoryId + "/" + category.Slug;
+                category.Slug = "/category/" + category.Slug + "-c" + category.CategoryId;
                 _context.Entry(category).State = EntityState.Modified;
 
                 if (await _context.SaveChangesAsync() > 0)

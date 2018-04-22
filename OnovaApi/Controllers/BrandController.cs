@@ -131,23 +131,44 @@ namespace OnovaApi.Controllers
             return brands;
         }
 
-        // GET: api/Brand/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetBrand([FromRoute] int id)
+        [HttpGet]
+        [Route("GetProductsForBrand")]
+        [AllowAnonymous]
+        public IActionResult GetProductsForBrand([FromQuery] int id)
         {
-            if (!ModelState.IsValid)
+            var brand = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
             {
-                return BadRequest(ModelState);
+                c.BrandId,
+                c.BrandImage,
+                c.Name,
+                TotalProduct = c.Product.Count,
+                c.Slug,
+                Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                {
+                    p.ProductId,
+                    p.DisplayPrice,
+                    p.Name,
+                    p.Slug,
+                    p.ProductThumbImage,
+                    CategoryName = p.Category.Name
+                })
+            }).ToList();
+
+            if (!brand.Any())
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find the brand"
+                });
             }
 
-            var brand = await _context.Brand.SingleOrDefaultAsync(m => m.BrandId == id);
-
-            if (brand == null)
+            return Json(new
             {
-                return NotFound();
-            }
-
-            return Ok(brand);
+                Status = "Success",
+                Message = "Brand products",
+                brand
+            });
         }
 
         // PUT: api/Brand/5
@@ -183,7 +204,8 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                brand.Slug = "/brand" + "/b" + brand.BrandId + "/" + brand.Slug;
+                //                brand.Slug = "/brand" + "/b" + brand.BrandId + "/" + brand.Slug;
+                brand.Slug = "/brand/" + brand.Slug + "-b" + brand.BrandId;
                 _context.Entry(brand).State = EntityState.Modified;
 
                 if (await _context.SaveChangesAsync() > 0)

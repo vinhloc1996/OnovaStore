@@ -100,7 +100,8 @@ namespace OnovaStore.Controllers
                     {
                         TypeUser = "customer",
                         CartId = _claimPrincipalManager.Id,
-                        TokenId = charge.Id
+                        TokenId = charge.Id,
+                        TotalPrice = (double) totalPrice/100
                     };
 
                     using (var client = _restClient.CreateClient(User))
@@ -138,7 +139,8 @@ namespace OnovaStore.Controllers
                     Zip = stripeBillingAddressZip,
                     Phone = "None",
                     FullName = stripeBillingName,
-                    TokenId = charge.Id
+                    TokenId = charge.Id,
+                    TotalPrice = (double)totalPrice / 100
                 };
 
                 using (var client = _restClient.CreateClient(User))

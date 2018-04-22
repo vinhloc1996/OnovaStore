@@ -112,10 +112,10 @@
     <script type="text/javascript">
         var imgUrl = 'http://res.cloudinary.com/vinhloc1996/image/upload/';
 
-        function addToCart(id) {
+        function addToCart(id, quantity = 1) {
             var anonymousId = getCookie("AnonymousId");
             $.ajax({
-                url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id,
+                url: 'http://localhost:5000/' + 'api/cart/addtocart?customerId=' + anonymousId + '&productId=' + id + '&quantity=' + quantity,
                 type: "get",
                 beforeSend: function (request) {
                     request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));

@@ -160,10 +160,19 @@
             secondsElSelector: '.js-cd-seconds'
         });
 
+    $.HSCore.components.HSTabs.init('[role="tablist"]');
+
+    // initialization of rating
+    $.HSCore.helpers.HSRating.init();
+    
+
     $(window).on('load',
         function() {
             // initialization of HSScrollBar component
             $.HSCore.components.HSScrollBar.init($('.js-scrollbar'));
+            setTimeout(function () {
+                $.HSCore.components.HSTabs.init('[role="tablist"]');
+            }, 200);
         });
 </script>
 @RenderSection("Scripts", required: false)

@@ -55,7 +55,7 @@ namespace OnovaApi.Services
                 {
                     {":productName", dto.Name},
                     {":productLink", "http://localhost:58212" + dto.Slug},
-                    {":productImage", dto.ThumbImageUrl} // shoud be changed, using automapper to select thumbup image
+                    {":productImage", dto.ThumbImageUrl}
                 },
                 Tos = emails
             };
@@ -64,7 +64,7 @@ namespace OnovaApi.Services
             {
                 From = new EmailAddress("support@onova.com", "Support Onova"),
                 Subject = "Product available: :productName",
-                TemplateId = "6d13c4d4-5330-42be-8d2e-021978fab05d", //new template for product available
+                TemplateId = "6d13c4d4-5330-42be-8d2e-021978fab05d",
                 
                 Personalizations = new List<Personalization> { personalize }
             };
@@ -72,6 +72,40 @@ namespace OnovaApi.Services
             return await client.SendEmailAsync(msg);
         }
 
-        //one more function for customer after billing the order, will be implemented after stripe
+        public async Task<Response> SendEmailOrderSuccessfulAsync(string orderNumber, double? subTotal, double? discount, double? shipping, double? tax,
+            double? total, string fullName, string phone, string addressLine1, string city, string zip, string email)
+        {
+            var key = _configuration.GetSection("SendGridService:Key").Value;
+            var client = new SendGridClient(key);
+            var personalize = new Personalization
+            {
+                Substitutions = new Dictionary<string, string>
+                {
+                    {":orderNumber", orderNumber},
+                    {":subTotal", subTotal.ToString()},
+                    {":discount", discount.ToString()},
+                    {":shippingFee", shipping == 0 ? "Free" : "$30"},
+                    {":tax", tax.ToString()},
+                    {":totalPrice", total.ToString()},
+                    {":fullName", fullName},
+                    {":phone", phone},
+                    {":addressLine1", addressLine1},
+                    {":city", city},
+                    {":zip", zip}
+                }
+            };
+
+            var msg = new SendGridMessage()
+            {
+                From = new EmailAddress("support@onova.com", "Support Onova"),
+                Subject = "Order successful",
+                TemplateId = "24a25b65-1254-47be-b59a-bdc4093bd253",
+
+                Personalizations = new List<Personalization> { personalize }
+            };
+            msg.AddTo(new EmailAddress(email));
+
+            return await client.SendEmailAsync(msg);
+        }
     }
 }

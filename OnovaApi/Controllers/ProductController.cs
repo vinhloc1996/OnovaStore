@@ -36,23 +36,77 @@ namespace OnovaApi.Controllers
             return _context.Product;
         }
 
-        // GET: api/Product/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetProduct([FromRoute] int id)
+        [HttpGet]
+        [Route("SearchProduct")]
+        public IActionResult SearchProduct([FromQuery] string keyword)
         {
-            if (!ModelState.IsValid)
+            var product = _context.Product.Where(c => EF.Functions.Like(c.Name, "%" + keyword +"%") && c.IsHide != true).Select(c => new
             {
-                return BadRequest(ModelState);
+                c.ProductId,
+                c.ProductThumbImage,
+                c.ProductStatus.StatusCode,
+                BrandName = c.Brand.Name,
+                CategoryName = c.Category.Name,
+                c.Name,
+                c.DisplayPrice,
+                c.Slug
+            }).ToList();
+
+            if (!product.Any())
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find the product"
+                });
             }
 
-            var product = await _context.Product.SingleOrDefaultAsync(m => m.ProductId == id);
-
-            if (product == null)
+            return Json(new
             {
-                return NotFound();
+                Status = "Success",
+                Message = "Product detail",
+                ProductDetail = product
+            });
+        }
+
+        // GET: api/Product/5
+        [HttpGet]
+        [Route("GetProduct")]
+        public IActionResult GetProduct([FromQuery] int id)
+        {
+            var product = _context.Product.Where(c => c.ProductId == id && c.IsHide != true).Select(c => new
+            {
+                c.ProductId,
+                ProductImages = c.ProductImage.Select(i => new
+                {
+                    i.GeneralImageId
+                }),
+                c.ProductThumbImage,
+                c.ProductStatus.StatusCode,
+                BrandName = c.Brand.Name,
+                CategoryName = c.Category.Name,
+                c.Name,
+                c.DisplayPrice,
+                c.Slug,
+                c.ProductShortDesc,
+                c.ProductLongDesc
+            });
+
+            if (!product.Any())
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find the product"
+                });
             }
 
-            return Ok(product);
+            return Json(new
+            {
+                Status = "Success",
+                Message = "Product detail",
+                product
+            });
         }
 
         [HttpGet]
@@ -275,7 +329,8 @@ namespace OnovaApi.Controllers
 
             if (await _context.SaveChangesAsync() > 0)
             {
-                product.Slug = "/product" + "/p" + product.ProductId + "/" + product.Slug;
+//                product.Slug = "/product" + "/p" + product.ProductId + "/" + product.Slug;
+                product.Slug = "/product/" + product.Slug + "-p" + product.ProductId;
                 _context.Entry(product).State = EntityState.Modified;
 
                 var productImages = new List<ProductImage>();
