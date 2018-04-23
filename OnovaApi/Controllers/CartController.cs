@@ -30,8 +30,7 @@ namespace OnovaApi.Controllers
         [AllowAnonymous]
         [Route("AddToCart")]
         [HttpGet]
-        public async Task<IActionResult> AddToCart([FromQuery] string customerId, [FromQuery] int productId,
-            [FromQuery] int quantity = 1)
+        public async Task<IActionResult> AddToCart([FromQuery] string customerId, [FromQuery] int productId, [FromQuery] int? quantity = 1)
         {
             var product = _context.Product.Find(productId);
 
@@ -505,7 +504,7 @@ namespace OnovaApi.Controllers
         [AllowAnonymous]
         [Route("ShowCartHeader")]
         [HttpGet]
-        public IActionResult ShowCartHeader([FromQuery] string customerId)
+        public async Task<IActionResult> ShowCartHeader([FromQuery] string customerId)
         {
             //Work to find user id
 //            var currentSigned = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
@@ -534,6 +533,22 @@ namespace OnovaApi.Controllers
                         })
                     .ToList();
 
+                foreach (var item in customerCart)
+                {
+                    var currentProduct = _context.Product.Find(item.ProductId);
+
+                    if (!currentProduct.DisplayPrice.Equals(item.DisplayPrice))
+                    {
+                        var itemInCart = _context.CustomerCartDetail.Find(customerId, item.ProductId);
+                        
+                        int? quantity = itemInCart.Quantity;
+
+                        await RemoveCartItem(customerId, item.ProductId);
+
+                        await AddToCart(customerId, item.ProductId, quantity);
+                    }
+                }
+
                 return Json(customerCart);
             }
 
@@ -556,6 +571,22 @@ namespace OnovaApi.Controllers
                             x.Product.Slug
                         })
                     .ToList();
+
+                foreach (var item in customerCart)
+                {
+                    var currentProduct = _context.Product.Find(item.ProductId);
+
+                    if (!currentProduct.DisplayPrice.Equals(item.DisplayPrice))
+                    {
+                        var itemInCart = _context.AnonymousCustomerCartDetail.Find(customerId, item.ProductId);
+
+                        int? quantity = itemInCart.Quantity;
+
+                        await RemoveCartItem(customerId, item.ProductId);
+
+                        await AddToCart(customerId, item.ProductId, quantity);
+                    }
+                }
 
                 return Json(customerCart);
             }

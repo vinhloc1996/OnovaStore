@@ -48,6 +48,8 @@ namespace OnovaApi.Services
 
         public async Task<ApplicationUser> FindUserById(string id) => await _userManager.FindByIdAsync(id);
 
+        public async Task<IdentityResult> ChangePassword(ApplicationUser user, string currentPassword, string newPassword) => await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+
         public async Task<ApplicationUser> FindUserByUserName(string username)
             => await _userManager.FindByNameAsync(username);
 

@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,45 @@ namespace OnovaApi.Controllers
         public IEnumerable<Order> GetOrder()
         {
             return _context.Order;
+        }
+
+        [HttpGet]
+        [Route("ShowOrdersForUser")]
+        [Authorize]
+        public IActionResult ShowOrdersForUser()
+        {
+            var currentCustomerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+                ?.FindFirst(
+                    c => c.Type == JwtRegisteredClaimNames.NameId || c.Type == ClaimTypes.NameIdentifier)
+                ?.Value;
+
+            var orders = _context.Order.Where(o => o.CartId == currentCustomerId).Select(o => new
+            {
+                o.OrderDate,
+                o.OrderTrackingNumber,
+                o.DisplayPrice,
+                o.AddressLine1,
+                o.FullName,
+                o.Phone,
+                o.City,
+                o.Zip,
+                o.OrderStatus.Name,
+                items = o.OrderDetail.Select(d => new
+                {
+                    d.ProductId,
+                    d.DisplayPrice,
+                    d.Product.Name,
+                    d.Product.Slug,
+                    d.Product.ProductThumbImage
+                })
+            }).OrderByDescending(o => o.OrderDate).ToList();
+
+            return Json(new
+            {
+                _context.Users.Find(currentCustomerId).FullName,
+                NumberOrders = orders.Count,
+                orders
+            });
         }
 
         // GET: api/Order/5
@@ -151,6 +191,7 @@ namespace OnovaApi.Controllers
                         });
                     }
 
+                    _context.OrderDetail.AddRange(orderItems);
                     await _context.SaveChangesAsync();
 
                     _context.CustomerCartDetail.RemoveRange(cartItems);
@@ -248,6 +289,7 @@ namespace OnovaApi.Controllers
                     });
                 }
 
+                _context.OrderDetail.AddRange(orderItems);
                 await _context.SaveChangesAsync();
 
                 _context.AnonymousCustomerCartDetail.RemoveRange(cartItems);
