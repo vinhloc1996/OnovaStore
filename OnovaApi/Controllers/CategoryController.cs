@@ -78,27 +78,101 @@ namespace OnovaApi.Controllers
         [HttpGet]
         [Route("GetProductsForCategory")]
         [AllowAnonymous]
-        public IActionResult GetProductsForCategory([FromQuery] int id)
+        public IActionResult GetProductsForCategory([FromQuery] int id, [FromQuery] string sortOrder)
         {
-            var category = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
-            {
-                c.CategoryId,
-                c.CategoryImage,
-                c.Name,
-                TotalProduct = c.Product.Count,
-                c.Slug,
-                Products = c.Product.Where(p => p.IsHide != true).Select(p => new
-                {
-                    p.ProductId,
-                    p.DisplayPrice,
-                    p.Name,
-                    p.Slug,
-                    p.ProductThumbImage,
-                    BrandName = p.Brand.Name
-                })
-            }).ToList();
+            var categories = new object();
 
-            if (!category.Any())
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    categories = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.CategoryId,
+                        c.CategoryImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            BrandName = p.Brand.Name,
+                            BranSlug = p.Brand.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderByDescending(p => p.Name).ToList()
+                    }).FirstOrDefault();
+                    break;
+                case "price":
+                    categories = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.CategoryId,
+                        c.CategoryImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            BrandName = p.Brand.Name,
+                            BranSlug = p.Brand.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderBy(p => p.DisplayPrice).ToList()
+                    }).FirstOrDefault();
+                    break;
+
+                case "price_desc":
+                    categories = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.CategoryId,
+                        c.CategoryImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            BrandName = p.Brand.Name,
+                            BranSlug = p.Brand.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderByDescending(p => p.DisplayPrice).ToList()
+                    }).FirstOrDefault();
+                    break;
+                default:
+                    categories = _context.Category.Where(c => c.CategoryId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.CategoryId,
+                        c.CategoryImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            BrandName = p.Brand.Name,
+                            BranSlug = p.Brand.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderBy(p => p.Name).ToList()
+                    }).FirstOrDefault();
+                    break;
+            }
+                
+
+            if (categories == null)
             {
                 return Json(new
                 {
@@ -111,7 +185,7 @@ namespace OnovaApi.Controllers
             {
                 Status = "Success",
                 Message = "Category products",
-                category
+                categories
             });
         }
 

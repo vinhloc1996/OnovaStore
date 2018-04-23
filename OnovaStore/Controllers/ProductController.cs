@@ -7,6 +7,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using OnovaStore.Helpers;
+using OnovaStore.Models.Product;
 
 namespace OnovaStore.Controllers
 {
@@ -49,9 +52,69 @@ namespace OnovaStore.Controllers
             return RedirectToAction("NotFound404", "Home");
         }
 
-        public async Task<IActionResult> SearchProduct(string keyword)
+        public async Task<IActionResult> SearchProduct(string sortOrder, string keyword,
+            int? page = 1)
         {
-            return View();
+            var sortQuery = new List<string>
+            {
+                "name",
+                "name_desc",
+                "price",
+                "price_desc"
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "name"
+                : sortOrder.Trim().ToLower();
+
+            var queryString = nameof(sortOrder) + "=" + sortOrder + (!string.IsNullOrEmpty(keyword)
+                                  ? "&" + nameof(keyword) + "=" + keyword
+                                  : "");
+
+            string displayOrder = "";
+
+            switch (sortOrder)
+            {
+                case "":
+                case "name":
+                    displayOrder = "Name A-Z";
+                    break;
+                case "name_desc":
+                    displayOrder = "Name Z-A";
+                    break;
+                case "price":
+                    displayOrder = "Price low to high";
+                    break;
+                case "price_desc":
+                    displayOrder = "Price high to low";
+                    break;
+            }
+
+            ViewData["DisplayOrder"] = displayOrder;
+            ViewData["SortOrder"] = sortOrder;
+            ViewData["KeyWord"] = keyword;
+            int pageSize = 8;
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (var response = await client.GetAsync("/api/product/SearchProduct?" + queryString))
+                {
+                    RootProductSearch root = response.StatusCode == HttpStatusCode.OK
+                        ? JsonConvert.DeserializeObject<RootProductSearch>(await response.Content.ReadAsStringAsync())
+                        : null;
+
+                    if (root != null && root.status == "Success")
+                    {
+//                        ViewData["LengthEntry"] = root.products.Count;
+//                        ViewData["CurrentEntry"] = pageSize * page;
+                        ViewData["CurrentPage"] = page;
+
+                        return View(PaginatedList<ProductSearch>.CreateAsync(root.products, page ?? 1, pageSize));
+                    }
+
+                    return View(null);
+                }
+            }
         }
     }
 }

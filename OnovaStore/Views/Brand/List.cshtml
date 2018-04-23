@@ -1,30 +1,34 @@
-﻿@model OnovaStore.Helpers.PaginatedList<OnovaStore.Models.Product.ProductSearch>
+﻿@using OnovaStore.Models.Brand
+@model OnovaStore.Helpers.PaginatedList<OnovaStore.Models.Brand.BrandProducts>
 @{
     Layout = "_Layout";
-    ViewBag.Title = "Search Product";
-    var list = Model;
+    BrandInfo brand = ViewBag.BrandInfo;
+    ViewBag.Title = brand.name;
     var imgUrl = "http://res.cloudinary.com/vinhloc1996/image/upload/";
 }
-
-@if (list != null)
+@if (Model != null)
 {
     <!-- Products -->
     <div class="container">
+        <!-- Banner -->
+        <div class="g-bg-size-cover g-bg-pos-center g-py-40 g-mt-50" style="background-image: url(@(imgUrl + brand.brandImage));">
+        </div>
+        <!-- End Banner -->
         <!-- Filters -->
         <div class="d-flex justify-content-end align-items-center g-brd-bottom g-brd-gray-light-v4 g-pt-40 g-pb-20">
-            <!-- Sort By -->
+            <!-- Show -->
             <div class="g-mr-60">
-                <h2 class="h6 align-middle d-inline-block g-font-weight-400 text-uppercase g-pos-rel g-top-1 mb-0">Sort by:</h2>
+                <h2 class="h6 align-middle d-inline-block g-font-weight-400 text-uppercase g-pos-rel g-top-1 mb-0">Show:</h2>
                 <!-- Secondary Button -->
-                <div class="d-inline-block btn-group g-line-height-1_2">
+                <div class="d-inline-block btn-group">
                     <button type="button" class="btn btn-secondary dropdown-toggle h6 align-middle g-brd-none g-color-gray-dark-v5 g-color-black--hover g-bg-transparent text-uppercase g-font-weight-300 g-font-size-12 g-pa-0 g-pl-10 g-ma-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         @ViewData["DisplayOrder"].ToString()
                     </button>
                     <div class="dropdown-menu rounded-0">
-                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-action="SearchProduct" asp-route-sortOrder="name" asp-route-keyword="@ViewData["KeyWord"].ToString()">Name A-Z</a>
-                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-action="SearchProduct" asp-route-sortOrder="name_desc" asp-route-keyword="@ViewData["KeyWord"].ToString()">Name Z-A</a>
-                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-action="SearchProduct" asp-route-sortOrder="price" asp-route-keyword="@ViewData["KeyWord"].ToString()">Price low to high</a>
-                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-action="SearchProduct" asp-route-sortOrder="price_desc" asp-route-keyword="@ViewData["KeyWord"].ToString()">Price high to low</a>
+                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-route="ViewBrand" asp-route-sortOrder="name" asp-route-slug="@ViewData["Slug"].ToString()">Name A-Z</a>
+                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-route="ViewBrand" asp-route-sortOrder="name_desc" asp-route-slug="@ViewData["Slug"].ToString()">Name Z-A</a>
+                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-route="ViewBrand" asp-route-sortOrder="price" asp-route-slug="@ViewData["Slug"].ToString()">Price low to high</a>
+                        <a class="dropdown-item g-color-gray-dark-v4 g-font-weight-300" asp-route="ViewBrand" asp-route-sortOrder="price_desc" asp-route-slug="@ViewData["Slug"].ToString()">Price high to low</a>
                     </div>
                 </div>
                 <!-- End Secondary Button -->
@@ -85,7 +89,7 @@
         </div>
         <!-- End Products -->
         <hr class="g-mb-60">
-
+        <!-- Pagination -->
         <!-- Pagination -->
         <nav class="g-mb-100" aria-label="Page Navigation">
             <ul class="list-inline mb-0">
@@ -94,11 +98,11 @@
                     <li class="list-inline-item hidden-down">
                         @if (i == Model.PageIndex)
                         {
-                            <a class="active u-pagination-v1__item g-width-30 g-height-30 g-brd-gray-light-v3 g-brd-primary--active g-color-white g-bg-primary--active g-font-size-12 rounded-circle g-pa-5" asp-action="SearchProduct" asp-route-keyword="@ViewData["KeyWord"].ToString()" asp-route-page="@i" asp-route-sortOrder="@ViewData["SortOrder"].ToString()">@i</a>
+                            <a class="active u-pagination-v1__item g-width-30 g-height-30 g-brd-gray-light-v3 g-brd-primary--active g-color-white g-bg-primary--active g-font-size-12 rounded-circle g-pa-5" asp-action="List" asp-route-slug="@ViewData["Slug"].ToString()" asp-route-page="@i" asp-route-sortOrder="@ViewData["SortOrder"].ToString()">@i</a>
                         }
                         else
                         {
-                            <a class="u-pagination-v1__item g-width-30 g-height-30 g-color-gray-dark-v5 g-color-primary--hover g-font-size-12 rounded-circle g-pa-5" asp-action="SearchProduct" asp-route-keyword="@ViewData["KeyWord"].ToString()" asp-route-page="@i" asp-route-sortOrder="@ViewData["SortOrder"].ToString()">@i</a>
+                            <a class="u-pagination-v1__item g-width-30 g-height-30 g-color-gray-dark-v5 g-color-primary--hover g-font-size-12 rounded-circle g-pa-5" asp-action="List" asp-route-slug="@ViewData["Slug"].ToString()" asp-route-page="@i" asp-route-sortOrder="@ViewData["SortOrder"].ToString()">@i</a>
                         }
 
                     </li>
@@ -113,6 +117,7 @@
         <!-- End Pagination -->
     </div>
     <!-- End Products -->
+
 }
 else
 {
@@ -121,9 +126,9 @@ else
             <span class="d-block g-color-gray-light-v1 g-font-size-70 g-font-size-90--md mb-4">
                 <i class="icon-hotel-restaurant-105 u-line-icon-pro"></i>
             </span>
-            <h2 class="g-mb-30">Search product with keyword "@ViewData["KeyWord"].ToString()" not found</h2>
+            <h2 class="g-mb-30">Currently, There are no products in this brand</h2>
             <p>
-                Please check your keyword again!
+                Please go back!
             </p>
         </div>
         <a class="btn u-btn-primary g-font-size-12 text-uppercase g-py-12 g-px-25" href="@Url.Action("Index", "Home")">Back to home</a>

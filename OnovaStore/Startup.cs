@@ -149,13 +149,13 @@ namespace OnovaStore
                 routes.MapRoute(
                     name: "ViewCategory",
                     template: "category/{slug}",
-                    defaults: new { controller = "Category", action = "Detail" }
+                    defaults: new { controller = "Category", action = "List" }
                 );
 
                 routes.MapRoute(
                     name: "ViewBrand",
                     template: "brand/{slug}",
-                    defaults: new { controller = "Brand", action = "Detail" }
+                    defaults: new { controller = "Brand", action = "List" }
                 );
             });
         }

@@ -38,19 +38,35 @@ namespace OnovaApi.Controllers
 
         [HttpGet]
         [Route("SearchProduct")]
-        public IActionResult SearchProduct([FromQuery] string keyword)
+        public IActionResult SearchProduct([FromQuery] string keyword, [FromQuery] string sortOrder)
         {
             var product = _context.Product.Where(c => EF.Functions.Like(c.Name, "%" + keyword +"%") && c.IsHide != true).Select(c => new
             {
                 c.ProductId,
                 c.ProductThumbImage,
                 c.ProductStatus.StatusCode,
-                BrandName = c.Brand.Name,
                 CategoryName = c.Category.Name,
                 c.Name,
                 c.DisplayPrice,
-                c.Slug
-            }).ToList();
+                c.Slug,
+                CategorySlug = c.Category.Slug
+            });
+
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    product = product.OrderByDescending(c => c.Name);
+                    break;
+                case "price":
+                    product = product.OrderBy(c => c.DisplayPrice);
+                    break;
+                case "price_desc":
+                    product = product.OrderByDescending(c => c.DisplayPrice);
+                    break;
+                default:
+                    product = product.OrderBy(c => c.Name);
+                    break;
+            }
 
             if (!product.Any())
             {
@@ -64,8 +80,8 @@ namespace OnovaApi.Controllers
             return Json(new
             {
                 Status = "Success",
-                Message = "Product detail",
-                ProductDetail = product
+                Message = "Product search result",
+                products = product.ToList()
             });
         }
 
@@ -85,6 +101,8 @@ namespace OnovaApi.Controllers
                 c.ProductStatus.StatusCode,
                 BrandName = c.Brand.Name,
                 CategoryName = c.Category.Name,
+                BrandSlug = c.Brand.Slug,
+                CategorySlug = c.Category.Slug,
                 c.Name,
                 c.DisplayPrice,
                 c.Slug,

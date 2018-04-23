@@ -232,31 +232,7 @@
                     @Html.Partial("_Cart")
                     <!-- End Basket -->
                     <!-- Search -->
-                    <div class="d-inline-block g-valign-middle">
-                        <div class="g-py-10 g-pl-15">
-                            <a href="#!" class="g-color-black g-color-primary--hover g-font-size-17 g-text-underline--none--hover"
-                               aria-haspopup="true"
-                               aria-expanded="false"
-                               aria-controls="searchform-1"
-                               data-dropdown-target="#searchform-1"
-                               data-dropdown-type="css-animation"
-                               data-dropdown-duration="300"
-                               data-dropdown-animation-in="fadeInUp"
-                               data-dropdown-animation-out="fadeOutDown">
-                                <i class="g-pos-rel g-top-3 icon-education-045 u-line-icon-pro"></i>
-                            </a>
-                        </div>
-                        <!-- Search Form -->
-                        <form id="searchform-1" class="u-searchform-v1 u-dropdown--css-animation u-dropdown--hidden u-shadow-v20 g-max-width-400 g-brd-around g-brd-gray-light-v4 g-bg-white g-right-0 rounded g-pa-10">
-                            <div class="input-group">
-                                <input class="form-control g-font-size-13" type="search" placeholder="Search Here...">
-                                <div class="input-group-btn p-0">
-                                    <button class="btn u-btn-primary g-font-size-12 text-uppercase g-py-15 g-px-15" type="submit">Go</button>
-                                </div>
-                            </div>
-                        </form>
-                        <!-- End Search Form -->
-                    </div>
+                    @Html.Partial("_Search")
                     <!-- End Search -->
                 </div>
             </div>

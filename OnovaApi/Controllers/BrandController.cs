@@ -134,27 +134,99 @@ namespace OnovaApi.Controllers
         [HttpGet]
         [Route("GetProductsForBrand")]
         [AllowAnonymous]
-        public IActionResult GetProductsForBrand([FromQuery] int id)
+        public IActionResult GetProductsForBrand([FromQuery] int id, [FromQuery] string sortOrder)
         {
-            var brand = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
-            {
-                c.BrandId,
-                c.BrandImage,
-                c.Name,
-                TotalProduct = c.Product.Count,
-                c.Slug,
-                Products = c.Product.Where(p => p.IsHide != true).Select(p => new
-                {
-                    p.ProductId,
-                    p.DisplayPrice,
-                    p.Name,
-                    p.Slug,
-                    p.ProductThumbImage,
-                    CategoryName = p.Category.Name
-                })
-            }).ToList();
+            var brands = new object();
 
-            if (!brand.Any())
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    brands = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.BrandId,
+                        c.BrandImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            CategoryName = p.Category.Name,
+                            CategorySlug = p.Category.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderByDescending(p => p.Name).ToList()
+                    }).FirstOrDefault();
+                    break;
+                case "price":
+                    brands = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.BrandId,
+                        c.BrandImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            CategoryName = p.Category.Name,
+                            CategorySlug = p.Category.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderBy(p => p.DisplayPrice).ToList()
+                    }).FirstOrDefault();
+                    break;
+                case "price_desc":
+                    brands = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.BrandId,
+                        c.BrandImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            CategoryName = p.Category.Name,
+                            CategorySlug = p.Category.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderByDescending(p => p.DisplayPrice).ToList()
+                    }).FirstOrDefault();
+                    break;
+                default:
+                    brands = _context.Brand.Where(c => c.BrandId == id && c.IsHide != true).Select(c => new
+                    {
+                        c.BrandId,
+                        c.BrandImage,
+                        c.Name,
+                        TotalProduct = c.Product.Count,
+                        c.Slug,
+                        Products = c.Product.Where(p => p.IsHide != true).Select(p => new
+                        {
+                            p.ProductId,
+                            p.DisplayPrice,
+                            p.Name,
+                            p.Slug,
+                            p.ProductThumbImage,
+                            CategoryName = p.Category.Name,
+                            CategorySlug = p.Category.Slug,
+                            p.ProductStatus.StatusCode
+                        }).OrderBy(p => p.Name).ToList()
+                    }).FirstOrDefault();
+                    break;
+            }
+
+            if (brands == null)
             {
                 return Json(new
                 {
@@ -167,7 +239,7 @@ namespace OnovaApi.Controllers
             {
                 Status = "Success",
                 Message = "Brand products",
-                brand
+                brands
             });
         }
 
