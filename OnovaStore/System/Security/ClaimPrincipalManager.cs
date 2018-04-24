@@ -75,7 +75,7 @@ namespace System.Security.Claims
             get
             {
                 return User.Identities.FirstOrDefault(u => u.IsAuthenticated)
-                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.Email)?.Value;
+                    ?.FindFirst(c => c.Type == JwtRegisteredClaimNames.Email || c.Type == ClaimTypes.Email)?.Value;
             }
         }
 

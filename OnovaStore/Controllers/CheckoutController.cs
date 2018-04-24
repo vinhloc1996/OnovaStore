@@ -29,16 +29,16 @@ namespace OnovaStore.Controllers
         }
 
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string error)
         {
             if (_claimPrincipalManager.IsAuthenticated)
             {
                 using (var client = _restClient.CreateClient(User))
                 {
-                    using (var response = await client.GetAsync("/api/customercart/GetCustomerCarts?customerId=" + _claimPrincipalManager.Id))
+                    using (var response = await client.GetAsync("/api/customercart/GetCustomerCarts?customerId=" + _claimPrincipalManager.Id + "&error=" + error))
                     {
                         dynamic result = response.StatusCode == HttpStatusCode.OK
-                            ? JsonConvert.DeserializeObject<List<dynamic>>(await response.Content.ReadAsStringAsync())
+                            ? JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync())
                             : null;
 
                         return View(result);
@@ -58,7 +58,7 @@ namespace OnovaStore.Controllers
                     using (var response = await client.GetAsync("/api/anonymouscustomercart/GetAnonymousCustomerCarts?customerId=" + customerId))
                     {
                         dynamic result = response.StatusCode == HttpStatusCode.OK
-                            ? JsonConvert.DeserializeObject<List<dynamic>>(await response.Content.ReadAsStringAsync())
+                            ? JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync())
                             : null;
 
                         return View(result);
@@ -118,14 +118,14 @@ namespace OnovaStore.Controllers
                                 return View("Success", result.orderCode.ToString());
                             }
 
-                            return View("Index");
+                            return RedirectToAction("Index", "Checkout", new {error = result.message.ToString() });
                         }
                     }
                 }
 
                 if (string.IsNullOrEmpty(anonymousId))
                 {
-                    return View("Index");
+                    return RedirectToAction("Index", "Checkout", new { error = "Invalid customer id" });
                 }
 
                 var anonymousOrder = new Order
@@ -157,7 +157,7 @@ namespace OnovaStore.Controllers
                             return View("Success", result.orderCode.ToString());
                         }
 
-                        return View("Index");
+                        return RedirectToAction("Index", "Checkout", new { error = result.message.ToString() });
                     }
                 }
             }

@@ -32,15 +32,15 @@ namespace OnovaApi.Data
                 });
             }
 
-            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "OpenReserve") == null)
-            {
-                context.ProductStatus.Add(new ProductStatus
-                {
-                    StatusCode = "OpenReserve",
-                    StatusDescription = "Product Open for Reserving",
-                    StatusName = "Open Reserve"
-                });
-            }
+//            if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "OpenReserve") == null)
+//            {
+//                context.ProductStatus.Add(new ProductStatus
+//                {
+//                    StatusCode = "OpenReserve",
+//                    StatusDescription = "Product Open for Reserving",
+//                    StatusName = "Open Reserve"
+//                });
+//            }
 
             if (await context.ProductStatus.FirstOrDefaultAsync(p => p.StatusCode == "StopSelling") == null)
             {

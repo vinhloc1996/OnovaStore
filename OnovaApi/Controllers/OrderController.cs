@@ -137,44 +137,187 @@ namespace OnovaApi.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var cart = _context.CustomerCart.Find(orderDto.CartId);
-                var shippingInfo = _context.ShippingInfo.Where(c => c.CustomerId == orderDto.CartId).FirstOrDefault(c => c.IsDefault);
+                var shippingInfo = _context.ShippingInfo.Where(c => c.CustomerId == orderDto.CartId)
+                    .FirstOrDefault(c => c.IsDefault);
                 var email = _context.Users.Find(orderDto.CartId).Email;
-                var currentCustomerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
-                    ?.FindFirst(
-                        c => c.Type == JwtRegisteredClaimNames.Email || c.Type == ClaimTypes.Email)
-                    ?.Value;
+//                var currentCustomerId = User.Identities.FirstOrDefault(u => u.IsAuthenticated)
+//                    ?.FindFirst(
+//                        c => c.Type == JwtRegisteredClaimNames.Email || c.Type == ClaimTypes.Email)
+//                    ?.Value;
 
                 if (cart != null)
                 {
+                    var cartItems = _context.CustomerCartDetail.Where(c => c.CustomerCartId == orderDto.CartId)
+                        .ToList();
+
+                    using (var transaction = await _context.Database.BeginTransactionAsync())
+                    {
+                        foreach (var item in cartItems)
+                        {
+                            var product = _context.Product.Find(item.ProductId);
+                            if (item.Quantity > product.CurrentQuantity)
+                            {
+                                return Json(new
+                                {
+                                    Status = "Failed",
+                                    Message = "Current product quantity is less than quantity in cart"
+                                });
+                            }
+                        }
+
+
+                        var order = new Order
+                        {
+                            CartId = orderDto.CartId,
+                            DisplayPrice = orderDto.TotalPrice,
+                            ShippingFee = cart.DisplayPrice > 1000 ? 0 : 30,
+                            AddressLine1 = shippingInfo.AddressLine1,
+                            AddressLine2 = shippingInfo.AddressLine2,
+                            City = shippingInfo.City,
+                            OrderDate = DateTime.Now,
+                            EstimateShippingDate = DateTime.Now.AddDays(3),
+                            FullName = shippingInfo.FullName,
+                            InvoiceTokenId = orderDto.TokenId,
+                            OrderTrackingNumber = Extensions.GenerateString(),
+                            OrderStatusId = 1,
+                            PaymentTokenId = orderDto.TokenId,
+                            Zip = shippingInfo.Zip,
+                            Tax = cart.Tax,
+                            Phone = shippingInfo.Phone,
+                            TotalPrice = cart.TotalPrice,
+                            TotalQuantity = cart.TotalQuantity,
+                            PaymentStatus = "Paid",
+                            PriceDiscount = cart.PriceDiscount,
+                            PromotionId = cart.PromotionId
+                        };
+
+                        _context.Order.Add(order);
+                        await _context.SaveChangesAsync();
+
+                        var orderItems = new List<OrderDetail>();
+
+                        foreach (var item in cartItems)
+                        {
+                            orderItems.Add(new OrderDetail
+                            {
+                                ProductId = item.ProductId,
+                                DisplayPrice = item.DisplayPrice,
+                                OrderId = order.OrderId,
+                                Price = item.Price,
+                                PriceDiscount = item.PriceDiscount,
+                                PromotionId = item.PromotionId,
+                                Quantity = item.Quantity
+                            });
+
+                            var product = _context.Product.Find(item.ProductId);
+                            product.CurrentQuantity = product.CurrentQuantity - item.Quantity.GetValueOrDefault();
+                            _context.Product.Update(product);
+                        }
+
+                        _context.OrderDetail.AddRange(orderItems);
+                        await _context.SaveChangesAsync();
+
+                        _context.CustomerCartDetail.RemoveRange(cartItems);
+
+                        if (await _context.SaveChangesAsync() > 0)
+                        {
+                            _context.CustomerCart.Remove(cart);
+
+                            if (await _context.SaveChangesAsync() > 0)
+                            {
+                                _context.CustomerCart.Add(new CustomerCart
+                                {
+                                    CustomerCartId = orderDto.CartId,
+                                    CreateDate = DateTime.Now
+                                });
+
+                                if (await _context.SaveChangesAsync() > 0)
+                                {
+                                    transaction.Commit();
+                                    var tax = cart.Tax * (cart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
+
+                                    await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber,
+                                        cart.DisplayPrice,
+                                        order.PriceDiscount, order.ShippingFee, tax, order.TotalPrice, order.FullName,
+                                        order.Phone, order.AddressLine1, order.City, order.Zip, email);
+
+                                    return Json(new
+                                    {
+                                        Status = "Success",
+                                        Message = "Order successful",
+                                        OrderCode = order.OrderTrackingNumber
+                                    });
+                                }
+                            }
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Cannot add order"
+                        });
+                    }
+                }
+
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Cannot find cart"
+                });
+            }
+
+            var anonymousCart = _context.AnonymousCustomerCart.Find(orderDto.CartId);
+
+            if (anonymousCart != null)
+            {
+                var cartItems = _context.AnonymousCustomerCartDetail
+                    .Where(c => c.AnonymousCustomerCartId == orderDto.CartId).ToList();
+
+                using (var transaction = await _context.Database.BeginTransactionAsync())
+                {
+                    foreach (var item in cartItems)
+                    {
+                        var product = _context.Product.Find(item.ProductId);
+                        if (item.Quantity > product.CurrentQuantity)
+                        {
+                            return Json(new
+                            {
+                                Status = "Failed",
+                                Message = "Current product quantity is less than quantity in cart"
+                            });
+                        }
+                    }
+
+
                     var order = new Order
                     {
                         CartId = orderDto.CartId,
                         DisplayPrice = orderDto.TotalPrice,
-                        ShippingFee = cart.DisplayPrice > 1000 ? 0 : 30,
-                        AddressLine1 = shippingInfo.AddressLine1,
-                        AddressLine2 = shippingInfo.AddressLine2,
-                        City = shippingInfo.City,
+                        ShippingFee = anonymousCart.DisplayPrice > 1000 ? 0 : 30,
+                        AddressLine1 = orderDto.AddressLine1,
+                        AddressLine2 = orderDto.AddressLine2,
+                        City = orderDto.City,
                         OrderDate = DateTime.Now,
                         EstimateShippingDate = DateTime.Now.AddDays(3),
-                        FullName = shippingInfo.FullName,
+                        FullName = orderDto.FullName,
                         InvoiceTokenId = orderDto.TokenId,
                         OrderTrackingNumber = Extensions.GenerateString(),
                         OrderStatusId = 1,
                         PaymentTokenId = orderDto.TokenId,
-                        Zip = shippingInfo.Zip,
-                        Tax = cart.Tax,
-                        Phone = shippingInfo.Phone,
-                        TotalPrice = cart.TotalPrice,
-                        TotalQuantity = cart.TotalQuantity,
+                        Zip = orderDto.Zip,
+                        Tax = anonymousCart.Tax,
+                        Phone = orderDto.Phone,
+                        TotalPrice = anonymousCart.TotalPrice,
+                        TotalQuantity = anonymousCart.TotalQuantity,
                         PaymentStatus = "Paid",
-                        PriceDiscount = cart.PriceDiscount,
-                        PromotionId = cart.PromotionId
+                        PriceDiscount = anonymousCart.PriceDiscount,
+                        PromotionId = anonymousCart.PromotionId
                     };
 
                     _context.Order.Add(order);
                     await _context.SaveChangesAsync();
 
-                    var cartItems = _context.CustomerCartDetail.Where(c => c.CustomerCartId == orderDto.CartId).ToList();
+
                     var orderItems = new List<OrderDetail>();
 
                     foreach (var item in cartItems)
@@ -189,32 +332,39 @@ namespace OnovaApi.Controllers
                             PromotionId = item.PromotionId,
                             Quantity = item.Quantity
                         });
+
+                        var product = _context.Product.Find(item.ProductId);
+                        product.CurrentQuantity = product.CurrentQuantity - item.Quantity.GetValueOrDefault();
+                        _context.Product.Update(product);
                     }
 
                     _context.OrderDetail.AddRange(orderItems);
                     await _context.SaveChangesAsync();
 
-                    _context.CustomerCartDetail.RemoveRange(cartItems);
+                    _context.AnonymousCustomerCartDetail.RemoveRange(cartItems);
 
                     if (await _context.SaveChangesAsync() > 0)
                     {
-                        _context.CustomerCart.Remove(cart);
+                        _context.AnonymousCustomerCart.Remove(anonymousCart);
 
                         if (await _context.SaveChangesAsync() > 0)
                         {
-                            _context.CustomerCart.Add(new CustomerCart
+                            _context.AnonymousCustomerCart.Add(new AnonymousCustomerCart
                             {
-                                CustomerCartId = orderDto.CartId,
+                                AnonymousCustomerCartId = orderDto.CartId,
                                 CreateDate = DateTime.Now
                             });
-                            
+
                             if (await _context.SaveChangesAsync() > 0)
                             {
-                                var tax = cart.Tax * (cart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
-                                
-                                await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber, cart.DisplayPrice,
+                                transaction.Commit();
+                                var tax = anonymousCart.Tax *
+                                          (anonymousCart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
+
+                                await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber,
+                                    anonymousCart.DisplayPrice,
                                     order.PriceDiscount, order.ShippingFee, tax, order.TotalPrice, order.FullName,
-                                    order.Phone, order.AddressLine1, order.City, order.Zip, email);
+                                    order.Phone, order.AddressLine1, order.City, order.Zip, orderDto.Email);
 
                                 return Json(new
                                 {
@@ -223,103 +373,6 @@ namespace OnovaApi.Controllers
                                     OrderCode = order.OrderTrackingNumber
                                 });
                             }
-                        }
-                    }
-
-                    return Json(new
-                    {
-                        Status = "Failed",
-                        Message = "Cannot add order"
-                    });
-                }
-
-                return Json(new
-                {
-                    Status = "Failed",
-                    Message = "Cannot find cart"
-                });
-            }
-
-            var anonymousCart = _context.AnonymousCustomerCart.Find(orderDto.CartId);
-
-            if (anonymousCart != null)
-            {
-                var order = new Order
-                {
-                    CartId = orderDto.CartId,
-                    DisplayPrice = orderDto.TotalPrice,
-                    ShippingFee = anonymousCart.DisplayPrice > 1000 ? 0 : 30,
-                    AddressLine1 = orderDto.AddressLine1,
-                    AddressLine2 = orderDto.AddressLine2,
-                    City = orderDto.City,
-                    OrderDate = DateTime.Now,
-                    EstimateShippingDate = DateTime.Now.AddDays(3),
-                    FullName = orderDto.FullName,
-                    InvoiceTokenId = orderDto.TokenId,
-                    OrderTrackingNumber = Extensions.GenerateString(),
-                    OrderStatusId = 1,
-                    PaymentTokenId = orderDto.TokenId,
-                    Zip = orderDto.Zip,
-                    Tax = anonymousCart.Tax,
-                    Phone = orderDto.Phone,
-                    TotalPrice = anonymousCart.TotalPrice,
-                    TotalQuantity = anonymousCart.TotalQuantity,
-                    PaymentStatus = "Paid",
-                    PriceDiscount = anonymousCart.PriceDiscount,
-                    PromotionId = anonymousCart.PromotionId
-                };
-
-                _context.Order.Add(order);
-                await _context.SaveChangesAsync();
-
-                var cartItems = _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == orderDto.CartId).ToList();
-                var orderItems = new List<OrderDetail>();
-
-                foreach (var item in cartItems)
-                {
-                    orderItems.Add(new OrderDetail
-                    {
-                        ProductId = item.ProductId,
-                        DisplayPrice = item.DisplayPrice,
-                        OrderId = order.OrderId,
-                        Price = item.Price,
-                        PriceDiscount = item.PriceDiscount,
-                        PromotionId = item.PromotionId,
-                        Quantity = item.Quantity
-                    });
-                }
-
-                _context.OrderDetail.AddRange(orderItems);
-                await _context.SaveChangesAsync();
-
-                _context.AnonymousCustomerCartDetail.RemoveRange(cartItems);
-
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    _context.AnonymousCustomerCart.Remove(anonymousCart);
-
-                    if (await _context.SaveChangesAsync() > 0)
-                    {
-                        _context.AnonymousCustomerCart.Add(new AnonymousCustomerCart
-                        {
-                            AnonymousCustomerCartId = orderDto.CartId,
-                            CreateDate = DateTime.Now
-                        });
-
-                        if (await _context.SaveChangesAsync() > 0)
-                        {
-                            var tax = anonymousCart.Tax * (anonymousCart.DisplayPrice + order.ShippingFee - order.PriceDiscount);
-
-                            await _emailSender.SendEmailOrderSuccessfulAsync(order.OrderTrackingNumber, anonymousCart.DisplayPrice,
-                                order.PriceDiscount, order.ShippingFee, tax, order.TotalPrice, order.FullName,
-                                order.Phone, order.AddressLine1, order.City, order.Zip, orderDto.Email);
-
-                            return Json(new
-                            {
-                                Status = "Success",
-                                Message = "Order successful",
-                                OrderCode = order.OrderTrackingNumber
-                            });
                         }
                     }
                 }

@@ -24,7 +24,7 @@ namespace OnovaApi.Controllers
         // GET: api/CustomerCart
         [HttpGet]
         [Route("GetCustomerCarts")]
-        public IActionResult GetCustomerCarts([FromQuery] string customerId)
+        public IActionResult GetCustomerCarts([FromQuery] string customerId, [FromQuery] string error)
         {
             var cart = _context.CustomerCart.Where(c => c.CustomerCartId == customerId).Select(c => new
             {
@@ -58,7 +58,11 @@ namespace OnovaApi.Controllers
                 customerType = "customer"
             }).ToList();
 
-            return Json(cart);
+            return Json(new
+            {
+                Error = error,
+                cart
+            });
         }
 
         // GET: api/CustomerCart/5

@@ -35,7 +35,7 @@ namespace OnovaStore
         {
             var value = Configuration.GetSection("JwtTokenValidationSettings:SecretKey").Value;
             var key = Encoding.UTF8.GetBytes(value);
-
+            services.AddCors();
             // Setup REST client
             services.Configure<RestClientSettings>(Configuration.GetSection(nameof(RestClientSettings)));
             services.AddTransient<IRestClient, RestClientFactory>();
@@ -128,6 +128,7 @@ namespace OnovaStore
 
             app.UseStaticFiles();
             app.UseSession();
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

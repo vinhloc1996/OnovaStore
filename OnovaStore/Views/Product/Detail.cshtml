@@ -1,5 +1,7 @@
 ﻿@using System.Collections.Specialized
+@using Microsoft.CodeAnalysis.CSharp.Syntax
 @model dynamic
+@inject System.Security.Claims.IClaimPrincipalManager claimManager
 @{
     Layout = "_Layout";
     ViewBag.Title = Model.name;
@@ -66,23 +68,48 @@
                 <div class="g-mb-30">
                     <h2 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-12 text-uppercase mb-2">Price</h2>
                     <span class="g-color-black g-font-weight-500 g-font-size-30 mr-2">$@Model.displayPrice</span>
-@*                    <s class="g-color-gray-dark-v4 g-font-weight-500 g-font-size-16">$101.00</s>*@
+                    @*                    <s class="g-color-gray-dark-v4 g-font-weight-500 g-font-size-16">$101.00</s>*@
                 </div>
                 <!-- End Price -->
                 <!-- Quantity -->
-                <div class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30" role="tab">
-                    <h5 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-default mb-0">Quantity</h5>
-                    <div class="input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
-                        <input class="form-control text-center g-font-size-13 rounded-0" id="productQuantity" type="number" value="1" min="1">
+
+                @if (Model.statusCode == "Available")
+                {
+                    <div class="d-flex justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30" role="tab">
+                        <h5 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-default mb-0">Quantity</h5>
+                        <div class="input-group u-quantity-v1 g-width-80 g-brd-primary--focus">
+                            <input class="form-control text-center g-font-size-13 rounded-0" id="productQuantity" type="number" value="1" min="1">
+                        </div>
                     </div>
-                </div>
+                }
+                else if (Model.statusCode == "SoldOut" || Model.statusCode == "StopSelling")
+                {
+                    <div class="justify-content-between align-items-center g-brd-bottom g-brd-gray-light-v3 py-3 g-mb-30" role="tab">
+                        <h5 class="g-color-gray-dark-v5 g-font-weight-400 g-font-size-default mb-0">Enter your email to get the email notification when product available</h5>
+                        <br/>
+                        <div class="form-group u-quantity-v1 g-width-auto g-brd-primary--focus">
+                            <input class="form-control form-control-md rounded-0" value="@(claimManager.IsAuthenticated ? claimManager.UserName : "")" id="emailNotification" autofocus placeholder="Enter your email" type="email">
+                            <small id="message" hidden class="form-text text-success g-font-size-default g-mt-10">You will get email notification when product available.</small>
+                        </div>
+                    </div>
+                }
+
                 <!-- End Quantity -->
                 <!-- Buttons -->
                 <div class="row g-mx-minus-5 g-mb-20">
                     <div class="col g-px-5 g-mb-10">
-                        <button class="btn btn-block u-btn-primary g-font-size-12 text-uppercase g-py-15 g-px-25" onclick="addToCartCustom(@Model.productId)" type="button">
-                            Add to Cart <i class="align-middle ml-2 icon-finance-100 u-line-icon-pro"></i>
-                        </button>
+                        @if (Model.statusCode == "Available")
+                        {
+                            <button class="btn btn-block u-btn-primary g-font-size-12 text-uppercase g-py-15 g-px-25" onclick="addToCartCustom(@Model.productId)" type="button">
+                                Add to Cart <i class="align-middle ml-2 icon-finance-100 u-line-icon-pro"></i>
+                            </button>
+                        }
+                        else if (Model.statusCode == "SoldOut" || Model.statusCode == "StopSelling")
+                        {
+                            <button class="btn btn-block u-btn-primary g-font-size-12 text-uppercase g-py-15 g-px-25" onclick="emailProductNotify(@Model.productId);" type="button">
+                                Get Notify <i class="align-middle ml-2 icon-education-166 u-line-icon-pro"></i>
+                            </button>
+                        }
                     </div>
                 </div>
                 <!-- End Buttons -->
@@ -114,11 +141,15 @@
                         <ul class="list-unstyled g-color-text">
                             <li class="g-brd-bottom--dashed g-brd-gray-light-v3 pt-1 mb-3">
                                 <span>Brand Name:</span>
-                                <span class="float-right g-color-black"><a href="@Model.brandSlug">@Model.brandName</a></span>
+                                <span class="float-right g-color-black">
+                                    <a href="@Model.brandSlug">@Model.brandName</a>
+                                </span>
                             </li>
                             <li class="g-brd-bottom--dashed g-brd-gray-light-v3 pt-1 mb-3">
                                 <span>Category Name:</span>
-                                <span class="float-right g-color-black"><a href="@Model.categorySlug">@Model.categoryName</a></span>
+                                <span class="float-right g-color-black">
+                                    <a href="@Model.categorySlug">@Model.categoryName</a>
+                                </span>
                             </li>
                         </ul>
                         <!-- End List -->
@@ -132,14 +163,40 @@
 <!-- End Description & Review -->
 
 @section Scripts
-    {
+{
     <script src="~/html/assets/js/components/hs.tabs.js"></script>
     <script src="~/html/assets/js/helpers/hs.rating.js"></script>
-       
+
     <script type="text/javascript">
-        function addToCartCustom (id) {
+        function addToCartCustom(id) {
             addToCart(id, $('#productQuantity').val());
         }
+
+        function emailProductNotify(id) {
+            var email = $('#emailNotification').val().trim();
+
+            if (email) {
+                $.ajax({
+                    url: 'http://localhost:5000/' + 'api/product/EmailNotificaion?id=' + id + '&email=' + email,
+                    type: "get",
+                    beforeSend: function (request) {
+                        request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                    },
+                    success: function(val) {
+
+                        if (val.status == 'Success') {
+                            $('#message').removeAttr('hidden');
+                        } else {
+                            $('#message').text(val.message);
+                            if ($('#message').hasClass('text-success')) {
+                                $('#message').removeClass('text-success');
+                                $('#message').addClass('text-danger');
+                            }
+                            $('#message').removeAttr('hidden');
+                        }
+                    }
+                });
+            }
+        }
     </script>
-    
 }

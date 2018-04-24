@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -99,6 +100,7 @@ namespace OnovaApi.Controllers
                 }),
                 c.ProductThumbImage,
                 c.ProductStatus.StatusCode,
+                c.ProductStatus.StatusName,
                 BrandName = c.Brand.Name,
                 CategoryName = c.Category.Name,
                 BrandSlug = c.Brand.Slug,
@@ -238,6 +240,74 @@ namespace OnovaApi.Controllers
             return products;
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("EmailNotificaion")]
+        public async Task<IActionResult> EmailNotificaion([FromQuery]string email, [FromQuery]int id)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Invalid email"
+                });
+            }
+
+            var product = _context.Product.Find(id);
+
+            if (product != null)
+            {
+                var productStatus = _context.Product.Where(p => p.ProductId == product.ProductId)
+                    .Select(p => p.ProductStatus.StatusCode).AsNoTracking().ToList();
+                if (productStatus[0] == "SoldOut" || productStatus[0] == "StopSelling")
+                {
+                    var notify = _context.ProductNotification.Find(id, email);
+                    if (notify == null)
+                    {
+                        _context.ProductNotification.Add(new ProductNotification
+                        {
+                            ProductId = id,
+                            Email = email.Trim()
+                        });
+
+                        if (await _context.SaveChangesAsync() > 0)
+                        {
+                            return Json(new
+                            {
+                                Status = "Success",
+                                Message = "Your email has been added to system"
+                            });
+                        }
+
+                        return Json(new
+                        {
+                            Status = "Failed",
+                            Message = "Cannot add your email to the system"
+                        });
+                    }
+
+                    return Json(new
+                    {
+                        Status = "Success",
+                        Message = "Your email already in the system, you will get notity as soon as product available"
+                    });
+                }
+
+                return Json(new
+                {
+                    Status = "Failed",
+                    Message = "Your email has been added to system"
+                });
+            }
+
+            return Json(new
+            {
+                Status = "Failed",
+                Message = "The product id is invalid"
+            });
+        }
+
         // PUT: api/Product/5
         [HttpPut]
         public async Task<IActionResult> PutProduct([FromBody] Product product)
@@ -254,7 +324,7 @@ namespace OnovaApi.Controllers
                 if (_context.ProductStatus.Find(oldProduct.ProductStatusId).StatusCode.ToLower() == "soldout")
                 {
                     var newStatus = _context.ProductStatus.Find(product.ProductStatusId).StatusCode.ToLower();
-                    if (newStatus == "available" || newStatus == "openreserve")
+                    if (newStatus == "available")
                     {
                         if (oldProduct.CurrentQuantity < product.CurrentQuantity)
                         {
@@ -276,9 +346,12 @@ namespace OnovaApi.Controllers
 
                                 if (result.StatusCode == HttpStatusCode.Accepted)
                                 {
-                                    await _context.ProductNotification
-                                        .Where(x => x.ProductId == oldProduct.ProductId)
-                                        .ForEachAsync(x => x.NotifyStatus = true);
+//                                    await _context.ProductNotification
+//                                        .Where(x => x.ProductId == oldProduct.ProductId)
+//                                        .ForEachAsync(x => x.NotifyStatus = true);
+
+                                    _context.ProductNotification.RemoveRange(productNotifyList);
+                                    await _context.SaveChangesAsync();
                                 }
                             }
                         }    

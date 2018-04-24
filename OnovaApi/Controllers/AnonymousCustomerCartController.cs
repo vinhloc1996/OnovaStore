@@ -49,7 +49,7 @@ namespace OnovaApi.Controllers
 
         [HttpGet]
         [Route("GetAnonymousCustomerCarts")]
-        public IActionResult GetAnonymousCustomerCarts([FromQuery]string customerId)
+        public IActionResult GetAnonymousCustomerCarts([FromQuery]string customerId, [FromQuery] string error)
         {
             var cart = _context.AnonymousCustomerCart.Where(c => c.AnonymousCustomerCartId == customerId).Select(c => new
             {
@@ -71,7 +71,11 @@ namespace OnovaApi.Controllers
                 customerType = "anonymous"
             }).ToList();
 
-            return Json(cart);
+            return Json(new
+            {
+                Error = error,
+                cart
+            });
         }
 
         // PUT: api/AnonymousCustomerCart/5

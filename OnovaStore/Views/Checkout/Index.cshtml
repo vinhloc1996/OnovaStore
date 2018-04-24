@@ -84,7 +84,7 @@ else
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach (var cart in Model)
+                        @foreach (var cart in Model.cart)
                         {
                             subTotal = cart.displayPrice;
                             tax = cart.tax;
@@ -1022,7 +1022,38 @@ else
             $('#makePayment').click();
 
         });
-
-
     </script>
+    
+    @{
+        if (!string.IsNullOrEmpty(Model.error.ToString()))
+        {
+            <script type="text/javascript">
+                window.onload = function() {
+                    $.notify({
+                            title: '<strong>Error while processing the checkout!</strong>',
+                            icon: 'glyphicon glyphicon-star',
+                            message: '@Model.error.ToString()'
+                        },
+                        {
+                            type: 'danger',
+                            animate: {
+                                enter: 'animated fadeInUp',
+                                exit: 'animated fadeOutRight'
+                            },
+                            placement: {
+                                from: "top",
+                                align: "right"
+                            },
+                            offset: 20,
+                            spacing: 10,
+                            z_index: 1031,
+                            delay: 5000,
+                            showProgressbar: true,
+                            allow_dismiss: true,
+                            newest_on_top: false
+                        });
+                }
+            </script>
+        }
+    }
 }
