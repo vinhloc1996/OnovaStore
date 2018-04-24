@@ -46,7 +46,6 @@ namespace OnovaApi.Controllers
                 shippingInfo = c.CustomerCartNavigation.ShippingInfo.Select(s => new
                 {
                     s.AddressLine1,
-                    s.AddressLine2,
                     s.City,
                     s.Phone,
                     s.Zip,

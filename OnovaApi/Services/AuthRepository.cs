@@ -178,6 +178,14 @@ namespace OnovaApi.Services
             return await _userManager.ResetPasswordAsync(user, code, newPassword);
         }
 
+        public async Task<IdentityResult> AdminResetPassword(ApplicationUser user, string newPassword)
+        {
+            user.PasswordHash = new PasswordHasher<ApplicationUser>().HashPassword(user, newPassword);
+            _context.Users.Update(user);
+
+            return await _context.SaveChangesAsync() > 0 ? IdentityResult.Success : IdentityResult.Failed();
+        }
+
         public async Task MoveCart(string anonymousId, string email)
         {
             if (!string.IsNullOrEmpty(anonymousId))

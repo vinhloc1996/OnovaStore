@@ -154,11 +154,6 @@ namespace OnovaApi.Data
                     .HasForeignKey<Customer>(d => d.CustomerId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Customer_CustomerID");
-
-                entity.HasOne(d => d.UserStatus)
-                    .WithMany(p => p.Customer)
-                    .HasForeignKey(d => d.UserStatusId)
-                    .HasConstraintName("FK_Customer_UserStatusID");
             });
 
             modelBuilder.Entity<CustomerCart>(entity =>

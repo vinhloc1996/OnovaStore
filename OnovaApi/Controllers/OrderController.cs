@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -73,6 +74,71 @@ namespace OnovaApi.Controllers
                 NumberOrders = orders.Count,
                 orders
             });
+        }
+
+        [HttpGet]
+        [Route("GetOrdersForStaff")]
+        public IEnumerable GetOrdersForStaff([FromQuery] string sortOrder)
+        {
+//            var orderss = _context.Order;
+//
+//            IQueryable<Order> a = orderss;
+//
+//            if (!string.IsNullOrEmpty(searchString))
+//            {
+//                a = orderss.Where(c => EF.Functions.Like(c.OrderTrackingNumber, "%" + searchString + "%"));
+//            }
+
+            var orders = _context.Order.Select(o => new
+            {
+                o.OrderId,
+                o.OrderDate,
+                o.OrderTrackingNumber,
+                o.DisplayPrice,
+//                Interest = String.Format("{0:0.00}", o.DisplayPrice - o.TotalPrice),
+                Interest = Math.Round(o.DisplayPrice.GetValueOrDefault() - o.TotalPrice.GetValueOrDefault(), 2),
+                o.EstimateShippingDate,
+                o.OrderStatus.Name
+            });
+
+            switch (sortOrder)
+            {
+                case "id":
+                    orders = orders.OrderBy(c => c.OrderId);
+                    break;
+                case "id_desc":
+                    orders = orders.OrderByDescending(c => c.OrderId);
+                    break;
+                case "statusname":
+                    orders = orders.OrderBy(c => c.Name);
+                    break;
+                case "statusname_desc":
+                    orders = orders.OrderByDescending(c => c.Name);
+                    break;
+                case "price":
+                    orders = orders.OrderBy(c => c.DisplayPrice);
+                    break;
+                case "price_desc":
+                    orders = orders.OrderByDescending(c => c.DisplayPrice);
+                    break;
+                case "orderdate":
+                    orders = orders.OrderBy(c => c.OrderDate);
+                    break;
+                case "orderdate_desc":
+                    orders = orders.OrderByDescending(c => c.OrderDate);
+                    break;
+                case "interest":
+                    orders = orders.OrderBy(c => c.Interest);
+                    break;
+                case "interest_desc":
+                    orders = orders.OrderByDescending(c => c.Interest);
+                    break;
+                default:
+                    orders = orders.OrderBy(c => c.OrderId);
+                    break;
+            }
+
+            return orders.ToList();
         }
 
         // GET: api/Order/5
@@ -172,7 +238,6 @@ namespace OnovaApi.Controllers
                             DisplayPrice = orderDto.TotalPrice,
                             ShippingFee = cart.DisplayPrice > 1000 ? 0 : 30,
                             AddressLine1 = shippingInfo.AddressLine1,
-                            AddressLine2 = shippingInfo.AddressLine2,
                             City = shippingInfo.City,
                             OrderDate = DateTime.Now,
                             EstimateShippingDate = DateTime.Now.AddDays(3),
@@ -295,7 +360,6 @@ namespace OnovaApi.Controllers
                         DisplayPrice = orderDto.TotalPrice,
                         ShippingFee = anonymousCart.DisplayPrice > 1000 ? 0 : 30,
                         AddressLine1 = orderDto.AddressLine1,
-                        AddressLine2 = orderDto.AddressLine2,
                         City = orderDto.City,
                         OrderDate = DateTime.Now,
                         EstimateShippingDate = DateTime.Now.AddDays(3),

@@ -359,6 +359,26 @@ namespace OnovaApi.Controllers
                 }
             }
 
+            if (oldProduct.CategoryId != product.CategoryId)
+            {
+                var oldCategory = _context.Category.Find(oldProduct.CategoryId);
+                oldCategory.TotalProduct--;
+                var newCategory = _context.Category.Find(product.CategoryId);
+                newCategory.TotalProduct++;
+
+                await _context.SaveChangesAsync();
+            }
+
+            if (oldProduct.BrandId != product.BrandId)
+            {
+                var oldBrand = _context.Brand.Find(oldProduct.CategoryId);
+                oldBrand.TotalProduct--;
+                var newBrand = _context.Brand.Find(product.CategoryId);
+                newBrand.TotalProduct++;
+
+                await _context.SaveChangesAsync();
+            }
+
             if (oldProduct != null)
             {
                 oldProduct.BrandId = product.BrandId;

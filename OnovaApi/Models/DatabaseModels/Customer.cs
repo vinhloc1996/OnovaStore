@@ -20,8 +20,6 @@ namespace OnovaApi.Models.DatabaseModels
 
         [Column("CustomerID")]
         public string CustomerId { get; set; }
-        [Column("UserStatusID")]
-        public int? UserStatusId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime JoinDate { get; set; }
         [Column("FacebookID")]
@@ -30,9 +28,6 @@ namespace OnovaApi.Models.DatabaseModels
         [ForeignKey("CustomerId")]
         [InverseProperty("Customer")]
         public ApplicationUser ApplicationUser { get; set; }
-        [ForeignKey("UserStatusId")]
-        [InverseProperty("Customer")]
-        public UserStatus UserStatus { get; set; }
         [InverseProperty("CustomerCartNavigation")]
         public CustomerCart CustomerCart { get; set; }
         [InverseProperty("Customer")]

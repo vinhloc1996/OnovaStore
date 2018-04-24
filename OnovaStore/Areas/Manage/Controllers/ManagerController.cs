@@ -973,5 +973,53 @@ namespace OnovaStore.Areas.Manage.Controllers
 
             return result;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Orders(string sortOrder, string currentFilter,
+            int? page = 1)
+        {
+            var orders = new List<GetOrdersForStaff>();
+
+            var sortQuery = new List<string>
+            {
+                "id",
+                "id_desc",
+                "statusname",
+                "statusname_desc",
+                "price",
+                "price_desc",
+                "orderdate",
+                "orderdate_desc",
+                "interest",
+                "interest_desc"
+            };
+
+            sortOrder = string.IsNullOrEmpty(sortOrder) || !sortQuery.Contains(sortOrder)
+                ? "id"
+                : sortOrder.Trim().ToLower();
+
+            var queryString = nameof(sortOrder) + "=" + sortOrder;
+
+            ViewData["SortOrder"] = sortOrder;
+
+            using (var client = _restClient.CreateClient(User))
+            {
+                using (
+                    var response = await client.GetAsync("/api/order/GetOrdersForStaff?" + queryString))
+                {
+                    if (response.StatusCode == HttpStatusCode.OK)
+                    {
+                        orders = JsonConvert.DeserializeObject<List<GetOrdersForStaff>>(
+                            await response.Content.ReadAsStringAsync());
+                    }
+                }
+            }
+
+            int pageSize = 5;
+            ViewData["LengthEntry"] = orders.Count;
+            ViewData["CurrentEntry"] = pageSize * page;
+
+            return View(PaginatedList<GetOrdersForStaff>.CreateAsync(orders, page ?? 1, pageSize));
+        }
     }
 }

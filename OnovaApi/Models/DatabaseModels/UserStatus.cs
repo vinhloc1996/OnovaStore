@@ -9,7 +9,6 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public UserStatus()
         {
-            Customer = new HashSet<Customer>();
             Staff = new HashSet<Staff>();
         }
 
@@ -21,9 +20,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Required]
         [StringLength(100)]
         public string Name { get; set; }
-
-        [InverseProperty("UserStatus")]
-        public ICollection<Customer> Customer { get; set; }
+        
         [InverseProperty("UserStatus")]
         public ICollection<Staff> Staff { get; set; }
     }

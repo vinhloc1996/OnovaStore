@@ -242,9 +242,6 @@ else
                                                     <!--Address Line 1-->
                                                     @info.addressLine1
                                                     <br>
-                                                    <!--Address Line 2-->
-                                                    @info.addressLine2
-                                                    <br>
                                                     <!--City + Zip Code-->
                                                     @info.city, @info.zip
                                                     <br>
@@ -310,10 +307,6 @@ else
                         <div class="col-sm-6 form-group g-mb-20">
                             <label class="g-color-text g-font-size-13">Address Line 1</label>
                             <input id="inputAddressLine1" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine1" placeholder="Address Line 1" required data-msg="This field cannot be null" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
-                        </div>
-                        <div class="col-sm-6 form-group g-mb-20">
-                            <label class="g-color-text g-font-size-13">Address Line 2</label>
-                            <input id="inputAddressLine2" class="form-control u-form-control g-brd-gray-light-v4 g-brd-primary--focus g-color-text rounded g-py-13 g-px-15" type="text" name="inputAddressLine2" placeholder="Address Line 2" data-error-class="u-has-error-v1" data-success-class="u-has-success-v1">
                         </div>
                         <div class="col-sm-6 form-group g-mb-20">
                             <label class="g-color-text g-font-size-13">City</label>
@@ -414,7 +407,6 @@ else
                         <li id="displayFullName" class="g-my-3"></li>
                         <li id="displayEmail" class="g-my-3"></li>
                         <li id="displayAddressLine1" class="g-my-3"></li>
-                        <li id="displayAddressLine2" class="g-my-3"></li>
                         <li id="displayCity" class="g-my-3"></li>
                         <li id="displayZipCode" class="g-my-3"></li>
                         <li class="g-my-3">United Kingdom</li>
@@ -427,7 +419,6 @@ else
                         {
                             <li class="g-my-3">@defaultInfo.fullName</li>
                             <li class="g-my-3">@defaultInfo.addressLine1</li>
-                            <li class="g-my-3">@defaultInfo.addressLine2</li>
                             <li class="g-my-3">@defaultInfo.city</li>
                             <li class="g-my-3">@defaultInfo.zip</li>
                             <li class="g-my-3">United Kingdom</li>
@@ -934,7 +925,6 @@ else
 
         function addShippingInfo() {
             var addressLine1 = $('#inputAddressLine1').val().trim();
-            var addressLine2 = $('#inputAddressLine2').val().trim();
             var city = $('#inputCity').val().trim();
             var zip = $('#inputZipCode').val().trim();
             var phone = $('#inputPhone').val().trim();
@@ -946,7 +936,6 @@ else
                     'fullName': fullName,
                     'phone': phone,
                     'addressLine1': addressLine1,
-                    'addressLine2': addressLine2,
                     'city': city,
                     'zip': zip
                 };

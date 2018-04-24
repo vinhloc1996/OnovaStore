@@ -1,8 +1,278 @@
-﻿
+﻿@model OnovaStore.Helpers.PaginatedList<OnovaStore.Areas.Manage.Data.GetStaffsForAdmin>
 @{
-    ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "List of Staff";
+    Layout = "_Layout";
 }
 
-<h2>Index</h2>
+<div class="g-pa-20">
+    <h3 class="g-font-weight-300 g-font-size-22 g-color-black g-mb-30">
+        <a style="text-decoration: none" href="@Url.Action("AddStaff", "Admin", new {Area = "Manage"})">Add new brand</a>
+    </h3>
 
+    <div class="media-md align-items-center g-mb-30">
+        <div class="d-flex g-mb-15 g-mb-0--md">
+            <h3 class="g-font-weight-400 g-font-size-16 g-color-black mb-0">Brands</h3>
+        </div>
+        <div class="media d-md-flex align-items-center ml-auto">
+            <form asp-action="Index" method="get">
+                <div class="d-flex g-ml-15 g-ml-55--md">
+                    <div class="input-group g-pos-rel g-width-320--md">
+
+                        <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for name, role" value="@ViewData["CurrentFilter"]" name="SearchString">
+                        <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0" type="submit">
+                            <i class="hs-admin-search g-absolute-centered"></i>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="g-mb-40">
+        <div class="table-responsive">
+            <table class="table u-table--v3 u-editable-table--v1 g-color-black">
+                <thead>
+                    <tr>
+                        <th>
+                            <div class="media">
+                                <div class="d-flex align-self-center">Full Name</div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="name" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-up"></i>
+                                        </a>
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "name_desc" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="name_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-down"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="media">
+                                <div class="d-flex align-self-center">Add Date</div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "adddate" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="adddate" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-up"></i>
+                                        </a>
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "adddate_desc" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="adddate_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-down"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="media">
+                                <div class="d-flex align-self-center">Salary</div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "salary" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="salary" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-up"></i>
+                                        </a>
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "salary_desc" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="salary_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-down"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="media">
+                                <div class="d-flex align-self-center">Email</div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "email" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="email" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-up"></i>
+                                        </a>
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "email_desc" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="email_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-down"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </th>
+                        <th>
+                            <div class="media">
+                                <div class="d-flex align-self-center">Role</div>
+                                <div class="d-flex align-self-center ml-auto">
+                                    <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "role" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="role" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-up"></i>
+                                        </a>
+                                        <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "role_desc" ? "color: #007bff !important;" : "")" asp-action="Index" asp-route-sortOrder="role_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
+                                            <i class="hs-admin-angle-down"></i>
+                                        </a>
+                                    </span>
+                                </div>
+                            </div>
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+                        var i = 0;
+                        foreach (var staff in Model)
+                        {
+                            <tr>
+                                <td>@staff.fullName</td>
+                                <td>@staff.addDate</td>
+                                <td>$@staff.salary</td>
+                                <td>@staff.email</td>
+                                <td>@staff.role</td>
+                                <td class="text-right">
+                                    <div class="g-pos-rel g-top-3 d-inline-block">
+                                        <a id="@("dropDown" + i + "Invoker")" class="u-link-v5 g-line-height-0 g-font-size-24 g-color-gray-light-v6 g-color-lightblue-v3--hover" href="#!" aria-controls="@("dropDown" + @i)" aria-haspopup="true" aria-expanded="false" data-dropdown-event="click" data-dropdown-target="@("#dropDown" + @i)">
+                                            <i class="hs-admin-more-alt"></i>
+                                        </a>
+                                        <div id="@("dropDown" + @i)" class="u-shadow-v31 g-pos-abs g-right-0 g-z-index-2 g-bg-white" aria-labelledby="@("dropDown" + i + "Invoker")">
+                                            <ul class="list-unstyled g-nowrap mb-0">
+                                                <li>
+                                                    <a class="d-flex align-items-center u-link-v5 g-bg-gray-light-v8--hover g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-px-25 g-py-14" onclick="resetPassword('@staff.staffId'); return false;">
+                                                        <i class="hs-admin-unlock g-font-size-18 g-color-gray-light-v6 g-mr-10 g-mr-15--md"></i>
+                                                        Reset Password
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            i++;
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        var length = (int)ViewData["LengthEntry"];
+        var currentEntry = (int)ViewData["CurrentEntry"];
+    }
+    <div class="media align-items-center g-mb-45">
+        <div class="media-body">Showing @(length < Model.PageSize ? length : currentEntry) of @length entries</div>
+        <nav id="" class="d-flex ml-auto" aria-label="Page Navigation">
+            <ul class="list-inline text-right mb-0">
+                <li class="list-inline-item">
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex - 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @prevDisabled" aria-label="Previous">
+                        <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                            <i class="hs-admin-angle-left"></i>
+                        </span><span class="sr-only">Prev</span>
+                    </a>
+                </li>
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="list-inline-item g-hidden-sm-down">
+                        <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@i" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15 @(i == Model.PageIndex ? "active" : "")">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <li class="list-inline-item">
+                    <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex + 1)" asp-route-currentFilter="@ViewData["CurrentFilter"]" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @nextDisabled" aria-label="Next">
+                        <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                            <i class="hs-admin-angle-right"></i>
+                        </span><span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@section Styles {
+    <style type="text/css">
+        a.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        function resetPassword(id) {
+            $.ajax({
+                url: 'http://localhost:5000/' + 'api/auth/ResetStaffPassword?id=' + id,
+                type: "get",
+                beforeSend: function (request) {
+                    request.setRequestHeader("Authorization", "Bearer " + getCookie("jwt"));
+                },
+                success: function (val) {
+                    var totalPrice = 0;
+                    var numberQuantity = 0;
+                    if (val.status == 'Success') {
+                        $.notify({
+                                title: '<strong>Password reset</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                            {
+                                type: 'success',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    } else {
+                        $.notify({
+                                title: '<strong>Password reset failed!</strong>',
+                                icon: 'glyphicon glyphicon-star',
+                                message: val.message
+                            },
+                            {
+                                type: 'danger',
+                                animate: {
+                                    enter: 'animated fadeInUp',
+                                    exit: 'animated fadeOutRight'
+                                },
+                                placement: {
+                                    from: "top",
+                                    align: "right"
+                                },
+                                offset: 20,
+                                spacing: 10,
+                                z_index: 1031,
+                                delay: 2000,
+                                showProgressbar: true,
+                                allow_dismiss: true,
+                                newest_on_top: false
+                            });
+                    }
+                }
+            });
+        }
+    </script>
+}

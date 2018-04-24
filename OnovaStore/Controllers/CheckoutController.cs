@@ -132,7 +132,7 @@ namespace OnovaStore.Controllers
                 {
                     Email = stripeEmail,
                     AddressLine1 = stripeBillingAddressLine1,
-                    AddressLine2 = "",
+//                    AddressLine2 = "",
                     CartId = anonymousId,
                     TypeUser = "anonymous",
                     City = stripeBillingAddressCity,

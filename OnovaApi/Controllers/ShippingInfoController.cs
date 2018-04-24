@@ -224,7 +224,6 @@ namespace OnovaApi.Controllers
         {
             var fullname = (string) info.GetValue("fullName");
             var addressLine1 = (string)info.GetValue("addressLine1");
-            var addressLine2 = (string)info.GetValue("addressLine2");
             var city = (string)info.GetValue("city");
             var phone = (string)info.GetValue("phone");
             var zip = (string)info.GetValue("zip");
@@ -245,7 +244,6 @@ namespace OnovaApi.Controllers
                     IsDefault = isDefault,
                     CustomerId = currentCustomerId,
                     AddressLine1 = addressLine1,
-                    AddressLine2 = addressLine2,
                     City = city,
                     Phone = phone,
                     Zip = zip,

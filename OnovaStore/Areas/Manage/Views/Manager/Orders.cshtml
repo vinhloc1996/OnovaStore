@@ -1,0 +1,176 @@
+﻿@model OnovaStore.Helpers.PaginatedList<OnovaStore.Areas.Manage.Data.GetOrdersForStaff>
+@{
+    ViewBag.Title = "List of Order";
+    Layout = "_Layout";
+}
+
+<div class="g-pa-20">
+    <div class="media-md align-items-center g-mb-30">
+        <div class="d-flex g-mb-15 g-mb-0--md">
+            <h3 class="g-font-weight-400 g-font-size-16 g-color-black mb-0">Orders</h3>
+        </div>
+@*        <div class="media d-md-flex align-items-center ml-auto">*@
+@*            <form asp-action="Orders" method="get">*@
+@*                <div class="d-flex g-ml-15 g-ml-55--md">*@
+@*                    <div class="input-group g-pos-rel g-width-320--md">*@
+@**@
+@*                        <input class="form-control g-font-size-default g-brd-gray-light-v7 g-brd-lightblue-v3--focus g-rounded-20 g-pl-20 g-pr-50 g-py-10" type="text" placeholder="Search for order tracking code" value="@ViewData["CurrentFilter"]" name="SearchString">*@
+@*                        <button class="btn g-pos-abs g-top-0 g-right-0 g-z-index-2 g-width-60 h-100 g-bg-transparent g-font-size-16 g-color-lightred-v2 g-color-lightblue-v3--hover rounded-0" type="submit">*@
+@*                            <i class="hs-admin-search g-absolute-centered"></i>*@
+@*                        </button>*@
+@*                    </div>*@
+@*                </div>*@
+@*            </form>*@
+@*        </div>*@
+    </div>
+    <div class="g-mb-40">
+        <div class="table-responsive">
+            <table class="table u-table--v3 u-editable-table--v1 g-color-black">
+                <thead>
+                <tr>
+                    <th>
+                        <div class="media">
+                            <div class="d-flex align-self-center">Id</div>
+                            <div class="d-flex align-self-center ml-auto">
+                                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="id">
+                                        <i class="hs-admin-angle-up"></i>
+                                    </a>
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "id_desc" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="id_desc">
+                                        <i class="hs-admin-angle-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="media">
+                            <div class="d-flex align-self-center">Order Date</div>
+                            <div class="d-flex align-self-center ml-auto">
+                                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "orderdate" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="orderdate">
+                                        <i class="hs-admin-angle-up"></i>
+                                    </a>
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "orderdate_desc" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="orderdate_desc">
+                                        <i class="hs-admin-angle-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="media">
+                            <div class="d-flex align-self-center">Order Price</div>
+                            <div class="d-flex align-self-center ml-auto">
+                                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "price" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="price">
+                                        <i class="hs-admin-angle-up"></i>
+                                    </a>
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "price_desc" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="price_desc">
+                                        <i class="hs-admin-angle-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="media">
+                            <div class="d-flex align-self-center">Order Status</div>
+                            <div class="d-flex align-self-center ml-auto">
+                                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "statusname" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="statusname">
+                                        <i class="hs-admin-angle-up"></i>
+                                    </a>
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "statusname_desc" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="statusname_desc">
+                                        <i class="hs-admin-angle-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="media">
+                            <div class="d-flex align-self-center">Interest</div>
+                            <div class="d-flex align-self-center ml-auto">
+                                <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "interest" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="interest">
+                                        <i class="hs-admin-angle-up"></i>
+                                    </a>
+                                    <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "interest_desc" ? "color: #007bff !important;" : "")" asp-action="Orders" asp-route-sortOrder="interest_desc">
+                                        <i class="hs-admin-angle-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                @if (Model.Count > 0)
+                {
+                    foreach (var order in Model)
+                    {
+                        <tr>
+                            <td>@order.orderId</td>
+                            <td>@order.orderDate</td>
+                            <td>$@order.displayPrice</td>
+                            <td>
+                                <span class="u-tags-v1 text-center g-width-110 g-brd-around g-brd-teal-v2 g-bg-teal-v2 g-font-weight-400 g-color-white g-rounded-50 g-py-4 g-px-15">
+                                    @order.name
+                                </span>
+                            </td>
+                            <td>$@order.interest</td>
+                        </tr>
+                    }
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+        var length = (int) ViewData["LengthEntry"];
+        var currentEntry = (int) ViewData["CurrentEntry"];
+    }
+    <div class="media align-items-center g-mb-45">
+        <div class="media-body">Showing @(length < Model.PageSize ? length : currentEntry) of @length entries</div>
+        <nav id="" class="d-flex ml-auto" aria-label="Page Navigation">
+            <ul class="list-inline text-right mb-0">
+                <li class="list-inline-item">
+                    <a asp-action="Orders" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex - 1)" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @prevDisabled" aria-label="Previous">
+                        <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                            <i class="hs-admin-angle-left"></i>
+                        </span><span class="sr-only">Prev</span>
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="list-inline-item g-hidden-sm-down">
+                        <a asp-action="Orders" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@i" class="u-pagination-v1__item u-pagination-v1-2 g-bg-lightblue-v3--active g-color-white--active g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-brd-lightblue-v3--active g-rounded-4 g-py-8 g-px-15 @(i == Model.PageIndex ? "active" : "")">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <li class="list-inline-item">
+                    <a asp-action="Orders" asp-route-sortOrder="@ViewData["CurrentSort"]" asp-route-page="@(Model.PageIndex + 1)" class="u-pagination-v1__item u-pagination-v1-2 g-brd-gray-light-v7 g-brd-lightblue-v3--hover g-rounded-4 g-py-8 g-px-12 @nextDisabled" aria-label="Next">
+                        <span class="g-line-height-1 g-valign-middle" aria-hidden="true">
+                            <i class="hs-admin-angle-right"></i>
+                        </span><span class="sr-only">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@section Styles {
+    <style type="text/css">
+        a.disabled {
+            pointer-events: none;
+            cursor: default;
+        }
+    </style>
+}

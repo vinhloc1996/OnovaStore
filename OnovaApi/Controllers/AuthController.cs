@@ -68,6 +68,30 @@ namespace OnovaApi.Controllers
             throw new Exception("Add new user failed");
         }
 
+        [Authorize(Policy = "Admin")]
+        [HttpGet("ResetStaffPassword")]
+        public async Task<IActionResult> ResetStaffPassword(string id, string newPassword = "123456")
+        {
+            var staff = await _repository.FindUserById(id);
+
+            if (staff != null)
+            {
+                var result = await _repository.AdminResetPassword(staff, newPassword);
+
+                return Json(new
+                {
+                    Status = "Success",
+                    Message = "Password of " + staff.Email + " has been reset"
+                });
+            }
+
+            return Json(new
+            {
+                Status = "Failed",
+                Message = "Cannot reset password"
+            });
+        }
+
         [AllowAnonymous]
         [HttpPost("CheckUserExistedForFbLogin")]
         public async Task<IActionResult> CheckUserExistedForFbLogin([FromBody] FacebookUserData model)
