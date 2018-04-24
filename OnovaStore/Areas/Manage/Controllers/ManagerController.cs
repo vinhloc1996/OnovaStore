@@ -54,7 +54,7 @@ namespace OnovaStore.Areas.Manage.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Products");
         }
 
         [HttpGet]
