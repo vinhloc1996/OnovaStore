@@ -86,14 +86,14 @@
                         <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                             <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="Role">
                                 @{
-                                    var roles = (List<string>) ViewData["Roles"];
+                                    var roles = (List<dynamic>) ViewData["Roles"];
 
                                     if (roles != null)
                                     {
                                         var i = 0;
                                         foreach (var role in roles)
                                         {
-                                            <option value="@role" selected="@(i++ == 0)">@role</option>
+                                            <option value="@role.name" selected="@(i++ == 0)">@role.name</option>
                                         }
                                     }
                                 }

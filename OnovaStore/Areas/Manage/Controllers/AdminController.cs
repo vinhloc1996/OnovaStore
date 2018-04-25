@@ -99,7 +99,7 @@ namespace OnovaStore.Areas.Manage.Controllers
                 {
                     if (response.StatusCode == HttpStatusCode.OK)
                     {
-                        ViewData["Roles"] = JsonConvert.DeserializeObject<List<string>>(
+                        ViewData["Roles"] = JsonConvert.DeserializeObject<List<dynamic>>(
                             await response.Content.ReadAsStringAsync());
                     }
                 }

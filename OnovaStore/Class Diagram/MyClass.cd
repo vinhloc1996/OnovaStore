@@ -1,0 +1,619 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="OnovaStore.Areas.Manage.Controllers.AdminController" Collapsed="true">
+    <Position X="2.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAIA=</HashCode>
+      <FileName>Areas\Manage\Controllers\AdminController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Controllers.HomeController" Collapsed="true">
+    <Position X="9.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAABAAA=</HashCode>
+      <FileName>Areas\Manage\Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Controllers.ManagerController" Collapsed="true">
+    <Position X="7.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAQIAAAAAABAQAgAQAAAEQAAAAEAQKCBIIQ=</HashCode>
+      <FileName>Areas\Manage\Controllers\ManagerController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Controllers.ShipperController" Collapsed="true">
+    <Position X="4" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Controllers\ShipperController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Controllers.SupportController" Collapsed="true">
+    <Position X="9.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Controllers\SupportController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.AddBrandDTO" Collapsed="true">
+    <Position X="4" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAgAAQAAAgABAAAAAACAAQAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\AddBrandDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.AddCategoryDTO" Collapsed="true">
+    <Position X="7.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAACAAAUAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\AddCategoryDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.AddProductDTO" Collapsed="true">
+    <Position X="11" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAgAIgMAAAAAAAQIgCAAQAAAAAAggAQQAAA=</HashCode>
+      <FileName>Areas\Manage\Data\AddProductDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetBrandForStaff" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAAAAQAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetBrandForStaff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetBrandsDTO" Collapsed="true">
+    <Position X="9.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAQAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetBrandsDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetCategoriesDTO" Collapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetCategoriesDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetCategoryForStaff" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAgAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetCategoryForStaff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetOrdersForStaff" Collapsed="true">
+    <Position X="14.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAACAAAAkIAAAAAAAABkAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetOrdersForStaff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetProductForStaff" Collapsed="true">
+    <Position X="0.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAAAAAAAAAAAAABAQAAQAAgAEAABAAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetProductForStaff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetProductStatusDTO" Collapsed="true">
+    <Position X="2.25" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetProductStatusDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetPromotionForStaff" Collapsed="true">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAgACAAAAACA=</HashCode>
+      <FileName>Areas\Manage\Data\GetPromotionForStaff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.GetStaffsForAdmin" Collapsed="true">
+    <Position X="5.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAgAAAgAACAABAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\GetStaffsForAdmin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Data.ImageUploadDTO" Collapsed="true">
+    <Position X="12.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQAAAAAgAAAAAAAAAAAAAAAAAAAECAAAAAAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Data\ImageUploadDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Admin.AddStaffViewModel" Collapsed="true">
+    <Position X="0.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAACgAAIAAEAAAAAAAAAAAAAACAAAAIAAAAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Admin\AddStaffViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Brand.AddBrandViewModel" Collapsed="true">
+    <Position X="5.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAgAAQAAAgABAAAAAACAAQAAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Brand\AddBrandViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Brand.EditBrandViewModel" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAAAAAAAggAQAAAgABAAAAAACAAQQAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Brand\EditBrandViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Category.AddCategoryViewModel" Collapsed="true">
+    <Position X="9.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAACAAAEAAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Category\AddCategoryViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Category.EditCategoryViewModel" Collapsed="true">
+    <Position X="2.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAgAAAAAAgAQAAAAAAAAAAACAAAUAAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Category\EditCategoryViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Image.UploadImageViewModel" Collapsed="true">
+    <Position X="12.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIA=</HashCode>
+      <FileName>Areas\Manage\Models\Image\UploadImageViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Product.AddProductViewModel" Collapsed="true">
+    <Position X="12.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAIAEAAAAAAIgMAAAAAAAQAACAAQAAAAAAggAAQAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Product\AddProductViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Product.EditProductViewModel" Collapsed="true">
+    <Position X="4" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQAAQAAAAAAAIgMAAAAAgAQAACAAQAAAAAAgAAQQAAA=</HashCode>
+      <FileName>Areas\Manage\Models\Product\EditProductViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Promotion.AddPromotionViewModel" Collapsed="true">
+    <Position X="14.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAoAAAAAAAAAAAAAAAAAAAgAAAQBAAAAAECAEAAAGA=</HashCode>
+      <FileName>Areas\Manage\Models\Promotion\AddPromotionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Areas.Manage.Models.Promotion.EditPromotionViewModel" Collapsed="true">
+    <Position X="5.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAACAAAAAAAAAAAAAAAgAAAQBAAAAAECAEgAACA=</HashCode>
+      <FileName>Areas\Manage\Models\Promotion\EditPromotionViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.AccountController" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAAEAAAAEEAAAIABAIBAAACAAEQAAABAAQ=</HashCode>
+      <FileName>Controllers\AccountController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.AccountSettingController" Collapsed="true">
+    <Position X="2.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAABQIA=</HashCode>
+      <FileName>Controllers\AccountSettingController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.BrandController" Collapsed="true">
+    <Position X="9.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAII=</HashCode>
+      <FileName>Controllers\BrandController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.CategoryController" Collapsed="true">
+    <Position X="2.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAII=</HashCode>
+      <FileName>Controllers\CategoryController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.CheckoutController" Collapsed="true">
+    <Position X="9.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAgAAAAAAAAEAAAABAIA=</HashCode>
+      <FileName>Controllers\CheckoutController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.HomeController" Collapsed="true">
+    <Position X="7.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAEAEAABAAA=</HashCode>
+      <FileName>Controllers\HomeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Controllers.ProductController" Collapsed="true">
+    <Position X="0.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAABCIA=</HashCode>
+      <FileName>Controllers\ProductController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookAppAccessToken" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAgA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookUserAccessTokenValidation" Collapsed="true">
+    <Position X="2.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookUserAccessTokenData" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAgAAAkAAAAAAAAAAQAAAAQAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookUserData" Collapsed="true">
+    <Position X="4" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgCAAACAAAACAAAAAAAQAAAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookPictureData" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookPicture" Collapsed="true">
+    <Position X="12.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAEAAAAgAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.DTOs.FacebookPasswordConfirm" Collapsed="true">
+    <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Helpers.Cart" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="14.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\Cart.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="OnovaStore.Helpers.CloudinarySettings" Collapsed="true">
+    <Position X="12.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEgAAABAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\CloudinarySettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Helpers.Extensions" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAABgAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Helpers.TempDataExtensions" Collapsed="true">
+    <Position X="11" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Helpers\Extensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Helpers.PaginatedList&lt;T&gt;" Collapsed="true">
+    <Position X="11" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAgAAAAAAAAAAAAAAEAAUAAAAAAAAAAAAEIAAAAA=</HashCode>
+      <FileName>Helpers\PaginatedList.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Helpers.StripeSettings" Collapsed="true">
+    <Position X="7.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\StripeSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Mvc.UrlHelperExtensions" Collapsed="true">
+    <Position X="14.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgIAAIAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\UrlHelperExtensions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Account.ChangePasswordViewModel" Collapsed="true">
+    <Position X="7.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Models\Account\ChangePasswordViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Account.ForgotPasswordViewModel" Collapsed="true">
+    <Position X="5.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Account\ForgotPasswordViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Account.LoginViewModel" Collapsed="true">
+    <Position X="5.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Account\LoginViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Account.RegisterViewModel" Collapsed="true">
+    <Position X="7.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAIAAAAAAAAAAAAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>Models\Account\RegisterViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Account.ResetPasswordViewModel" Collapsed="true">
+    <Position X="9.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAIAA=</HashCode>
+      <FileName>Models\Account\ResetPasswordViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Brand.Brand" Collapsed="true">
+    <Position X="7.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAQAAAgAAAAAAAAAAAQQAAA=</HashCode>
+      <FileName>Models\Brand\Brand.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Brand.BrandProducts" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAEAIAAAAAAEAAAABAAAACkAAAA=</HashCode>
+      <FileName>Models\Brand\BrandProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Brand.BrandInfo" Collapsed="true">
+    <Position X="11" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAEAAAIBBAABAAAAAA=</HashCode>
+      <FileName>Models\Brand\BrandProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Brand.RootBrandProducts" Collapsed="true">
+    <Position X="14.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Models\Brand\BrandProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Category.Category" Collapsed="true">
+    <Position X="0.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAACAAAAAgAAAAAAAAQAAAAAAAAAAAAAAAUAAAA=</HashCode>
+      <FileName>Models\Category\Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Category.CategoryProducts" Collapsed="true">
+    <Position X="5.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABgAAAAAAAAAAAAAAAAAAEAEAAAABAAAACkAAAA=</HashCode>
+      <FileName>Models\Category\CategoryProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Category.CategoryInfo" Collapsed="true">
+    <Position X="4" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAABAgAAAAAAAAAAAAAEAAAABAAABAAAAAA=</HashCode>
+      <FileName>Models\Category\CategoryProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Category.RootCategoryProducts" Collapsed="true">
+    <Position X="0.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>Models\Category\CategoryProducts.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.CustomerCart.CustomerCartDetail" Collapsed="true">
+    <Position X="14.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQAAAAAAAQAAAAAAAAAABAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Models\CustomerCart\CustomerCartDetail.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Order.Order" Collapsed="true">
+    <Position X="9.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAACAAAIAIAAAACAABAAAAQQAAAAAAIAAQCAA=</HashCode>
+      <FileName>Models\Order\Order.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Product.Product" Collapsed="true">
+    <Position X="12.75" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQAAAAAAAAAAAAAAAAAAAAQAAAAAAAAgAAAAAAQAAAA=</HashCode>
+      <FileName>Models\Product\Product.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Product.ProductCart" Collapsed="true">
+    <Position X="14.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EQAAQAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Product\ProductCart.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Product.ProductSearch" Collapsed="true">
+    <Position X="2.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAAEAIAAAAAAEAAAABAAAACkAAAA=</HashCode>
+      <FileName>Models\Product\ProductSearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Models.Product.RootProductSearch" Collapsed="true">
+    <Position X="2.25" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAACA=</HashCode>
+      <FileName>Models\Product\ProductSearch.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Security.Claims.ClaimPrincipalManager" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IgCDAAAIBgAAAAAAEAAAAAAggBBABACAAQIQAAAAAAE=</HashCode>
+      <FileName>System\Security\ClaimPrincipalManager.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="System.Config.AuthenticationSettings" Collapsed="true">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\AuthenticationSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Config.AuthenticationSettingsFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="5.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\AuthenticationSettings.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="System.Config.RestClientSettings" Collapsed="true">
+    <Position X="12.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\HttpClientConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Config.JwtTokenIssuerSettings" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAACAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenIssuerSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Config.JwtTokenIssuerSettingsFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAACAACAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenIssuerSettings.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="System.Config.JwtTokenValidationSettings" Collapsed="true">
+    <Position X="2.25" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIAAAAAAABACAAAAAAAAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenValidationSettingsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Config.JwtTokenValidationSettingsFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="4" Y="6.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIAAAAAAABACAAAAAACAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenValidationSettingsFactory.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="System.Net.Http.RestClientFactory" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="11" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAADAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\HttpClientConfig.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="System.Net.Http.HttpRestClient" Collapsed="true">
+    <Position X="11" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenIssuerSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RefreshTokenMonitor" Collapsed="true">
+    <Position X="5.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAA=</HashCode>
+      <FileName>System\LastChangedValidator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Program" Collapsed="true">
+    <Position X="4" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Program.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaStore.Startup" Collapsed="true">
+    <Position X="5.75" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgAAACAAAAAA=</HashCode>
+      <FileName>Startup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="OnovaStore.Helpers.ICart" Collapsed="true">
+    <Position X="2.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\Cart.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Security.Claims.IClaimPrincipalManager" Collapsed="true">
+    <Position X="4" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgCDAAAABgAAAAAAEAAAAAAggBAAAAAAAQIQAAAAAAA=</HashCode>
+      <FileName>System\Security\ClaimPrincipalManager.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Config.IAuthenticationSettings" Collapsed="true">
+    <Position X="0.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\AuthenticationSettings.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Config.IJwtTokenIssuerSettings" Collapsed="true">
+    <Position X="5.75" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAACAAAAAAAAAAACAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenIssuerSettings.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Config.IJwtTokenValidationSettings" Collapsed="true">
+    <Position X="7.5" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAIAAAAAAABACAAAAAACAgAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\JwtTokenValidationSettingsFactory.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="System.Net.Http.IRestClient" Collapsed="true">
+    <Position X="9.25" Y="9.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAACAABAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>System\Settings\HttpClientConfig.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

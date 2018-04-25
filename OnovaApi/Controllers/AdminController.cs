@@ -30,7 +30,7 @@ namespace OnovaApi.Controllers
         [Route("GetRoles")]
         public IEnumerable GetRoles()
         {
-            var roles = _context.Roles.Where(r => r.Name != "Administrator").Select(r => new
+            var roles = _context.Roles.Where(r => r.Name != "CustomerSupport" && r.Name != "Shipper").Select(r => new
             {
                 r.Name
             });

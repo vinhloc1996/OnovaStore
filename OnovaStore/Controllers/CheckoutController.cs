@@ -167,10 +167,18 @@ namespace OnovaStore.Controllers
 
         [AllowAnonymous]
         [HttpGet]
-        public async Task<IActionResult> Success([FromQuery] string orderCode)
+        public IActionResult Success([FromQuery] string orderCode)
         {
             
             return View();
         }
+        
+//        public IActionResult Success(object model)
+//        {
+//
+//            return View(model);
+//        }
+
+
     }
 }

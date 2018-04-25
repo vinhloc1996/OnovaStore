@@ -10,12 +10,7 @@ namespace OnovaApi.Models.DatabaseModels
     {
         public Customer()
         {
-            CustomerRecentView = new HashSet<CustomerRecentView>();
-            Review = new HashSet<Review>();
-            SaveForLater = new HashSet<SaveForLater>();
             ShippingInfo = new HashSet<ShippingInfo>();
-            UsefulReview = new HashSet<UsefulReview>();
-            WishList = new HashSet<WishList>();
         }
 
         [Column("CustomerID")]
@@ -31,18 +26,6 @@ namespace OnovaApi.Models.DatabaseModels
         [InverseProperty("CustomerCartNavigation")]
         public CustomerCart CustomerCart { get; set; }
         [InverseProperty("Customer")]
-        public CustomerPurchaseInfo CustomerPurchaseInfo { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<CustomerRecentView> CustomerRecentView { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<Review> Review { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<SaveForLater> SaveForLater { get; set; }
-        [InverseProperty("Customer")]
         public ICollection<ShippingInfo> ShippingInfo { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<UsefulReview> UsefulReview { get; set; }
-        [InverseProperty("Customer")]
-        public ICollection<WishList> WishList { get; set; }
     }
 }

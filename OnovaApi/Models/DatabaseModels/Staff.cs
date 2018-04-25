@@ -12,7 +12,6 @@ namespace OnovaApi.Models.DatabaseModels
         {
             GeneralImage = new HashSet<GeneralImage>();
             InverseAddByStaffManager = new HashSet<Staff>();
-            ReviewConfirm = new HashSet<ReviewConfirm>();
         }
 
         [Column("StaffID")]
@@ -37,14 +36,9 @@ namespace OnovaApi.Models.DatabaseModels
         [ForeignKey("StaffId")]
         [InverseProperty("Staff")]
         public ApplicationUser ApplicationUser { get; set; }
-        [ForeignKey("UserStatusId")]
-        [InverseProperty("Staff")]
-        public UserStatus UserStatus { get; set; }
         [InverseProperty("Staff")]
         public ICollection<GeneralImage> GeneralImage { get; set; }
         [InverseProperty("AddByStaffManager")]
         public ICollection<Staff> InverseAddByStaffManager { get; set; }
-        [InverseProperty("AssignStaff")]
-        public ICollection<ReviewConfirm> ReviewConfirm { get; set; }
     }
 }

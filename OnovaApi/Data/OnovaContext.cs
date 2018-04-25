@@ -16,8 +16,6 @@ namespace OnovaApi.Data
         public virtual DbSet<Customer> Customer { get; set; }
         public virtual DbSet<CustomerCart> CustomerCart { get; set; }
         public virtual DbSet<CustomerCartDetail> CustomerCartDetail { get; set; }
-        public virtual DbSet<CustomerPurchaseInfo> CustomerPurchaseInfo { get; set; }
-        public virtual DbSet<CustomerRecentView> CustomerRecentView { get; set; }
         public virtual DbSet<GeneralImage> GeneralImage { get; set; }
         public virtual DbSet<Order> Order { get; set; }
         public virtual DbSet<OrderDetail> OrderDetail { get; set; }
@@ -29,14 +27,8 @@ namespace OnovaApi.Data
         public virtual DbSet<Promotion> Promotion { get; set; }
         public virtual DbSet<PromotionBrand> PromotionBrand { get; set; }
         public virtual DbSet<PromotionCategory> PromotionCategory { get; set; }
-        public virtual DbSet<Review> Review { get; set; }
-        public virtual DbSet<ReviewConfirm> ReviewConfirm { get; set; }
-        public virtual DbSet<SaveForLater> SaveForLater { get; set; }
         public virtual DbSet<ShippingInfo> ShippingInfo { get; set; }
         public virtual DbSet<Staff> Staff { get; set; }
-        public virtual DbSet<UsefulReview> UsefulReview { get; set; }
-        public virtual DbSet<UserStatus> UserStatus { get; set; }
-        public virtual DbSet<WishList> WishList { get; set; }
 
         public OnovaContext(DbContextOptions<OnovaContext> options)
             : base(options)
@@ -208,40 +200,6 @@ namespace OnovaApi.Data
                     .WithMany(p => p.CustomerCartDetail)
                     .HasForeignKey(d => d.PromotionId)
                     .HasConstraintName("FK_CustomerCartDetail_PromotionID");
-            });
-
-            modelBuilder.Entity<CustomerPurchaseInfo>(entity =>
-            {
-                entity.Property(e => e.CustomerId).ValueGeneratedNever();
-
-                entity.Property(e => e.TotalMoneySpend).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.TotalQuantityOfPurchasedProduct).HasDefaultValueSql("((0))");
-
-                entity.Property(e => e.TotalSuccessOrder).HasDefaultValueSql("((0))");
-
-                entity.HasOne(d => d.Customer)
-                    .WithOne(p => p.CustomerPurchaseInfo)
-                    .HasForeignKey<CustomerPurchaseInfo>(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerPurchaseInfo_CustomerID");
-            });
-
-            modelBuilder.Entity<CustomerRecentView>(entity =>
-            {
-                entity.HasKey(e => new { e.CustomerId, e.ProductId });
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.CustomerRecentView)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerRecentView_CustomerID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.CustomerRecentView)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_CustomerRecentView_ProductID");
             });
 
             modelBuilder.Entity<GeneralImage>(entity =>
@@ -446,63 +404,6 @@ namespace OnovaApi.Data
                     .HasConstraintName("FK_PromotionCategory_PromotionID");
             });
 
-            modelBuilder.Entity<Review>(entity =>
-            {
-                entity.Property(e => e.UsefulCounting).HasDefaultValueSql("((0))");
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.Review)
-                    .HasForeignKey(d => d.CustomerId)
-                    .HasConstraintName("FK_Review_CustomerID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.Review)
-                    .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK_Review_ProductID");
-
-                entity.HasOne(d => d.ReplyReview)
-                    .WithMany(p => p.InverseReplyReview)
-                    .HasForeignKey(d => d.ReplyReviewId)
-                    .HasConstraintName("FK_Review_ReviewID");
-            });
-
-            modelBuilder.Entity<ReviewConfirm>(entity =>
-            {
-                entity.Property(e => e.ReviewId).ValueGeneratedNever();
-
-                entity.Property(e => e.LastUpdateDate).IsRowVersion();
-
-                entity.Property(e => e.StaffComment).HasDefaultValueSql("('')");
-
-                entity.HasOne(d => d.AssignStaff)
-                    .WithMany(p => p.ReviewConfirm)
-                    .HasForeignKey(d => d.AssignStaffId)
-                    .HasConstraintName("FK_ReviewConfirm_AssignStaffID");
-
-                entity.HasOne(d => d.Review)
-                    .WithOne(p => p.ReviewConfirm)
-                    .HasForeignKey<ReviewConfirm>(d => d.ReviewId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_ReviewConfirm_ReviewID");
-            });
-
-            modelBuilder.Entity<SaveForLater>(entity =>
-            {
-                entity.HasKey(e => new { e.CustomerId, e.ProductId });
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.SaveForLater)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SaveForLater_CustomerID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.SaveForLater)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_SaveForLater_ProductID");
-            });
-
             modelBuilder.Entity<ShippingInfo>(entity =>
             {
                 entity.Property(e => e.Phone).IsUnicode(false);
@@ -531,52 +432,6 @@ namespace OnovaApi.Data
                     .HasForeignKey<Staff>(d => d.StaffId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_Staff_StaffID");
-
-                entity.HasOne(d => d.UserStatus)
-                    .WithMany(p => p.Staff)
-                    .HasForeignKey(d => d.UserStatusId)
-                    .HasConstraintName("FK_Staff_UserStatusID");
-            });
-
-            modelBuilder.Entity<UsefulReview>(entity =>
-            {
-                entity.HasKey(e => new { e.ReviewId, e.CustomerId });
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.UsefulReview)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UsefulReview_CustomerID");
-
-                entity.HasOne(d => d.Review)
-                    .WithMany(p => p.UsefulReview)
-                    .HasForeignKey(d => d.ReviewId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_UsefulReview_ReviewID");
-            });
-
-            modelBuilder.Entity<UserStatus>(entity =>
-            {
-                entity.Property(e => e.Code).IsUnicode(false);
-
-                entity.Property(e => e.Name).IsUnicode(false);
-            });
-
-            modelBuilder.Entity<WishList>(entity =>
-            {
-                entity.HasKey(e => new { e.CustomerId, e.ProductId });
-
-                entity.HasOne(d => d.Customer)
-                    .WithMany(p => p.WishList)
-                    .HasForeignKey(d => d.CustomerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WishList_CustomerID");
-
-                entity.HasOne(d => d.Product)
-                    .WithMany(p => p.WishList)
-                    .HasForeignKey(d => d.ProductId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_WishList_ProductID");
             });
 
             modelBuilder.Entity<ApplicationUser>().ToTable("User");
