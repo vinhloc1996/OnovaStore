@@ -54,8 +54,6 @@ namespace OnovaApi
                     options.SignIn.RequireConfirmedEmail = false;
                     options.SignIn.RequireConfirmedPhoneNumber = false;
                     options.User.RequireUniqueEmail = true;
-//                    options.Tokens.PasswordResetTokenProvider = "OnovaPasswordResetToken";
-
                     options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
                     options.ClaimsIdentity.UserIdClaimType = JwtRegisteredClaimNames.NameId;
                     options.ClaimsIdentity.UserNameClaimType = JwtRegisteredClaimNames.Email;

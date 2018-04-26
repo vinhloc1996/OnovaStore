@@ -61,18 +61,6 @@ namespace OnovaStore
             var serviceProvider = services.BuildServiceProvider();
             var authenticationSettings = serviceProvider.GetService<IAuthenticationSettings>();
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
-            //            services.Configure<JwtBearerOptions>(options =>
-            //            {
-            //                options.SaveToken = true;
-            //                options.TokenValidationParameters = new TokenValidationParameters
-            //                {
-            //                    ValidateIssuerSigningKey = true,
-            //                    IssuerSigningKey = new SymmetricSecurityKey(key),
-            //                    ValidateIssuer = false,
-            //                    ValidateAudience = false,
-            //                    ValidateLifetime = false
-            //                };
-            //            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddCookie(JwtBearerDefaults.AuthenticationScheme,
@@ -80,11 +68,6 @@ namespace OnovaStore
                     {
                         options.LoginPath = authenticationSettings.LoginPath;
                         options.AccessDeniedPath = authenticationSettings.AccessDeniedPath;
-                        options.Events = new CookieAuthenticationEvents
-                        {
-                            // Check if JWT needs refreshment 
-//                          OnValidatePrincipal = RefreshTokenMonitor.ValidateAsync
-                        };
                     }
                 );
 

@@ -78,56 +78,56 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.GeneralImageController" Collapsed="true">
-    <Position X="4" Y="4.5" Width="1.5" />
+    <Position X="2.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABEAAgAAQAAIAAAAAAAAAAAAAAAAAEAA=</HashCode>
       <FileName>Controllers\GeneralImageController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.OrderController" Collapsed="true">
-    <Position X="12.75" Y="5.5" Width="1.5" />
+    <Position X="11" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAQQAAAASBAAAAAAQAAAAAACAAAIAAEAAAAAAAAA=</HashCode>
       <FileName>Controllers\OrderController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.ProductController" Collapsed="true">
-    <Position X="4" Y="6.5" Width="1.5" />
+    <Position X="2.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAQAAACAABAAABAAAAQgAAACAAACAAAAACAAAAIA=</HashCode>
       <FileName>Controllers\ProductController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.ProductStatusController" Collapsed="true">
-    <Position X="11" Y="6.5" Width="1.5" />
+    <Position X="9.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAABBAEAACAAAAAARAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controllers\ProductStatusController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.PromotionController" Collapsed="true">
-    <Position X="2.25" Y="7.5" Width="1.5" />
+    <Position X="0.5" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAAAAAAABAAEIAAAAAAAIAAAAAAAAEABAAAEAAA=</HashCode>
       <FileName>Controllers\PromotionController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Controllers.ShippingInfoController" Collapsed="true">
-    <Position X="4" Y="8.5" Width="1.5" />
+    <Position X="14.5" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAQABBAAgAAAIAQAAAAAFAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Controllers\ShippingInfoController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Data.OnovaContext" Collapsed="true">
-    <Position X="7.5" Y="5.5" Width="1.5" />
+    <Position X="5.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAELAAEAAJAGAQgIAFAEAAAQETAAAEACACCCCAABCEA=</HashCode>
+      <HashCode>AAEKAAEAABAGAQAAAFAEAAAAESAAAEACACACAAABCEA=</HashCode>
       <FileName>Data\OnovaContext.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Data.Seed" Collapsed="true">
-    <Position X="0.5" Y="8.5" Width="1.5" />
+    <Position X="11" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAIAAAQAAAAIAAMAAAAAAAAIAAAAAAAAAAAA=</HashCode>
       <FileName>Data\Seed.cs</FileName>
@@ -155,154 +155,154 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.FacebookAppAccessToken" Collapsed="true">
-    <Position X="9.25" Y="3.5" Width="1.5" />
+    <Position X="5.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAgA=</HashCode>
       <FileName>DTOs\FacebookDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.FacebookUserAccessTokenValidation" Collapsed="true">
-    <Position X="16.25" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>DTOs\FacebookDTO.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.DTOs.FacebookUserAccessTokenData" Collapsed="true">
-    <Position X="14.5" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAABAAAAAAAAgAAAkAAAAAAAAAAQAAAAQAAAA=</HashCode>
-      <FileName>DTOs\FacebookDTO.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.DTOs.FacebookUserData" Collapsed="true">
-    <Position X="0.5" Y="4.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAACgCAAACAAAACAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
-      <FileName>DTOs\FacebookDTO.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.DTOs.FacebookPictureData" Collapsed="true">
     <Position X="12.75" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\FacebookDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OnovaApi.DTOs.FacebookPicture" Collapsed="true">
+  <Class Name="OnovaApi.DTOs.FacebookUserAccessTokenData" Collapsed="true">
     <Position X="11" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAgAAAkAAAAAAAAAAQAAAAQAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaApi.DTOs.FacebookUserData" Collapsed="true">
+    <Position X="14.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgCAAACAAAACAAAAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaApi.DTOs.FacebookPictureData" Collapsed="true">
+    <Position X="9.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
+      <FileName>DTOs\FacebookDTO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="OnovaApi.DTOs.FacebookPicture" Collapsed="true">
+    <Position X="7.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABAAAAAAAAAAAAEAAAAgAAAAACAAAAAAAAAA=</HashCode>
       <FileName>DTOs\FacebookDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetBrandForStaff" Collapsed="true">
-    <Position X="5.75" Y="4.5" Width="1.5" />
+    <Position X="4" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABABAAAAAAAAQAAA=</HashCode>
       <FileName>DTOs\GetBrandForStaff.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetBrandsDTO" Collapsed="true">
-    <Position X="7.5" Y="4.5" Width="1.5" />
+    <Position X="5.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAQAAA=</HashCode>
       <FileName>DTOs\GetBrandsDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetCategoriesDTO" Collapsed="true">
-    <Position X="9.25" Y="4.5" Width="1.5" />
+    <Position X="7.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\GetCategoriesDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetCategoryForStaff" Collapsed="true">
-    <Position X="11" Y="4.5" Width="1.5" />
+    <Position X="9.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACAAAAAgAAAAAAAAAAACAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\GetCategoryForStaff.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetProductEmailDTO" Collapsed="true">
-    <Position X="12.75" Y="4.5" Width="1.5" />
+    <Position X="11" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAgAQAAAA=</HashCode>
       <FileName>DTOs\GetProductEmailDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetProductForStaff" Collapsed="true">
-    <Position X="14.5" Y="4.5" Width="1.5" />
+    <Position X="12.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAAAAAAAAAAAAABAQAAQAAgAEAABAAAAAAAAA=</HashCode>
       <FileName>DTOs\GetProductForStaff.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetProductStatusDTO" Collapsed="true">
-    <Position X="16.25" Y="4.5" Width="1.5" />
+    <Position X="14.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAIAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\GetProductStatusDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.GetPromotionForStaff" Collapsed="true">
-    <Position X="0.5" Y="5.5" Width="1.5" />
+    <Position X="16.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAGAAAAAAAAAAAAAAAAAAAAAAAAAgACAAAAACA=</HashCode>
       <FileName>DTOs\GetPromotionForStaff.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.ImageUploadDTO" Collapsed="true">
-    <Position X="2.25" Y="5.5" Width="1.5" />
+    <Position X="0.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAQAAAAAgAAAAAAAAAAAAAAAAAAAECAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\ImageUploadDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.OrderDTO" Collapsed="true">
-    <Position X="16.25" Y="5.5" Width="1.5" />
+    <Position X="14.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAACAAAIAIAAAACAABAAAAQQAAAAAAIAAQCAA=</HashCode>
       <FileName>DTOs\OrderDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.StaffInfoDTO" Collapsed="true">
-    <Position X="7.5" Y="8.5" Width="1.5" />
+    <Position X="0.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAACgAAIAAEAAAAAAAAAAAAAACAAAAIAAAAAA=</HashCode>
       <FileName>DTOs\StaffInfoDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.UserForgotPassword" Collapsed="true">
-    <Position X="7.5" Y="9.5" Width="1.5" />
+    <Position X="16.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\UserForgotPassword.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.UserForLoginDTO" Collapsed="true">
-    <Position X="9.25" Y="9.5" Width="1.5" />
+    <Position X="0.5" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAACAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\UserForLoginDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.UserForRegisterDTO" Collapsed="true">
-    <Position X="11" Y="9.5" Width="1.5" />
+    <Position X="2.25" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAQAAAAACAAAIAAAAAAAAAAAAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>DTOs\UserForRegisterDTO.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.DTOs.UserResetPassword" Collapsed="true">
-    <Position X="12.75" Y="9.5" Width="1.5" />
+    <Position X="4" Y="9.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAAAAgAAAAAAAAAAACAAAAAAAAIAA=</HashCode>
       <FileName>DTOs\UserResetPassword.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Services.EmailSenderExtensions" Collapsed="true">
-    <Position X="4" Y="3.5" Width="1.5" />
+    <Position X="0.5" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Helpers\EmailSenderExtensions.cs</FileName>
@@ -314,10 +314,10 @@
       <HashCode>AAAABAAAAQAChAAAAABAEgAAECCAAAoAAAEAgAAAiAg=</HashCode>
       <FileName>Services\AuthRepository.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
+    <Lollipop Position="0.166" Collapsed="true" />
   </Class>
   <Class Name="OnovaApi.Services.EmailSender" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="2.25" Y="3.5" Width="1.5" />
+    <Position X="16.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAIAAIAAAAAAAAAAAAAAAACAAAAAEAAAAAAAA=</HashCode>
       <FileName>Services\EmailSender.cs</FileName>
@@ -325,49 +325,49 @@
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="OnovaApi.Helpers.Errors" Collapsed="true">
-    <Position X="5.75" Y="3.5" Width="1.5" />
+    <Position X="2.25" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAIAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Helpers\Errors.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Helpers.Extensions" Collapsed="true">
-    <Position X="7.5" Y="3.5" Width="1.5" />
+    <Position X="4" Y="3.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAIAAAAAAAgAAAAAAAAAAAAAAKAAgAAAAAAACAAA=</HashCode>
       <FileName>Helpers\Extensions.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Microsoft.AspNetCore.Mvc.UrlHelperExtensions" Collapsed="true">
-    <Position X="4" Y="9.5" Width="1.5" />
+    <Position X="14.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Helpers\UrlHelperExtensions.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.InitDb" Collapsed="true">
-    <Position X="4" Y="5.5" Width="1.5" />
+    <Position X="2.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180314065013_InitDb.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdateFacebookIdColumn" Collapsed="true">
-    <Position X="12.75" Y="8.5" Width="1.5" />
+    <Position X="5.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180319054304_UpdateFacebookIdColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdateImageColumn" Collapsed="true">
-    <Position X="16.25" Y="8.5" Width="1.5" />
+    <Position X="9.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180402073441_UpdateImageColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.RemoveColumnName" Collapsed="true">
-    <Position X="5.75" Y="7.5" Width="1.5" />
+    <Position X="4" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180402144242_RemoveColumnName.cs</FileName>
@@ -381,56 +381,56 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdateImage" Collapsed="true">
-    <Position X="14.5" Y="8.5" Width="1.5" />
+    <Position X="7.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180403144502_UpdateImage.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.EditBrandColumn" Collapsed="true">
-    <Position X="0.5" Y="3.5" Width="1.5" />
+    <Position X="14.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180406075106_EditBrandColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.RemoveUniqueEmail" Collapsed="true">
-    <Position X="7.5" Y="7.5" Width="1.5" />
+    <Position X="5.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180407145142_RemoveUniqueEmail.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.RemoveCategoryCode" Collapsed="true">
-    <Position X="4" Y="7.5" Width="1.5" />
+    <Position X="2.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180407145750_RemoveCategoryCode.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.RemoveUnnecessaryColumn" Collapsed="true">
-    <Position X="9.25" Y="7.5" Width="1.5" />
+    <Position X="7.5" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180407155231_RemoveUnnecessaryColumn.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdateRow" Collapsed="true">
-    <Position X="2.25" Y="9.5" Width="1.5" />
+    <Position X="12.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180410051746_UpdateRow.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdatePercentOff" Collapsed="true">
-    <Position X="0.5" Y="9.5" Width="1.5" />
+    <Position X="11" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180410161915_UpdatePercentOff.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.UpdateDatabase" Collapsed="true">
-    <Position X="11" Y="8.5" Width="1.5" />
+    <Position X="4" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180411114855_UpdateDatabase.cs</FileName>
@@ -444,7 +444,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.NullableColumn" Collapsed="true">
-    <Position X="5.75" Y="5.5" Width="1.5" />
+    <Position X="4" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180414024542_NullableColumn.cs</FileName>
@@ -458,14 +458,21 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Migrations.RemoveUserStatus" Collapsed="true">
-    <Position X="11" Y="7.5" Width="1.5" />
+    <Position X="9.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
       <FileName>Migrations\20180424095458_RemoveUserStatus.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="OnovaApi.Migrations.FinalDatabase" Collapsed="true">
+    <Position X="16.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAI=</HashCode>
+      <FileName>Migrations\20180425110746_FinalDatabase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Class Name="OnovaApi.Migrations.OnovaContextModelSnapshot" Collapsed="true">
-    <Position X="9.25" Y="5.5" Width="1.5" />
+    <Position X="7.5" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
       <FileName>Migrations\OnovaContextModelSnapshot.cs</FileName>
@@ -509,7 +516,7 @@
   <Class Name="OnovaApi.Models.DatabaseModels.Customer" Collapsed="true">
     <Position X="2.25" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAARAAAAAIAAAAgQAEAEAAAQABAAABAAAACCAAAAAAA=</HashCode>
+      <HashCode>AAAQAAAAAAAAAAAQAEAEAAAAAAAAABAAAAACAAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\Customer.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -527,151 +534,95 @@
       <FileName>Models\DatabaseModels\CustomerCartDetail.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.CustomerPurchaseInfo" Collapsed="true">
-    <Position X="14.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAEAAAAAAEAAAAAAABAAAQAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\CustomerPurchaseInfo.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.CustomerRecentView" Collapsed="true">
-    <Position X="16.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAECAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\CustomerRecentView.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.GeneralImage" Collapsed="true">
-    <Position X="2.25" Y="4.5" Width="1.5" />
+    <Position X="0.5" Y="4.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACQAEAABgAAAAAAAAAAAAAACAAAAACIAAAAAABCAA=</HashCode>
       <FileName>Models\DatabaseModels\GeneralImage.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.Order" Collapsed="true">
-    <Position X="11" Y="5.5" Width="1.5" />
+    <Position X="9.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>GQAAAQACABAiAoAIAJAAGAAgAAAIQQQAAAAAIABQCAA=</HashCode>
       <FileName>Models\DatabaseModels\Order.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.OrderDetail" Collapsed="true">
-    <Position X="14.5" Y="5.5" Width="1.5" />
+    <Position X="12.75" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EQECAQACARAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\OrderDetail.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.OrderStatus" Collapsed="true">
-    <Position X="0.5" Y="6.5" Width="1.5" />
+    <Position X="16.25" Y="5.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAAAAAAAAAAAAAAAgAAQAAAAIAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\OrderStatus.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.Product" Collapsed="true">
-    <Position X="2.25" Y="6.5" Width="1.5" />
+    <Position X="0.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EQABQAEAAAgAIwsAAFEAgAQQASAAwAEgACCgAAQRCAA=</HashCode>
+      <HashCode>EQAAQAEAAAgAIwMAAFEAgAQAASAAwAEgACAgAAQRCAA=</HashCode>
       <FileName>Models\DatabaseModels\Product.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.ProductImage" Collapsed="true">
-    <Position X="5.75" Y="6.5" Width="1.5" />
+    <Position X="4" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAACAAAAAAAAAAAAAAAAAAAAAAAAAEAAIAAAAAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\ProductImage.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.ProductNotification" Collapsed="true">
-    <Position X="7.5" Y="6.5" Width="1.5" />
+    <Position X="5.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>EAACAAAAACAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\ProductNotification.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.ProductStatus" Collapsed="true">
-    <Position X="9.25" Y="6.5" Width="1.5" />
+    <Position X="7.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACAgAAAAAAIAAAAAAAAAQAAAAAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Models\DatabaseModels\ProductStatus.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.Promotion" Collapsed="true">
-    <Position X="14.5" Y="6.5" Width="1.5" />
+    <Position X="12.75" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEoBAACAAAAAQgAAFAAAAAgAAAQBAACAAECAEgAAGA=</HashCode>
       <FileName>Models\DatabaseModels\Promotion.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.PromotionBrand" Collapsed="true">
-    <Position X="16.25" Y="6.5" Width="1.5" />
+    <Position X="14.5" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACABAAAAAAAAAAAAAAAAAAAAAAAAAAAAARAAA=</HashCode>
       <FileName>Models\DatabaseModels\PromotionBrand.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.PromotionCategory" Collapsed="true">
-    <Position X="0.5" Y="7.5" Width="1.5" />
+    <Position X="16.25" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAACABAAAgAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
       <FileName>Models\DatabaseModels\PromotionCategory.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.Review" Collapsed="true">
-    <Position X="12.75" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAECAAAACgAMAEAIAAAAAAAEABAAAJEAEAAAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\Review.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.ReviewConfirm" Collapsed="true">
-    <Position X="14.5" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAIAAAAAAAAAAAQAAAAAAAAAACEACAAIgAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\ReviewConfirm.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.SaveForLater" Collapsed="true">
-    <Position X="16.25" Y="7.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAECAAAAAQAAAAAAAAAAAAAAAAAAABAAAAAAgAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\SaveForLater.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.ShippingInfo" Collapsed="true">
-    <Position X="2.25" Y="8.5" Width="1.5" />
+    <Position X="12.75" Y="7.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAEAAQAAAAAAAIAIAAAACAAAAAAAABAAAAAAIAAQAAI=</HashCode>
       <FileName>Models\DatabaseModels\ShippingInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.DatabaseModels.Staff" Collapsed="true">
-    <Position X="5.75" Y="8.5" Width="1.5" />
+    <Position X="16.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAACAAAAkAAAAYAAAAAAAAAEAAAEACAABAKAQAAAA=</HashCode>
+      <HashCode>AAAAACAAAAkAAAAQAAAAAAAAAEAAAEACAABAIAQAAAA=</HashCode>
       <FileName>Models\DatabaseModels\Staff.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.UsefulReview" Collapsed="true">
-    <Position X="5.75" Y="9.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAEAAAAAAAAAAAAAAAAAAAAAAAAAABAAEACAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\UsefulReview.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.UserStatus" Collapsed="true">
-    <Position X="14.5" Y="9.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAEAAAAAAAAgAAQAACAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\UserStatus.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="OnovaApi.Models.DatabaseModels.WishList" Collapsed="true">
-    <Position X="16.25" Y="9.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>EAECAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAA=</HashCode>
-      <FileName>Models\DatabaseModels\WishList.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Models.IdentityModels.ApplicationRole" Collapsed="true">
@@ -689,18 +640,22 @@
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Program" Collapsed="true">
-    <Position X="12.75" Y="6.5" Width="1.5" />
+    <Position X="11" Y="6.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="OnovaApi.Startup" Collapsed="true">
-    <Position X="9.25" Y="8.5" Width="1.5" />
+    <Position X="2.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAgAAACAAAAAA=</HashCode>
       <FileName>Startup.cs</FileName>
     </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.EntityFrameworkCore.Migrations.Migration" Collapsed="true">
+    <Position X="19" Y="7.25" Width="1.5" />
+    <TypeIdentifier />
   </Class>
   <Interface Name="OnovaApi.Services.IAuthRepository" Collapsed="true">
     <Position X="0.5" Y="10.75" Width="1.5" />
