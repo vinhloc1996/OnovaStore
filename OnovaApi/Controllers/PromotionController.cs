@@ -678,6 +678,11 @@ namespace OnovaApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPromotion([FromBody] AddPromotionDTO promotion)
         {
+            if (_context.Promotion.FirstOrDefault(p => p.PromotionCode == promotion.PromotionCode) != null)
+            {
+                return StatusCode(409);
+            }
+
             var promo = new Promotion
             {
                 PromotionName = promotion.PromotionName,

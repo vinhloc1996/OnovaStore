@@ -160,7 +160,7 @@ else
                                 <h6 class="g-color-black g-font-weight-200">@(subTotal > 1000 ? "Free" : "$30")</h6>
                             </div>
                             <div class="d-flex justify-content-between">
-                                <h6 class="g-color-black g-font-weight-200">Tax</h6>
+                                <h6 class="g-color-black g-font-weight-200">Tax (15%)</h6>
                                 @{
                                     tax = tax * (subTotal + shippingFee - discount);
                                     totalPrice = subTotal + shippingFee - discount + tax;
@@ -178,7 +178,7 @@ else
                     </div>
                 </div>
                 <!-- End Summary -->
-                <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>
+@*                <button class="btn btn-block u-btn-outline-black g-brd-gray-light-v1 g-bg-black--hover g-font-size-13 text-uppercase g-py-15 mb-4" type="button">Update Shopping Cart</button>*@
                 <button class="btn btn-block u-btn-primary g-font-size-13 text-uppercase g-py-15 mb-4" type="button" data-next-step="#step2">Proceed to Checkout</button>
                 @{
                     var isNotDiscounted = string.IsNullOrEmpty(promotionCode);

@@ -90,20 +90,20 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddStaff()
+        public IActionResult AddStaff()
         {
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/admin/GetRoles"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["Roles"] = JsonConvert.DeserializeObject<List<dynamic>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
+//            using (var client = _restClient.CreateClient(User))
+//            {
+//                using (
+//                    var response = await client.GetAsync("/api/admin/GetRoles"))
+//                {
+//                    if (response.StatusCode == HttpStatusCode.OK)
+//                    {
+//                        ViewData["Roles"] = JsonConvert.DeserializeObject<List<dynamic>>(
+//                            await response.Content.ReadAsStringAsync());
+//                    }
+//                }
+//            }
 
             return View();
         }

@@ -37,6 +37,24 @@ namespace OnovaApi.Controllers
             return _context.Product;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBrand([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var category = await _context.Product.SingleOrDefaultAsync(m => m.ProductId == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(category);
+        }
+
         [HttpGet]
         [Route("SearchProduct")]
         public IActionResult SearchProduct([FromQuery] string keyword, [FromQuery] string sortOrder)

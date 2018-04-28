@@ -713,6 +713,10 @@ namespace OnovaStore.Areas.Manage.Controllers
                         if (response.StatusCode == HttpStatusCode.Created)
                         {
                             return RedirectToAction("Promotions");
+                        }else if (response.StatusCode == HttpStatusCode.Conflict)
+                        {
+                            ModelState.AddModelError("CodeExisted", "Promotion Code is already existed");
+                            return View(model);
                         }
                     }
                 }
