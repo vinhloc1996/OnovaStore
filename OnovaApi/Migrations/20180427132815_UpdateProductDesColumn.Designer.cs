@@ -11,9 +11,10 @@ using System;
 namespace OnovaApi.Migrations
 {
     [DbContext(typeof(OnovaContext))]
-    partial class OnovaContextModelSnapshot : ModelSnapshot
+    [Migration("20180427132815_UpdateProductDesColumn")]
+    partial class UpdateProductDesColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -581,7 +582,7 @@ namespace OnovaApi.Migrations
                         .IsRequired()
                         .HasMaxLength(255);
 
-                    b.Property<string>("ProductLongDesc")
+                    b.Property<string>("NewProductLongDesc")
                         .IsRequired()
                         .HasColumnType("ntext");
 

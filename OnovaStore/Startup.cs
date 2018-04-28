@@ -127,19 +127,19 @@ namespace OnovaStore
                 routes.MapRoute(
                     name: "ViewProduct",
                     template: "product/{slug}",
-                    defaults: new {controller = "Product", action = "Detail"}
+                    defaults: new { Areas = "", controller = "Product", action = "Detail"}
                 );
 
                 routes.MapRoute(
                     name: "ViewCategory",
                     template: "category/{slug}",
-                    defaults: new { controller = "Category", action = "List" }
+                    defaults: new { Areas = "", controller = "Category", action = "List" }
                 );
 
                 routes.MapRoute(
                     name: "ViewBrand",
                     template: "brand/{slug}",
-                    defaults: new { controller = "Brand", action = "List" }
+                    defaults: new {Areas = "", controller = "Brand", action = "List" }
                 );
             });
         }

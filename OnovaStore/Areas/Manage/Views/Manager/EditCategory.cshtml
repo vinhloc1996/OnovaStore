@@ -1,8 +1,33 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Category.EditCategoryViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     Layout = "_Layout";
     ViewBag.Title = "Edit Category";
+    var listCategory = new List<GetCategoriesDTO>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/category/GetCategories"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listCategory = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                    await response.Content.ReadAsStringAsync());
+
+                if (listCategory.Count > 0)
+                {
+                    var self = listCategory.Single(c => c.CategoryId == Model.CategoryId);
+                    listCategory.Remove(self);
+                }
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
@@ -38,15 +63,11 @@
                             <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ParentCategoryID">
                                 <!option value="0" @((Model.ParentCategoryID == 0 || Model.ParentCategoryID == null) ? "selected" : "")>None</!option>
                                 @{
-                                    if (ViewData["ListCategories"] != null)
+                                    foreach (var category in listCategory)
                                     {
-                                        var list = (List<GetCategoriesDTO>) ViewData["ListCategories"];
-                                        foreach (var category in list)
-                                        {
-                                            <!option value="@category.CategoryId" @(Model.ParentCategoryID == category.CategoryId ? "selected" : "")>
-                                                @category.CategoryName
-                                            </!option>
-                                        }
+                                        <!option value="@category.CategoryId" @(Model.ParentCategoryID == category.CategoryId ? "selected" : "")>
+                                            @category.CategoryName
+                                        </!option>
                                     }
                                 }
                             </select>
@@ -62,7 +83,7 @@
                     <label class="g-mb-10">Hidden</label>
                     <div class="g-pos-rel">
                         <label class="form-check-inline u-check g-mr-20 mx-0 mb-0">
-                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" onchange="changeCheckboxValue();"  @(Model.IsHide == true ? "checked" : "") type="checkbox" id="IsHide" name="IsHide" value="@Model.IsHide">
+                            <input class="g-hidden-xs-up g-pos-abs g-top-0 g-right-0" onchange="changeCheckboxValue();" @(Model.IsHide == true ? "checked" : "") type="checkbox" id="IsHide" name="IsHide" value="@Model.IsHide">
 
                             <span class="u-check-icon-radio-v7">
                                 <i class="fa" data-check-icon=""></i>

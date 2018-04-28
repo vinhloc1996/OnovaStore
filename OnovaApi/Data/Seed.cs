@@ -229,6 +229,7 @@ namespace OnovaApi.Data
         (UserManager<ApplicationUser> userManager,
             RoleManager<ApplicationRole> roleManager, OnovaContext context)
         {
+            await context.Database.MigrateAsync();
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
             await SeedStaffs(context);

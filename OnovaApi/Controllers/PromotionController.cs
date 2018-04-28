@@ -678,11 +678,6 @@ namespace OnovaApi.Controllers
         [HttpPost]
         public async Task<IActionResult> PostPromotion([FromBody] AddPromotionDTO promotion)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             var promo = new Promotion
             {
                 PromotionName = promotion.PromotionName,
@@ -708,6 +703,11 @@ namespace OnovaApi.Controllers
                     };
 
                     _context.PromotionBrand.Add(promoBrand);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return StatusCode(201);
+                    }
                 }
 
                 if (promotion.TargetApply == "Category")
@@ -719,12 +719,14 @@ namespace OnovaApi.Controllers
                     };
 
                     _context.PromotionCategory.Add(promoCategory);
+
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        return StatusCode(201);
+                    }
                 }
 
-                if (await _context.SaveChangesAsync() > 0)
-                {
-                    return StatusCode(201);
-                }
+                return StatusCode(201);
             }
 
             return StatusCode(424);

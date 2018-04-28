@@ -106,36 +106,6 @@
                         </div>
                     </div>
                 </th>
-                <th>
-                    <div class="media">
-                        <div class="d-flex align-self-center">Rating</div>
-                        <div class="d-flex align-self-center ml-auto">
-                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rating" ? "color: #007bff !important;" : "")" asp-action="Products" asp-route-sortOrder="rating" asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                                    <i class="hs-admin-angle-up"></i>
-                                </a>
-                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "rating_desc" ? "color: #007bff !important;" : "")" asp-action="Products" asp-route-sortOrder="rating_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                                    <i class="hs-admin-angle-down"></i>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                </th>
-                <th>
-                    <div class="media">
-                        <div class="d-flex align-self-center">Wish Counting</div>
-                        <div class="d-flex align-self-center ml-auto">
-                            <span class="d-inline-block g-width-10 g-line-height-1 g-font-size-10">
-                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "wishcounting" ? "color: #007bff !important;" : "")" asp-action="Products" asp-route-sortOrder="wishcounting" asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                                    <i class="hs-admin-angle-up"></i>
-                                </a>
-                                <a class="g-color-gray-light-v6 g-color-lightblue-v3--hover g-text-underline--none--hover" style="@(ViewData["SortOrder"].ToString() == "wishcounting_desc" ? "color: #007bff !important;" : "")" asp-action="Products" asp-route-sortOrder="wishcounting_desc" asp-route-currentFilter="@ViewData["CurrentFilter"]">
-                                    <i class="hs-admin-angle-down"></i>
-                                </a>
-                            </span>
-                        </div>
-                    </div>
-                </th>
                 <th></th>
             </tr>
             </thead>
@@ -178,8 +148,6 @@
                         </td>
                         <td>@product.Sales</td>
                         <td>@product.NumberOrder</td>
-                        <td>@product.Rating</td>
-                        <td>@product.WishCounting</td>
 
                         <td class="text-right">
                             <div class="g-pos-rel g-top-3 d-inline-block">

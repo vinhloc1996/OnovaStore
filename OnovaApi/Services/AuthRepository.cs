@@ -188,7 +188,9 @@ namespace OnovaApi.Services
 
         public async Task MoveCart(string anonymousId, string email)
         {
-            if (!string.IsNullOrEmpty(anonymousId))
+            var staff = _context.Staff.FirstOrDefault(c => c.ApplicationUser.Email == email);
+            
+            if (!string.IsNullOrEmpty(anonymousId) && staff == null)
             {
                 var anonymousCart =
                     _context.AnonymousCustomerCartDetail.Where(c => c.AnonymousCustomerCartId == anonymousId);

@@ -1,218 +1,259 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Product.AddProductViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     ViewBag.Title = "Add new Product";
     Layout = "_Layout";
+    var listCategory = new List<GetCategoriesDTO>();
+    var listBrand = new List<GetBrandsDTO>();
+    var listStatus = new List<GetProductStatusDTO>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/category/GetCategories"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listCategory = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+            await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
+
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/brand/GetBrands"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listBrand = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+            await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
+
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listStatus = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
+            await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
-<div class="col-md-3">
-</div>
-<div class="col-md-6">
-<div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
-<h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Add new product</h3>
-<form method="post"
-      asp-controller="Manager" asp-action="AddProduct" asp-area="Manage" enctype="multipart/form-data">
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Name</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="Name" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Product Name">
+    <div class="col-md-3">
     </div>
-    <span asp-validation-for="Name" class="form-control-feedback"></span>
-</div>
+    <div class="col-md-6">
+        <div class="g-brd-around g-brd-gray-light-v7 g-rounded-4 g-pa-15 g-pa-20--md g-mb-30">
+            <h3 class="d-flex align-self-center text-uppercase g-font-size-12 g-font-size-default--md g-color-black g-mb-20">Add new product</h3>
+            <form method="post"
+                  asp-controller="Manager" asp-action="AddProduct" asp-area="Manage" enctype="multipart/form-data">
 
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10" for="ProductShortDesc">Product Short Description</label>
-    <textarea id="ProductShortDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="2" placeholder="Product Short Description" asp-for="ProductShortDesc"></textarea>
-    <span asp-validation-for="ProductShortDesc" class="form-control-feedback"></span>
-</div>
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Name</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Name" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Product Name">
+                    </div>
+                    <span asp-validation-for="Name" class="form-control-feedback"></span>
+                </div>
 
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10" for="ProductLongDesc">Product Long Description</label>
-    <textarea id="ProductLongDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="3" placeholder="Product Long Description" asp-for="ProductLongDesc"></textarea>
-    <span asp-validation-for="ProductLongDesc" class="form-control-feedback"></span>
-</div>
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10" for="ProductShortDesc">Product Short Description</label>
+                    <textarea id="ProductShortDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="2" placeholder="Product Short Description" asp-for="ProductShortDesc"></textarea>
+                    <span asp-validation-for="ProductShortDesc" class="form-control-feedback"></span>
+                </div>
 
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Status</label>
-    <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
-        <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
-            <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ProductStatusId">
-                @{
-                    var statuses = (List<GetProductStatusDTO>) ViewData["StatusSelection"];
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10" for="ProductLongDesc">Product Long Description</label>
+                    <textarea id="ProductLongDesc" class="form-control form-control-md g-resize-none g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4" rows="3" placeholder="Product Long Description" asp-for="ProductLongDesc"></textarea>
+                    <span asp-validation-for="ProductLongDesc" class="form-control-feedback"></span>
+                </div>
 
-                    if (statuses != null)
-                    {
-                        var i = 0;
-                        foreach (var status in statuses)
-                        {
-                            <option value="@status.StatusId" selected="@(i++ == 0)">@status.StatusName</option>
-                        }
-                    }
-                }
-            </select>
-        </div>
-        <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
-            <i class="hs-admin-angle-down"></i>
-        </div>
-    </div>
-</div>
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Maximum Quantity In A Order</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="MaximumQuantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Maximum Quantity">
-    </div>
-    <span asp-validation-for="MaximumQuantity" class="form-control-feedback"></span>
-</div>
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Quantity</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="Quantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Quantity">
-    </div>
-    <span asp-validation-for="Quantity" class="form-control-feedback"></span>
-</div>
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Base Price</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="RealPrice" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Base Price">
-    </div>
-    <span asp-validation-for="RealPrice" class="form-control-feedback"></span>
-</div>
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Saling Price</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="DisplayPrice" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Saling Price">
-    </div>
-    <span asp-validation-for="DisplayPrice" class="form-control-feedback"></span>
-</div>
-
-<div class="form-group has-danger g-mb-30">
-    <label class="g-mb-10">Product Weight</label>
-    <div class="g-pos-rel">
-        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
-            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
-        </span>
-        <input asp-for="Weight" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Weight">
-    </div>
-    <span asp-validation-for="Weight" class="form-control-feedback"></span>
-</div>
-
-<div class="row">
-    <div class="col-md-6 order-md-1 disable-div" id="CategorySelection">
-        <div class="form-group has-danger g-mb-30">
-            <label class="g-mb-10">Category Name</label>
-            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
-                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
-                    <select id="CategoryId" name="CategoryId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Category Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
-                        @{
-                            var categories = (List<GetCategoriesDTO>) ViewData["CategorySelection"];
-
-                            if (categories != null)
-                            {
-                                var i = 0;
-                                foreach (var category in categories)
-                                {
-                                    <option value="@category.CategoryId" data-tokens="@category.CategoryName" selected="@(i++ == 0)">@category.CategoryName</option>
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Status</label>
+                    <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                        <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                            <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ProductStatusId">
+                                @{
+                                    if (listStatus != null)
+                                    {
+                                        var i = 0;
+                                        foreach (var status in listStatus)
+                                        {
+                                            <option value="@status.StatusId" selected="@(i++ == 0)">@status.StatusName</option>
+                                        }
+                                    }
                                 }
-                            }
-                        }
-                    </select>
+                            </select>
+                        </div>
+                        <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                            <i class="hs-admin-angle-down"></i>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
-                    <i class="hs-admin-angle-down"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-6 order-md-2 disable-div" id="BrandSelection">
-        <div class="form-group has-danger g-mb-30">
-            <label class="g-mb-10">Brand Name</label>
-            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
-                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
-                    <select id="BrandId" name="BrandId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Brand Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
-                        @{
-                            var brands = (List<GetBrandsDTO>) ViewData["BrandSelection"];
-
-                            if (brands != null)
-                            {
-                                var i = 0;
-                                foreach (var brand in brands)
-                                {
-                                    <option value="@brand.BrandId" data-tokens="@brand.BrandName" selected="@(i++ == 0)">@brand.BrandName</option>
-                                }
-                            }
-                        }
-                    </select>
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Maximum Quantity In A Order</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="MaximumQuantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Maximum Quantity">
+                    </div>
+                    <span asp-validation-for="MaximumQuantity" class="form-control-feedback"></span>
                 </div>
 
-                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
-                    <i class="hs-admin-angle-down"></i>
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Quantity</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Quantity" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Quantity">
+                    </div>
+                    <span asp-validation-for="Quantity" class="form-control-feedback"></span>
                 </div>
-            </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Base Price</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="RealPrice" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Base Price">
+                    </div>
+                    <span asp-validation-for="RealPrice" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Saling Price</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="DisplayPrice" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Saling Price">
+                    </div>
+                    <span asp-validation-for="DisplayPrice" class="form-control-feedback"></span>
+                </div>
+
+                <div class="form-group has-danger g-mb-30">
+                    <label class="g-mb-10">Product Weight</label>
+                    <div class="g-pos-rel">
+                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
+                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
+                        </span>
+                        <input asp-for="Weight" step="any" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="number" placeholder="Product Weight">
+                    </div>
+                    <span asp-validation-for="Weight" class="form-control-feedback"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 order-md-1 disable-div" id="CategorySelection">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">Category Name</label>
+                            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                                    <select id="CategoryId" name="CategoryId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Category Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
+                                        @{
+                                            if (listCategory != null)
+                                            {
+                                                var i = 0;
+                                                foreach (var category in listCategory)
+                                                {
+                                                    <option value="@category.CategoryId" data-tokens="@category.CategoryName" selected="@(i++ == 0)">@category.CategoryName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 order-md-2 disable-div" id="BrandSelection">
+                        <div class="form-group has-danger g-mb-30">
+                            <label class="g-mb-10">Brand Name</label>
+                            <div class="form-group u-select--v3 g-pos-rel g-brd-gray-light-v7 g-rounded-4 mb-0">
+                                <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
+                                    <select id="BrandId" name="BrandId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Brand Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
+                                        @{
+                                            if (listBrand != null)
+                                            {
+                                                var i = 0;
+                                                foreach (var brand in listBrand)
+                                                {
+                                                    <option value="@brand.BrandId" data-tokens="@brand.BrandName" selected="@(i++ == 0)">@brand.BrandName</option>
+                                                }
+                                            }
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
+                                    <i class="hs-admin-angle-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group has-danger g-mb-30 ">
+                    <label class="g-mb-10">Thumbnail Image</label>
+
+                    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
+                        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
+
+                        <div class="input-group-btn">
+                            <button id="selectImage" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                            <input type="file" asp-for="ThumbImage" accept="image/*">
+                        </div>
+                    </div>
+                    <span asp-validation-for="ThumbImage" class="form-control-feedback"></span>
+                </div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("ThumbnailOverLength", new { @class = "form-control-feedback" })</div>
+
+                <div class="form-group has-danger g-mb-30 ">
+                    <label class="g-mb-10">Product Images</label>
+
+                    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
+                        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName1">
+
+                        <div class="input-group-btn">
+                            <button id="selectImage1" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
+                            <input type="file" asp-for="ProductImages" accept="image/*" multiple>
+                        </div>
+                    </div>
+                    <span asp-validation-for="ProductImages" class="form-control-feedback"></span>
+                </div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("ImagesOverLength", new { @class = "form-control-feedback" })</div>
+
+                <div class="form-group" style="text-align: center">
+                    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-
-<div class="form-group has-danger g-mb-30 ">
-    <label class="g-mb-10">Thumbnail Image</label>
-
-    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
-        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName">
-
-        <div class="input-group-btn">
-            <button id="selectImage" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
-            <input type="file" asp-for="ThumbImage" accept="image/*">
-        </div>
+    <div class="col-md-3">
     </div>
-    <span asp-validation-for="ThumbImage" class="form-control-feedback"></span>
-</div>
-<div class="form-group has-danger text-center">@Html.ValidationMessage("ThumbnailOverLength", new { @class = "form-control-feedback" })</div>
-
-<div class="form-group has-danger g-mb-30 ">
-    <label class="g-mb-10">Product Images</label>
-
-    <div class="input-group u-file-attach-v1 g-brd-gray-light-v2">
-        <input class="form-control form-control-md rounded-0" placeholder="No file is choosen" readonly="" type="text" id="fileName1">
-
-        <div class="input-group-btn">
-            <button id="selectImage1" class="btn btn-md u-btn-primary rounded-0" type="button">Browse</button>
-            <input type="file" asp-for="ProductImages" accept="image/*" multiple>
-        </div>
-    </div>
-    <span asp-validation-for="ProductImages" class="form-control-feedback"></span>
-</div>
-<div class="form-group has-danger text-center">@Html.ValidationMessage("ImagesOverLength", new { @class = "form-control-feedback" })</div>
-
-<div class="form-group" style="text-align: center">
-    <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
-</div>
-</form>
-</div>
-</div>
-<div class="col-md-3">
-</div>
 </div>
 
 <script type="text/javascript">
@@ -229,7 +270,7 @@
     }
 
     document.getElementById('fileName').addEventListener('click',
-        function(event) {
+        function (event) {
             document.getElementById('ThumbImage').click();
         },
         false);;
@@ -244,7 +285,7 @@
     }
 
     document.getElementById('fileName1').addEventListener('click',
-        function(event) {
+        function (event) {
             document.getElementById('ProductImages').click();
         },
         false);;
@@ -252,8 +293,12 @@
 
 @section Styles {
     <style type="text/css">
-        ul.dropdown-menu { height: 200px; }
+        ul.dropdown-menu {
+            height: 200px;
+        }
 
-        #fileName, #fileName1 { cursor: pointer; }
+        #fileName, #fileName1 {
+            cursor: pointer;
+        }
     </style>
 }

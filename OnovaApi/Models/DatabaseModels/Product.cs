@@ -29,7 +29,7 @@ namespace OnovaApi.Models.DatabaseModels
         [Column(TypeName = "ntext")]
         public string ProductShortDesc { get; set; }
         [Required]
-        [Column(TypeName = "text")]
+        [Column(TypeName = "ntext")]
         public string ProductLongDesc { get; set; }
         public string ProductThumbImage { get; set; }
         [Required]

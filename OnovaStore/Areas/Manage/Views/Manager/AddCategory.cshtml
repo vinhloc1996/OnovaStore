@@ -1,8 +1,27 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Category.AddCategoryViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     ViewBag.Title = "Add new Category";
     Layout = "_Layout";
+    var listCategory = new List<GetCategoriesDTO>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/category/GetCategories"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listCategory = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
@@ -24,16 +43,16 @@
                     <span asp-validation-for="Name" class="form-control-feedback"></span>
                 </div>
 
-@*                <div class="form-group has-danger g-mb-30">*@
-@*                    <label class="g-mb-10">Contact Phone</label>*@
-@*                    <div class="g-pos-rel">*@
-@*                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">*@
-@*                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>*@
-@*                        </span>*@
-@*                        <input asp-for="ContactPhone" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Phone">*@
-@*                    </div>*@
-@*                    <span asp-validation-for="ContactPhone" class="form-control-feedback"></span>*@
-@*                </div>*@
+                @*                <div class="form-group has-danger g-mb-30">*@
+                @*                    <label class="g-mb-10">Contact Phone</label>*@
+                @*                    <div class="g-pos-rel">*@
+                @*                        <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">*@
+                @*                            <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>*@
+                @*                        </span>*@
+                @*                        <input asp-for="ContactPhone" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Contact Phone">*@
+                @*                    </div>*@
+                @*                    <span asp-validation-for="ContactPhone" class="form-control-feedback"></span>*@
+                @*                </div>*@
 
                 <div class="form-group has-danger g-mb-30">
                     <label class="g-mb-10">Select Parent Category</label>
@@ -43,17 +62,16 @@
                             <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ParentCategoryID">
                                 <option value="0" selected>None</option>
                                 @{
-                                    if (ViewData["ListCategories"] != null)
+                                    if (listCategory != null)
                                     {
-                                        var list = (List<GetCategoriesDTO>)ViewData["ListCategories"];
-                                        foreach (var category in list)
+                                        foreach (var category in listCategory)
                                         {
                                             <option value="@category.CategoryId">
                                                 @category.CategoryName
                                             </option>
                                         }
                                     }
-                                    
+
                                 }
                             </select>
                         </div>
@@ -77,7 +95,7 @@
                     </div>
                     <span asp-validation-for="CategoryImage" class="form-control-feedback"></span>
                 </div>
-                <div class="form-group has-danger text-center">@Html.ValidationMessage("OverLength", new {@class = "form-control-feedback"})</div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("OverLength", new { @class = "form-control-feedback" })</div>
                 <div class="form-group" style="text-align: center">
                     <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>
                 </div>
@@ -101,7 +119,7 @@
     }
 
     document.getElementById('fileName').addEventListener('click',
-        function(event) {
+        function (event) {
             document.getElementById('CategoryImage').click();
         },
         false);;
@@ -109,8 +127,12 @@
 
 @section Styles {
     <style type="text/css">
-        ul { list-style-type: none; }
+        ul {
+            list-style-type: none;
+        }
 
-        #fileName { cursor: pointer; }
+        #fileName {
+            cursor: pointer;
+        }
     </style>
 }

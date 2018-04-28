@@ -1,8 +1,41 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Promotion.AddPromotionViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     ViewBag.Title = "Add new Promotion";
     Layout = "_Layout";
+    var listCategory = new List<GetCategoriesDTO>();
+    var listBrand = new List<GetBrandsDTO>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/category/GetCategories"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listCategory = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
+
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/brand/GetBrands"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listBrand = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
@@ -34,7 +67,7 @@
                         <input asp-for="PromotionCode" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" type="text" placeholder="Promotion Code">
                     </div>
                     <span asp-validation-for="PromotionCode" class="form-control-feedback"></span>
-                    <div class="form-group has-danger text-center">@Html.ValidationMessage("CodeExisted", new {@class = "form-control-feedback"})</div>
+                    <div class="form-group has-danger text-center">@Html.ValidationMessage("CodeExisted", new { @class = "form-control-feedback" })</div>
                 </div>
 
                 <div class="form-group has-danger g-mb-30">
@@ -82,12 +115,10 @@
                                 <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                                     <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="PromotionCategory">
                                         @{
-                                            var categories = (List<GetCategoriesDTO>) ViewData["CategorySelection"];
-
-                                            if (categories != null)
+                                            if (listCategory != null)
                                             {
                                                 var i = 0;
-                                                foreach (var category in categories)
+                                                foreach (var category in listCategory)
                                                 {
                                                     <option value="@category.CategoryId" selected="@(i++ == 0)">@category.CategoryName</option>
                                                 }
@@ -109,12 +140,10 @@
                                 <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                                     <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="PromotionBrand">
                                         @{
-                                            var brands = (List<GetBrandsDTO>) ViewData["BrandSelection"];
-
-                                            if (brands != null)
+                                            if (listBrand != null)
                                             {
                                                 var i = 0;
-                                                foreach (var brand in brands)
+                                                foreach (var brand in listBrand)
                                                 {
                                                     <option value="@brand.BrandId" selected="@(i++ == 0)">@brand.BrandName</option>
                                                 }
@@ -136,10 +165,10 @@
                         <span class="g-pos-abs g-top-0 g-right-0 d-block g-width-40 h-100 opacity-0 g-opacity-1--error">
                             <i class="hs-admin-close g-absolute-centered g-font-size-default g-color-primary"></i>
                         </span>
-                        <input asp-for="PercentOff" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" placeholder="Promotion Name">
+                        <input asp-for="PercentOff" class="form-control form-control-md g-brd-gray-light-v7 g-brd-gray-light-v3--focus g-rounded-4 g-px-14 g-py-10" placeholder="Discount Percent">
                     </div>
                     <span asp-validation-for="PercentOff" class="form-control-feedback"></span>
-                    <div class="form-group has-danger text-center">@Html.ValidationMessage("OverPercent", new {@class = "form-control-feedback"})</div>
+                    <div class="form-group has-danger text-center">@Html.ValidationMessage("OverPercent", new { @class = "form-control-feedback" })</div>
                 </div>
 
                 <div class="row">
@@ -147,26 +176,28 @@
                         <div class="form-group has-danger g-mb-30">
                             <label class="g-mb-10">Start Date</label>
                             <div id="datepickerWrapper1" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
-                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select Start Date" data-rp-wrapper="#datepickerWrapper1" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" name="StartDate">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" required="" type="text" placeholder="Select Start Date" data-rp-wrapper="#datepickerWrapper1" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" name="StartDate">
                                 <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
                                     <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
                                     <i class="hs-admin-angle-down"></i>
                                 </div>
                             </div>
                         </div>
+                        <span asp-validation-for="StartDate" class="form-control-feedback"></span>
                     </div>
 
                     <div class="col-md-6 order-md-2">
                         <div class="form-group has-danger g-mb-30">
                             <label class="g-mb-10">End Date</label>
                             <div id="datepickerWrapper2" class="u-datepicker-right u-datepicker--v3 g-pos-rel w-100 g-cursor-pointer g-brd-around g-brd-gray-light-v7 g-rounded-4">
-                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" type="text" placeholder="Select End Date" data-rp-wrapper="#datepickerWrapper2" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" name="EndDate">
+                                <input class="js-range-datepicker g-bg-transparent g-font-size-12 g-font-size-default--md g-color-gray-dark-v6 g-pr-80 g-pl-15 g-py-9 flatpickr-input" required="" type="text" placeholder="Select End Date" data-rp-wrapper="#datepickerWrapper2" data-rp-date-format="d/m/Y" readonly="readonly" style="width: 0px;" name="EndDate">
                                 <div class="d-flex align-items-center g-absolute-centered--y g-right-0 g-color-gray-light-v6 g-color-lightblue-v9--sibling-opened g-mr-15">
                                     <i class="hs-admin-calendar g-font-size-18 g-mr-10"></i>
                                     <i class="hs-admin-angle-down"></i>
                                 </div>
                             </div>
                             <div class="form-group has-danger text-center">@Html.ValidationMessage("StartGreaterEnd", new { @class = "form-control-feedback" })</div>
+                            <span asp-validation-for="EndDate" class="form-control-feedback"></span>
                         </div>
                     </div>
                 </div>
@@ -182,9 +213,11 @@
 </div>
 
 @section Styles
-{
+    {
     <style type="text/css">
-        .disable-div { pointer-events: none; }
+        .disable-div {
+            pointer-events: none;
+        }
     </style>
 }
 
@@ -214,6 +247,6 @@
                 $('#CategorySelection').removeClass("disable-div");
             }
         }
-        
+
     }
 </script>

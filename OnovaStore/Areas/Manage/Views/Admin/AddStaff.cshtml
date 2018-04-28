@@ -1,8 +1,27 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Admin.AddStaffViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     ViewBag.Title = "Add new Staff";
     Layout = "_Layout";
+    var listRole = new List<dynamic>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/admin/GetRoles"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listRole = JsonConvert.DeserializeObject<List<dynamic>>(
+            await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
@@ -86,12 +105,10 @@
                         <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                             <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="Role">
                                 @{
-                                    var roles = (List<dynamic>) ViewData["Roles"];
-
-                                    if (roles != null)
+                                    if (listRole != null)
                                     {
                                         var i = 0;
-                                        foreach (var role in roles)
+                                        foreach (var role in listRole)
                                         {
                                             <option value="@role.name" selected="@(i++ == 0)">@role.name</option>
                                         }
@@ -105,7 +122,7 @@
                     </div>
                 </div>
 
-                <div class="form-group has-danger text-center">@Html.ValidationMessage("AddFail", new {@class = "form-control-feedback"})</div>
+                <div class="form-group has-danger text-center">@Html.ValidationMessage("AddFail", new { @class = "form-control-feedback" })</div>
 
                 <div class="form-group" style="text-align: center">
                     <button type="submit" class="btn btn-md u-btn-primary rounded-0">Add</button>

@@ -27,6 +27,7 @@ namespace OnovaStore.Controllers
             _restClient = restClient;
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Detail([FromRoute] string slug)
         {
             //split productId

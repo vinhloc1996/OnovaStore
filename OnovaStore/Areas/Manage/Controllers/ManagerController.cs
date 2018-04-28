@@ -149,47 +149,8 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddProduct()
+        public IActionResult AddProduct()
         {
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/category/GetCategories"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/brand/GetBrands"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["StatusSelection"] = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
             return View();
         }
 
@@ -274,45 +235,6 @@ namespace OnovaStore.Areas.Manage.Controllers
                     else
                     {
                         return RedirectToAction("Products");
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/category/GetCategories"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/brand/GetBrands"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["StatusSelection"] = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
-                            await response.Content.ReadAsStringAsync());
                     }
                 }
             }
@@ -568,21 +490,8 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddCategory()
+        public IActionResult AddCategory()
         {
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/category/GetCategories"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["ListCategories"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
             return View();
         }
 
@@ -658,27 +567,6 @@ namespace OnovaStore.Areas.Manage.Controllers
         public async Task<IActionResult> EditCategory([FromRoute] int id)
         {
             var category = new EditCategoryViewModel();
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/category/GetCategories"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        var list = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
-                            await response.Content.ReadAsStringAsync());
-
-                        if (list.Count > 0)
-                        {
-                            var self = list.Single(c => c.CategoryId == id);
-                            list.Remove(self);
-                        }
-
-                        ViewData["ListCategories"] = list;
-                    }
-                }
-            }
 
             using (var client = _restClient.CreateClient(User))
             {
@@ -792,34 +680,8 @@ namespace OnovaStore.Areas.Manage.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> AddPromotion()
+        public IActionResult AddPromotion()
         {
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/category/GetCategories"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["CategorySelection"] = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
-            using (var client = _restClient.CreateClient(User))
-            {
-                using (
-                    var response = await client.GetAsync("/api/brand/GetBrands"))
-                {
-                    if (response.StatusCode == HttpStatusCode.OK)
-                    {
-                        ViewData["BrandSelection"] = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
-                            await response.Content.ReadAsStringAsync());
-                    }
-                }
-            }
-
             return View();
         }
 

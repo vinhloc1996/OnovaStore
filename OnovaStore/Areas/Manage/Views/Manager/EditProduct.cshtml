@@ -1,8 +1,55 @@
 ﻿@using OnovaStore.Areas.Manage.Data
 @model OnovaStore.Areas.Manage.Models.Product.EditProductViewModel
+@using System.Net
+@using System.Net.Http
+@using Newtonsoft.Json
+@inject IRestClient _restClient
 @{
     Layout = "_Layout";
     ViewBag.Title = "Edit Product";
+    var listCategory = new List<GetCategoriesDTO>();
+    var listBrand = new List<GetBrandsDTO>();
+    var listStatus = new List<GetProductStatusDTO>();
+}
+@{
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/category/GetCategories"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listCategory = JsonConvert.DeserializeObject<List<GetCategoriesDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
+
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/brand/GetBrands"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listBrand = JsonConvert.DeserializeObject<List<GetBrandsDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
+
+    using (var client = _restClient.CreateClient(User))
+    {
+        using (
+            var response = await client.GetAsync("/api/productstatus/GetProductStatus"))
+        {
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                listStatus = JsonConvert.DeserializeObject<List<GetProductStatusDTO>>(
+                    await response.Content.ReadAsStringAsync());
+            }
+        }
+    }
 }
 
 <div class="row" style="padding-top: 50px">
@@ -45,11 +92,9 @@
                         <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                             <select class="js-select u-select--v3-select u-sibling w-100" style="display: none;" tabindex="-98" name="ProductStatusId">
                                 @{
-                                    var statuses = (List<GetProductStatusDTO>)ViewData["StatusSelection"];
-
-                                    if (statuses != null)
+                                    if (listStatus != null)
                                     {
-                                        foreach (var status in statuses)
+                                        foreach (var status in listStatus)
                                         {
                                             <option value="@status.StatusId" selected="@(status.StatusId == Model.ProductStatusId)">@status.StatusName</option>
                                         }
@@ -126,11 +171,9 @@
                                 <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                                     <select id="CategoryId" name="CategoryId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Category Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
                                         @{
-                                            var categories = (List<GetCategoriesDTO>)ViewData["CategorySelection"];
-
-                                            if (categories != null)
+                                            if (listCategory != null)
                                             {
-                                                foreach (var category in categories)
+                                                foreach (var category in listCategory)
                                                 {
                                                     <option value="@category.CategoryId" data-tokens="@category.CategoryName" selected="@(category.CategoryId == Model.CategoryId)">@category.CategoryName</option>
                                                 }
@@ -152,11 +195,9 @@
                                 <div class="btn-group bootstrap-select js-select u-select--v3-select u-sibling w-100">
                                     <select id="BrandId" name="BrandId" data-size="auto" class="js-select u-select--v3-select u-sibling w-100 selectpicker" title="Brand Name" style="display: none;" data-live-search="true" liveSearchStyle="contains" liveSearchNormalize="true" tabindex="-99">
                                         @{
-                                            var brands = (List<GetBrandsDTO>)ViewData["BrandSelection"];
-
-                                            if (brands != null)
+                                            if (listBrand != null)
                                             {
-                                                foreach (var brand in brands)
+                                                foreach (var brand in listBrand)
                                                 {
                                                     <option value="@brand.BrandId" data-tokens="@brand.BrandName" selected="@(brand.BrandId == Model.BrandId)">@brand.BrandName</option>
                                                 }

@@ -34,6 +34,24 @@ namespace OnovaApi.Controllers
             return _context.Brand;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBrand([FromRoute] int id)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var category = await _context.Brand.SingleOrDefaultAsync(m => m.BrandId == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(category);
+        }
+
         [HttpGet("GetBrandsForHeader")]
         [AllowAnonymous]
         public IActionResult GetBrandsForHeader()
