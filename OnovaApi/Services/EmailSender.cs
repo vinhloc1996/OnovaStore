@@ -57,7 +57,7 @@ namespace OnovaApi.Services
                     {":productLink", "http://localhost:58212" + dto.Slug},
                     {":productImage", dto.ThumbImageUrl}
                 },
-                Tos = emails
+                Tos = emails //not exceed 1000 emails in list
             };
 
             var msg = new SendGridMessage()
